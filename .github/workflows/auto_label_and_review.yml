@@ -63,3 +63,17 @@ jobs:
                 console.error('Error requesting reviewers:', error);
               }
             }
+
+            // Auto-assign PR creator as assignee
+            const prCreator = context.payload.pull_request.user.login;
+            try {
+              await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: prNumber,
+                assignees: [prCreator]
+              });
+              console.log(`Assigned PR creator: ${prCreator}`);
+            } catch (error) {
+              console.error('Error assigning PR creator:', error);
+            }
