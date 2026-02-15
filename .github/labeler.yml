@@ -1,0 +1,15 @@
+back:
+  - changed-files:
+    - any-glob-to-any-file: 'backend/**/*'
+
+front:
+  - changed-files:
+    - any-glob-to-any-file: 'frontend/**/*'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['*.md', 'docs/**/*']
+
+github-actions:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**/*'
