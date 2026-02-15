@@ -1,0 +1,31 @@
+name: Auto Assignees
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assignees:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Auto Assignees
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const prCreator = context.payload.pull_request.user.login;
+            try {
+              await github.rest.issues.addAssignees({
+                owner,
+                repo,
+                issue_number: prNumber,
+                assignees: [prCreator]
+              });
+              console.log(`Assigned PR creator: ${prCreator}`);
+            } catch (error) {
+              console.error('Error assigning PR creator:', error);
+            }
