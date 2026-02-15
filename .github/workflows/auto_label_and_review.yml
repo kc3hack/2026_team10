@@ -27,6 +27,7 @@ jobs:
             // Configuration
             const backendReviewers = ['kubodayo', 'yone-al', 'bearl27'];
             const frontendReviewers = ['KZ-a-k', 'IRyoma', 'bearl27'];
+            const otherReviewers = ['kc3hack/2026_10'];
 
             if (branchName.startsWith('BE-')) {
               labelsToAdd.push('back');
@@ -34,6 +35,9 @@ jobs:
             } else if (branchName.startsWith('FE-')) {
               labelsToAdd.push('front');
               reviewersToAdd = frontendReviewers;
+            } else {
+              labelsToAdd.push('other');
+              reviewersToAdd = otherReviewers;
             }
 
             if (labelsToAdd.length > 0) {
