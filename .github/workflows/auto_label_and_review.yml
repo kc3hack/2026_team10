@@ -1,0 +1,65 @@
+name: Auto Label and Assign Reviewer
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  label_and_assign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Auto Label and Assign Reviewer
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branchName = context.payload.pull_request.head.ref;
+            const prNumber = context.payload.pull_request.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            let labelsToAdd = [];
+            let reviewersToAdd = [];
+
+            // Configuration
+            const backendReviewers = ['kubodayo', 'yone-al', 'bearl27'];
+            const frontendReviewers = ['KZ-a-k', 'IRyoma', 'bearl27'];
+            const otherReviewers = ['kc3hack/2026_10'];
+
+            if (branchName.startsWith('BE-')) {
+              labelsToAdd.push('back');
+              reviewersToAdd = backendReviewers;
+            } else if (branchName.startsWith('FE-')) {
+              labelsToAdd.push('front');
+              reviewersToAdd = frontendReviewers;
+            } else {
+              labelsToAdd.push('other');
+              reviewersToAdd = otherReviewers;
+            }
+
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number: prNumber,
+                labels: labelsToAdd
+              });
+              console.log(`Added labels: ${labelsToAdd.join(', ')}`);
+            }
+
+            if (reviewersToAdd.length > 0) {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner,
+                  repo,
+                  pull_number: prNumber,
+                  reviewers: reviewersToAdd
+                });
+                console.log(`Requested reviewers: ${reviewersToAdd.join(', ')}`);
+              } catch (error) {
+                console.error('Error requesting reviewers:', error);
+              }
+            }
