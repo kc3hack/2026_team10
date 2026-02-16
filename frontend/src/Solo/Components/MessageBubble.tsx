@@ -8,13 +8,16 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ text, isUser, icon }) => {
-    const defaultIconUrl = "https://knsoza1.com/wp-content/uploads/2025/02/4cbc0aab7c6d44a4559d83b2d733d166.png";
+    const DEFAULT_ICON_URL = "https://knsoza1.com/wp-content/uploads/2025/02/4cbc0aab7c6d44a4559d83b2d733d166.png";
 
     const renderIcon = () => {
-        if (icon) {
-            return <span className="icon">{icon}</span>;
+        if (!icon) {
+            return <img src={DEFAULT_ICON_URL} className="icon" alt="icon" />;
         }
-        return <img src={defaultIconUrl} className="icon" alt="icon" />;
+        if (icon.startsWith('http')) {
+            return <img src={icon} className="icon" alt="icon" />;
+        }
+        return <span className="icon">{icon}</span>;
     };
 
     return (
