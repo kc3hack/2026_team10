@@ -49,12 +49,6 @@
     border-left: 0;
 }
 
-/* Adjusted for border look - overlay white to hide border overlap if needed, 
-   but simplistic CSS triangle creates solid shape. 
-   For outline style bubble, SVG or more complex CSS is often better.
-   For now, simple border-radius is good enough or use a specific shape.
-*/
-
 .icon {
     font-size: 24px;
     width: 40px;
