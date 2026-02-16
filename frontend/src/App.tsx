@@ -1,34 +1,37 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useNavigate } from "react-router-dom";
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isStarted, setIsStarted] = useState(false)
+  const navigate = useNavigate();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div>
+      <h1>偏見で遊ぼう（仮）</h1>
+      <h2>モード選択</h2>
+
+      {!isStarted ? (
+        <button onClick={() => setIsStarted(true)}>
+          スタート
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      ) : (
+        <div>
+
+          <button onClick={() => navigate('/solo')}>
+            ソロモード
+          </button>
+
+          <button onClick={() => alert("複数人モードへ移動！")}>
+            複数人モード
+          </button>
+
+          <button onClick={() => setIsStarted(false)}>
+            戻る
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
 
