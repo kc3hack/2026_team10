@@ -9,13 +9,7 @@ import (
 )
 
 func main() {
-	rounds := []model.Round{
-		{
-			ID:     1,
-			Answer: "お題",
-			Hints:  []string{"ヒント1", "ヒント2", "ヒント3"},
-		},
-	}
+	rounds := []model.Round{}
 
 	hintRepository := repositories.NewHintMemoryRepository(rounds)
 	hintService := services.NewHintService(hintRepository)
@@ -27,6 +21,6 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.POST("/solo", hintController.GetHints)
+	r.POST("/solo", hintController.StartGame)
 	r.Run() // デフォルトで0.0.0.0:8080で待機します
 }

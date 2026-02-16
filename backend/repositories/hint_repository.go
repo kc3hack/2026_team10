@@ -15,12 +15,18 @@ func NewHintMemoryRepository(rounds []model.Round) IHintRepository {
 }
 
 func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*model.Round, error) {
-	newID := len(r.rounds) + 1
+	maxID := 0
+	for _, rd := range r.rounds {
+		if rd.ID > maxID {
+			maxID = rd.ID
+		}
+	}
+	newID := maxID + 1
 	round := model.Round{
 		ID:     newID,
 		Answer: answer,
 		Hints:  hints,
 	}
 	r.rounds = append(r.rounds, round)
-	return &round, nil
+	return &r.rounds[len(r.rounds)-1], nil
 }

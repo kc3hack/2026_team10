@@ -8,7 +8,7 @@ import (
 )
 
 type IHintController interface {
-	GetHints(ctx *gin.Context)
+	StartGame(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -19,10 +19,11 @@ func NewHintController(service services.IHintService) IHintController {
 	return &HintController{service: service}
 }
 
-func (c *HintController) GetHints(ctx *gin.Context) {
-	result, err := c.service.GetHints()
+func (c *HintController) StartGame(ctx *gin.Context) {
+	result, err := c.service.StartGame()
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get hints"})
+		_ = ctx.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start game"})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"result": result})
