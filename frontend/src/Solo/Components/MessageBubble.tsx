@@ -14,7 +14,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ text, isUser, icon }) => 
         if (icon) {
             return <span className="icon">{icon}</span>;
         }
-        return <img src={defaultIconUrl} className="icon" alt="icon" />;
+        return <img src={DEFAULT_ICON_URL} className="icon" alt="icon" />;
     };
 
     return (
