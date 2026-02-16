@@ -21,7 +21,6 @@ const topicData = {
 };
 
 function Solo() {
-  /* Rename id to messageId to avoid confusion with topicData.result.id */
   const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string; }[]>([
     { messageId: 1, hint: topicData.result.hints[0], isUser: false, icon: topicData.result.icons[0] }
   ]);

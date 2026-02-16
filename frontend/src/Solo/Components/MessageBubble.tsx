@@ -17,7 +17,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ text, isUser, icon }) => 
         if (icon.startsWith('http')) {
             return <img src={icon} className="icon" alt="icon" />;
         }
-        return <span className="icon">{icon}</span>;
+        return <img src={DEFAULT_ICON_URL} className="icon" alt="icon" />;
     };
 
     return (
