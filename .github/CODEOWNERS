@@ -1,8 +1,5 @@
-# デフォルトのレビュワー（全てのファイルに対して）
-* @bearl27
-
 # バックエンドのレビュワー
-/backend/ @kubodayo @yone-al
+/backend/ @kubodayo @yone-al @bearl27
 
 # フロントエンドのレビュワー
-/frontend/ @KZ-a-k @IRyoma
+/frontend/ @KZ-a-k @IRyoma @bearl27
