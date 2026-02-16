@@ -1,0 +1,36 @@
+.solo-container {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    /* Light grey background for the whole page */
+    box-sizing: border-box;
+}
+
+/* Optional: Add a central content area if a constrained chat width is desired, 
+   but user asked for 'web site' look, so full width or wide container is good. 
+   Let's keep the messages area full width but maybe limit reading width if needed.
+   For now, we'll keep it flexible. */
+
+
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 100px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    /* Ensure messages stack from top */
+}
+
+/* Custom scrollbar for messages if needed */
+.messages-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-area::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}

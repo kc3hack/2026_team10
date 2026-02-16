@@ -1,0 +1,30 @@
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.timer-label {
+    font-size: 12px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.timer-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.timer-value {
+    font-size: 24px;
+    font-weight: bold;
+}
