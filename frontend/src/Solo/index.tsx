@@ -16,53 +16,49 @@ const initialMessages: Message[] = [
   { id: 1, text: "みんなノリ良さそうだよね！", isUser: false, icon: "😀" },
   { id: 2, text: "賑やかなイメージ！", isUser: false, icon: "🤯" },
   { id: 3, text: "みんな粉物食べてそう", isUser: false, icon: "😇" },
+  { id: 4, text: "あ", isUser: false, icon: "" },
+  { id: 5, text: "い", isUser: false, icon: "" },
+  { id: 6, text: "う", isUser: false, icon: "" },
+  { id: 7, text: "え", isUser: false, icon: "" },
+  { id: 8, text: "お", isUser: false, icon: "" },
+  { id: 9, text: "か", isUser: false, icon: "" },
+  { id: 10, text: "き", isUser: false, icon: "" },
+  { id: 11, text: "く", isUser: false, icon: "" },
+  { id: 12, text: "け", isUser: false, icon: "" },
 ];
 
 function Solo() {
   const [messages, setMessages] = useState<Message[]>([initialMessages[0]]);
   const [inputValue, setInputValue] = useState("");
-  /* 
-     Timer logic:
-     Total cycle:
-     0-10s: Show 1st message, Timer counts 10->0
-     At 10s: Show 2nd message, Timer resets to 10
-     10-20s: 
-     Show 1st & 2nd, Timer counts 10->0
-     At 20s: Show 3rd message, Timer resets to 10 (?) or stops?
-     
-     Assuming the user wants the timer to show "Next hint in..."
-     0s: Msg1, Timer 10
-     ... countdown ...
-     10s: Msg2, Timer 10
-     ... countdown ...
-     20s: Msg3, Timer ?? (Maybe hide or stay at 0?)
-  */
 
   const [timeLeft, setTimeLeft] = useState(10);
   const [hasAnswered, setHasAnswered] = useState(false);
 
   useEffect(() => {
-    // 10秒後
-    const timer1 = setTimeout(() => {
-      setMessages((prev) => [...prev, initialMessages[1]]);
-      setTimeLeft(10); // Reset timer for next hint
-    }, 10000);
+    const timers: number[] = [];
 
-    // 20秒後
-    const timer2 = setTimeout(() => {
-      setMessages((prev) => [...prev, initialMessages[2]]);
-      setTimeLeft(0); // Finished or reset again? Let's verify requirement. 
-      // User said "timer also matches timing". Assuming countdown for each interval.
-    }, 20000);
+    for (let i = 1; i < initialMessages.length; i++) {
+      const delay = i * 10000;
 
-    // Countdown interval
+      const timer = setTimeout(() => {
+        setMessages((prev) => [...prev, initialMessages[i]]);
+
+        if (i < initialMessages.length - 1) {
+          setTimeLeft(11);
+        } else {
+          setTimeLeft(0);
+        }
+      }, delay);
+
+      timers.push(timer);
+    }
+
     const interval = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      timers.forEach((t) => clearTimeout(t));
       clearInterval(interval);
     };
   }, []);
