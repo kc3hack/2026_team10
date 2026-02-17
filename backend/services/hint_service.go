@@ -20,6 +20,7 @@ type IHintService interface {
 	StartGame() (*dto.StartGameResult, error)
 	StartGame_AI() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
+	CheckAnswer(id uint, answer string) (bool, error)
 }
 
 type HintService struct {
@@ -110,4 +111,16 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 		return "", fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
 	}
 	return round.Answer, nil
+}
+
+func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
+	round, err := s.repository.GetRoundByID(id)
+	if err != nil {
+		return false, fmt.Errorf("failed to get round: %w", err)
+	}
+	if round == nil {
+		return false, fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
+	}
+	result := round.Answer == answer
+	return result, nil
 }
