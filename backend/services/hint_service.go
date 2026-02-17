@@ -104,7 +104,7 @@ func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
 func (s *HintService) GetAnswer(id uint) (string, error) {
 	round, err := s.repository.GetRoundByID(id)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to get round: %w", err)
 	}
 	if round == nil {
 		return "", fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)

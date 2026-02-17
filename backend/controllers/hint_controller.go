@@ -46,8 +46,8 @@ func (c *HintController) StartGame_AI(ctx *gin.Context) {
 }
 
 func (c *HintController) GetAnswer(ctx *gin.Context) {
-	strId := ctx.Param("id")
-	id, err := strconv.ParseUint(strId, 10, 64)
+	strID := ctx.Param("id")
+	id, err := strconv.ParseUint(strID, 10, 64)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
