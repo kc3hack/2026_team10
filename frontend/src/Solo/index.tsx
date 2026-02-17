@@ -50,6 +50,7 @@ function Solo() {
   };
 
   //画面の最も下にある場合にのみ自動スクロールする
+  // biome-ignore lint: messageが変更された時点で下にスクロールするためだけなのでmessageは使っていない
   useEffect(() => {
     if (isAtBottomRef.current && messagesAreaRef.current) {
       messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
@@ -88,7 +89,9 @@ function Solo() {
     }, 1000);
 
     return () => {
-      timers.forEach((t) => clearTimeout(t));
+      for (const t of timers) {
+        clearTimeout(t);
+      }
       clearInterval(interval);
     };
   }, [hasAnswered]);
