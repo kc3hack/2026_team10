@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -13,9 +14,12 @@ import (
 	"google.golang.org/api/option"
 )
 
+var ErrRoundNotFound = errors.New("round not found")
+
 type IHintService interface {
 	StartGame() (*dto.StartGameResult, error)
 	StartGame_AI() (*dto.StartGameResult, error)
+	GetAnswer(id uint) (string, error)
 }
 
 type HintService struct {
@@ -95,4 +99,15 @@ func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
 		ID:    result.ID,
 		Hints: result.Hints,
 	}, nil
+}
+
+func (s *HintService) GetAnswer(id uint) (string, error) {
+	round, err := s.repository.GetRoundByID(id)
+	if err != nil {
+		return "", err
+	}
+	if round == nil {
+		return "", fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
+	}
+	return round.Answer, nil
 }
