@@ -3,16 +3,14 @@ package services
 import (
 	"context"
 	"encoding/json"
-	"os"
-
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
-	"google.golang.org/api/option"
-
 	"github.com/kc3hack/2026_team10/backend/models"
 	"github.com/kc3hack/2026_team10/backend/repositories"
+	"google.golang.org/api/option"
 )
 
 type IHintService interface {
