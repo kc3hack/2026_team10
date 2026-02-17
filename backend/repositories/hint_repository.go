@@ -9,15 +9,16 @@ import (
 
 type IHintRepository interface {
 	CreateRound(answer string, hints []string) (*models.Round, error)
+	FindById(roundId uint) (*models.Round, error)
 }
 
 type HintMemoryRepository struct {
 	rounds []models.Round
 }
 
-func NewHintMemoryRepository(rounds []models.Round) IHintRepository {
-	return &HintMemoryRepository{rounds: rounds}
-}
+// func NewHintMemoryRepository(rounds []models.Round) IHintRepository {
+// 	return &HintMemoryRepository{rounds: rounds}
+// }
 
 func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*models.Round, error) {
 	var maxID uint
@@ -34,6 +35,19 @@ func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*mode
 	round.ID = newID
 	r.rounds = append(r.rounds, round)
 	return &r.rounds[len(r.rounds)-1], nil
+}
+
+func (r *HintRepository) FindById(roundId uint) (*models.Round, error) {
+	var round models.Round
+	// DBから指定されたIDのレコードを1件取得する
+	result := r.db.First(&round, roundId)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errors.New("Round not found")
+		}
+		return nil, result.Error
+	}
+	return &round, nil
 }
 
 type HintRepository struct {
@@ -55,11 +69,11 @@ func (r *HintRepository) CreateRound(answer string, hints []string) (*models.Rou
 	return &round, nil
 }
 
-func (r *HintMemoryRepository) FindById(roundId uint) (*models.Round, error) {
-	for _, v := range r.rounds {
-		if v.ID == roundId {
-			return &v, nil
-		}
-	}
-	return nil, errors.New("Item not found")
-}
+// func (r *HintMemoryRepository) FindById(roundId uint) (*models.Round, error) {
+// 	for _, v := range r.rounds {
+// 		if v.ID == roundId {
+// 			return &v, nil
+// 		}
+// 	}
+// 	return nil, errors.New("Item not found")
+// }

@@ -16,6 +16,7 @@ import (
 type IHintService interface {
 	StartGame() (*models.StartGameResult, error)
 	StartGame_AI() (*models.StartGameResult, error)
+	CheckAnswer(roundId uint, userAnswer string) (bool, error)
 }
 
 type HintService struct {
@@ -95,4 +96,19 @@ func (s *HintService) StartGame_AI() (*models.StartGameResult, error) {
 		ID:    result.ID,
 		Hints: result.Hints,
 	}, nil
+}
+
+func (s *HintService) CheckAnswer(roundId uint, userAnswer string) (bool, error) {
+	// 1. リポジトリを使って、IDから保存されているRoundデータを取得
+	round, err := s.repository.FindById(roundId)
+	if err != nil {
+		return false, fmt.Errorf("round not found: %w", err)
+	}
+
+	// 2. ユーザーの回答とお題（Answer）を比較
+	// strings.TrimSpace で余計な空白を消し、
+	// お好みで strings.EqualFold (大文字小文字を区別しない) を使うと親切です
+	isCorrect := strings.TrimSpace(userAnswer) == round.Answer
+
+	return isCorrect, nil
 }

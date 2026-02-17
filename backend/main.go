@@ -34,5 +34,6 @@ func main() {
 	})
 	r.POST("/solo", hintController.StartGame)
 	r.POST("/solo/ai", hintController.StartGame_AI)
+	r.POST("/db/read", hintController.CheckAnswer)
 	r.Run() // デフォルトで0.0.0.0:8080で待機します
 }

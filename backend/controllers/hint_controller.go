@@ -10,6 +10,7 @@ import (
 type IHintController interface {
 	StartGame(ctx *gin.Context)
 	StartGame_AI(ctx *gin.Context)
+	CheckAnswer(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -40,4 +41,28 @@ func (c *HintController) StartGame_AI(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"result": result})
+}
+
+func (c *HintController) CheckAnswer(ctx *gin.Context) {
+	// ユーザーからのリクエストを受け取るための構造体
+	var input struct {
+		RoundID uint   `json:"round_id"`
+		Answer  string `json:"answer"`
+	}
+
+	// JSONのパース
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	// サービス層の呼び出し
+	isCorrect, err := c.service.CheckAnswer(input.RoundID, input.Answer)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 結果（true/false）を返す
+	ctx.JSON(http.StatusOK, gin.H{"correct": isCorrect})
 }
