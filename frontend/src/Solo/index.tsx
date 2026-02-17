@@ -8,17 +8,29 @@ const topicData = {
   "result": {
     "id": 0,
     "hints": [
-      { "icon": "http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png", "text": "ヒント1" },
-      { "icon": "http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png", "text": "ヒント2" },
-      { "icon": "http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png", "text": "ヒント3" }
+      { "text": "ヒント1" },
+      { "text": "ヒント2" },
+      { "text": "ヒント3" },
+      { "text": "ヒント4" },
+      { "text": "ヒント5" },
+      { "text": "ヒント6" },
+      { "text": "ヒント7" },
+      { "text": "ヒント8" },
+      { "text": "ヒント9" },
+      { "text": "ヒント10" }
     ]
   }
 };
 
+const HINT_ICONS = [
+  "http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png",
+  "http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png",
+  "http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png"
+];
 
 function Solo() {
   const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string; }[]>([
-    { messageId: 1, hint: topicData.result.hints[0].text, isUser: false, icon: topicData.result.hints[0].icon }
+    { messageId: 1, hint: topicData.result.hints[0].text, isUser: false, icon: HINT_ICONS[0] }
   ]);
   const [inputValue, setInputValue] = useState("");
 
@@ -37,7 +49,7 @@ function Solo() {
           messageId: i + 1,
           hint: hints[i].text,
           isUser: false,
-          icon: hints[i].icon
+          icon: HINT_ICONS[i % HINT_ICONS.length]
         }]);
 
         if (i < hints.length - 1) {
