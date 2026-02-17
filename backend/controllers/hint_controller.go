@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kc3hack/2026_team10/backend/dto"
 	"github.com/kc3hack/2026_team10/backend/services"
 )
 
@@ -73,7 +74,14 @@ func (c *HintController) CheckAnswer(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
-	result, err := c.service.CheckAnswer(uint(id))
+
+	var input dto.CheckAnswerRequest
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	result, err := c.service.CheckAnswer(uint(id), input.Answer)
 	if err != nil {
 		if errors.Is(err, services.ErrRoundNotFound) {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
