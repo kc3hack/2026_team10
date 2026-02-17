@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Solo.css'
 import MessageBubble from './Components/MessageBubble'
 import InputArea from './Components/InputArea'
@@ -36,6 +36,25 @@ function Solo() {
 
   const [timeLeft, setTimeLeft] = useState(10);
   const [hasAnswered, setHasAnswered] = useState(false);
+
+  const messagesAreaRef = useRef<HTMLDivElement>(null);
+  const isAtBottomRef = useRef(true);
+
+  //スクロールされたときに、画面の最も下にあるかどうかを判定する
+  const handleScroll = () => {
+    if (messagesAreaRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesAreaRef.current;
+      //画面から10px下以内にあれば、画面の最も下にあると判定する
+      isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 10;
+    }
+  };
+
+  //画面の最も下にある場合にのみ自動スクロールする
+  useEffect(() => {
+    if (isAtBottomRef.current && messagesAreaRef.current) {
+      messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   useEffect(() => {
     const timers: number[] = [];
@@ -88,7 +107,11 @@ function Solo() {
   return (
     <div className="solo-container">
       <Timer seconds={timeLeft} />
-      <div className="messages-area">
+      <div
+        className="messages-area"
+        ref={messagesAreaRef}
+        onScroll={handleScroll}
+      >
         {messages.map((msg) => (
           <MessageBubble
             key={msg.messageId}
