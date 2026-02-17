@@ -1,23 +1,23 @@
 package repositories
 
 import (
-	"github.com/kc3hack/2026_team10/backend/model"
+	"github.com/kc3hack/2026_team10/backend/models"
 	"gorm.io/gorm"
 )
 
 type IHintRepository interface {
-	CreateRound(answer string, hints []string) (*model.Round, error)
+	CreateRound(answer string, hints []string) (*models.Round, error)
 }
 
 type HintMemoryRepository struct {
-	rounds []model.Round
+	rounds []models.Round
 }
 
-func NewHintMemoryRepository(rounds []model.Round) IHintRepository {
+func NewHintMemoryRepository(rounds []models.Round) IHintRepository {
 	return &HintMemoryRepository{rounds: rounds}
 }
 
-func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*model.Round, error) {
+func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*models.Round, error) {
 	var maxID uint
 	for _, rd := range r.rounds {
 		if rd.ID > maxID {
@@ -25,7 +25,7 @@ func (r *HintMemoryRepository) CreateRound(answer string, hints []string) (*mode
 		}
 	}
 	newID := maxID + 1
-	round := model.Round{
+	round := models.Round{
 		Answer: answer,
 		Hints:  hints,
 	}
@@ -42,8 +42,8 @@ func NewHintRepository(db *gorm.DB) IHintRepository {
 	return &HintRepository{db: db}
 }
 
-func (r *HintRepository) CreateRound(answer string, hints []string) (*model.Round, error) {
-	round := model.Round{
+func (r *HintRepository) CreateRound(answer string, hints []string) (*models.Round, error) {
+	round := models.Round{
 		Answer: answer,
 		Hints:  hints,
 	}
