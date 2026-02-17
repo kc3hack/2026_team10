@@ -1,0 +1,23 @@
+/* 黒い背景 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+/* --- 3つのボタンを包むコンテナ --- */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 300px;
+}
