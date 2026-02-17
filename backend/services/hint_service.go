@@ -11,13 +11,13 @@ import (
 	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
 	"google.golang.org/api/option"
 
-	"github.com/kc3hack/2026_team10/backend/model"
+	"github.com/kc3hack/2026_team10/backend/models"
 	"github.com/kc3hack/2026_team10/backend/repositories"
 )
 
 type IHintService interface {
-	StartGame() (*model.StartGameResult, error)
-	StartGame_AI() (*model.StartGameResult, error)
+	StartGame() (*models.StartGameResult, error)
+	StartGame_AI() (*models.StartGameResult, error)
 }
 
 type HintService struct {
@@ -28,7 +28,7 @@ func NewHintService(repository repositories.IHintRepository) IHintService {
 	return &HintService{repository: repository}
 }
 
-func (s *HintService) StartGame() (*model.StartGameResult, error) {
+func (s *HintService) StartGame() (*models.StartGameResult, error) {
 	// お題、ヒントを作成
 	answer := "お題"
 	hints := []string{"ヒント1", "ヒント2", "ヒント3"}
@@ -40,14 +40,14 @@ func (s *HintService) StartGame() (*model.StartGameResult, error) {
 	}
 
 	// IDとヒントを返す
-	response := &model.StartGameResult{
+	response := &models.StartGameResult{
 		ID:    result.ID,
 		Hints: result.Hints,
 	}
 	return response, nil
 }
 
-func (s *HintService) StartGame_AI() (*model.StartGameResult, error) {
+func (s *HintService) StartGame_AI() (*models.StartGameResult, error) {
 	ctx := context.Background()
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
@@ -93,7 +93,7 @@ func (s *HintService) StartGame_AI() (*model.StartGameResult, error) {
 		return nil, fmt.Errorf("failed to save hint data: %w", err)
 	}
 
-	return &model.StartGameResult{
+	return &models.StartGameResult{
 		ID:    result.ID,
 		Hints: result.Hints,
 	}, nil
