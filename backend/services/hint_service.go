@@ -3,12 +3,12 @@ package services
 import (
 	"fmt"
 
-	"github.com/kc3hack/2026_team10/backend/models"
+	"github.com/kc3hack/2026_team10/backend/dto"
 	"github.com/kc3hack/2026_team10/backend/repositories"
 )
 
 type IHintService interface {
-	StartGame() (*models.StartGameResult, error)
+	StartGame() (*dto.StartGameResult, error)
 }
 
 type HintService struct {
@@ -19,7 +19,7 @@ func NewHintService(repository repositories.IHintRepository) IHintService {
 	return &HintService{repository: repository}
 }
 
-func (s *HintService) StartGame() (*models.StartGameResult, error) {
+func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	// お題、ヒントを作成
 	answer := "お題"
 	hints := []string{"ヒント1", "ヒント2", "ヒント3"}
@@ -31,7 +31,7 @@ func (s *HintService) StartGame() (*models.StartGameResult, error) {
 	}
 
 	// IDとヒントを返す
-	response := &models.StartGameResult{
+	response := &dto.StartGameResult{
 		ID:    result.ID,
 		Hints: result.Hints,
 	}
