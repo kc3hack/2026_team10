@@ -4,24 +4,6 @@ import MessageBubble from "./Components/MessageBubble";
 import InputArea from "./Components/InputArea";
 import Timer from "./Components/Timer";
 
-const topicData = {
-	result: {
-		id: 0,
-		hints: [
-			{ text: "ヒント1" },
-			{ text: "ヒント2" },
-			{ text: "ヒント3" },
-			{ text: "ヒント4" },
-			{ text: "ヒント5" },
-			{ text: "ヒント6" },
-			{ text: "ヒント7" },
-			{ text: "ヒント8" },
-			{ text: "ヒント9" },
-			{ text: "ヒント10" },
-		],
-	},
-};
-
 const HINT_ICONS = [
 	"http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png",
 	"http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png",
@@ -31,14 +13,8 @@ const HINT_ICONS = [
 function Solo() {
 	const [messages, setMessages] = useState<
 		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
-	>([
-		{
-			messageId: 1,
-			hint: topicData.result.hints[0].text,
-			isUser: false,
-			icon: HINT_ICONS[0],
-		},
-	]);
+	>([]);
+	const [hints, setHints] = useState<string[]>([]);
 	const [inputValue, setInputValue] = useState("");
 
 	const [timeLeft, setTimeLeft] = useState(10);
@@ -46,6 +22,35 @@ function Solo() {
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
+
+	useEffect(() => {
+		const fetchGameData = async () => {
+			try {
+				const res = await fetch("/api/solo", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({}),
+				});
+				const data = await res.json();
+				if (data.result && data.result.hints) {
+					setHints(data.result.hints);
+					if (data.result.hints.length > 0) {
+						setMessages([
+							{
+								messageId: 1,
+								hint: data.result.hints[0],
+								isUser: false,
+								icon: HINT_ICONS[0],
+							},
+						]);
+					}
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		};
+		fetchGameData();
+	}, []);
 
 	//スクロールされたときに、画面の最も下にあるかどうかを判定する
 	const handleScroll = () => {
@@ -65,10 +70,9 @@ function Solo() {
 	}, [messages]);
 
 	useEffect(() => {
-		if (hasAnswered) return;
+		if (hasAnswered || hints.length === 0) return;
 
 		const timers: number[] = [];
-		const hints = topicData.result.hints;
 
 		for (let i = 1; i < hints.length; i++) {
 			const delay = i * 10000;
@@ -78,7 +82,7 @@ function Solo() {
 					...prev,
 					{
 						messageId: i + 1,
-						hint: hints[i].text,
+						hint: hints[i],
 						isUser: false,
 						icon: HINT_ICONS[i % HINT_ICONS.length],
 					},
@@ -104,7 +108,7 @@ function Solo() {
 			}
 			clearInterval(interval);
 		};
-	}, [hasAnswered]);
+	}, [hasAnswered, hints]);
 
 	const handleSubmit = () => {
 		if (!inputValue.trim()) return;

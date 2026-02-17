@@ -19,18 +19,7 @@ function App() {
 				<div>
 					<button
 						type="button"
-						onClick={async () => {
-							try {
-								await fetch("http://localhost:8080/solo", {
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify({}),
-								});
-							} catch (e) {
-								console.error(e);
-							}
+						onClick={() => {
 							navigate("/solo");
 						}}
 					>
