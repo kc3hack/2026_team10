@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"errors"
+
 	"github.com/kc3hack/2026_team10/backend/models"
 	"gorm.io/gorm"
 )
@@ -51,4 +53,13 @@ func (r *HintRepository) CreateRound(answer string, hints []string) (*models.Rou
 		return nil, err
 	}
 	return &round, nil
+}
+
+func (r *HintMemoryRepository) FindById(roundId uint) (*models.Round, error) {
+	for _, v := range r.rounds {
+		if v.ID == roundId {
+			return &v, nil
+		}
+	}
+	return nil, errors.New("Item not found")
 }
