@@ -1,14 +1,18 @@
 import '../Styles/Result.css';
 import ResultButtons from './ResultButtons';
+import { useNavigate } from "react-router-dom";
 
-type Props = {
+interface Props {
     onClose?: () => void;
     // 将来的に、おそらくここに「正解のデータ（画像URLやテキスト）」を受け取るPropsを追加
-};
+}
 
 export default function ResultOverlay({ onClose }: Props) {
 
-    const handleTitle = () => alert("タイトルへ戻ります");
+    const navigate = useNavigate();
+
+    const handleTitle = () => navigate('/');
+    //ゲームをリスタートする（ページのリロード？）
     const handleRetry = () => alert("ゲームをリスタートします");
 
     return (
@@ -53,7 +57,6 @@ export default function ResultOverlay({ onClose }: Props) {
                     onRetry={handleRetry}
                 />
             </div>
-
         </div>
     );
 }

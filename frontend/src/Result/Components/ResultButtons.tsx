@@ -1,10 +1,10 @@
 import '../Styles/Result.css';
 
-type Props = {
+interface Props {
     onBackToLog: () => void;
     onBackToTitle: () => void;
     onRetry: () => void;
-};
+}
 
 export default function ResultButtons({ onBackToLog, onBackToTitle, onRetry }: Props) {
     return (
