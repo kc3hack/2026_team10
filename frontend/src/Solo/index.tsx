@@ -102,6 +102,18 @@ function Solo() {
     setMessages((prev) => [...prev, newMessage]);
     setInputValue("");
     setHasAnswered(true);
+
+    // Mock backend response
+    setTimeout(() => {
+      const isCorrect = newMessage.hint === "大阪";
+      const responseMessage = {
+        messageId: Date.now() + 1,
+        hint: isCorrect ? "正解です！" : "不正解です...",
+        isUser: false,
+        icon: isCorrect ? "🙆‍♂️" : "🙅‍♂️"
+      };
+      setMessages((prev) => [...prev, responseMessage]);
+    }, 100);
   };
 
   return (
