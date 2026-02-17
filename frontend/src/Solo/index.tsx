@@ -5,18 +5,20 @@ import InputArea from './Components/InputArea'
 import Timer from './Components/Timer'
 
 const topicData = {
-  "ID": 0,
-  "Hints": [
-    { "icon": "http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png", "text": "ヒント1" },
-    { "icon": "http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png", "text": "ヒント2" },
-    { "icon": "http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png", "text": "ヒント3" }
-  ]
+  "result": {
+    "id": 0,
+    "hints": [
+      { "icon": "http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png", "text": "ヒント1" },
+      { "icon": "http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png", "text": "ヒント2" },
+      { "icon": "http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png", "text": "ヒント3" }
+    ]
+  }
 };
 
 
 function Solo() {
   const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string; }[]>([
-    { messageId: 1, hint: topicData.Hints[0].text, isUser: false, icon: topicData.Hints[0].icon }
+    { messageId: 1, hint: topicData.result.hints[0].text, isUser: false, icon: topicData.result.hints[0].icon }
   ]);
   const [inputValue, setInputValue] = useState("");
 
@@ -25,7 +27,7 @@ function Solo() {
 
   useEffect(() => {
     const timers: number[] = [];
-    const hints = topicData.Hints;
+    const hints = topicData.result.hints;
 
     for (let i = 1; i < hints.length; i++) {
       const delay = i * 10000;
