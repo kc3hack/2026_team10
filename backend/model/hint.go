@@ -1,12 +1,14 @@
 package model
 
+import "gorm.io/gorm"
+
 type Round struct {
-	ID     int
-	Answer string
-	Hints  []string
+	gorm.Model
+	Answer string   `gorm:"not null"`
+	Hints  []string `gorm:"serializer:json;not null"` // ヒントはJSON形式で保存
 }
 
 type StartGameResult struct {
-	ID    int      `json:"id"`
+	ID    uint     `json:"id"`
 	Hints []string `json:"hints"`
 }

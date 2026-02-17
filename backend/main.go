@@ -1,17 +1,24 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/kc3hack/2026_team10/backend/controllers"
+	"github.com/kc3hack/2026_team10/backend/infra"
 	"github.com/kc3hack/2026_team10/backend/model"
 	"github.com/kc3hack/2026_team10/backend/repositories"
 	"github.com/kc3hack/2026_team10/backend/services"
 )
 
 func main() {
-	rounds := []model.Round{}
+	infra.Initialize()
+	db := infra.SetupDB()
+	if err := db.AutoMigrate(&model.Round{}); err != nil {
+		panic(fmt.Sprintf("Failed to migrate database: %v", err))
+	}
 
-	hintRepository := repositories.NewHintMemoryRepository(rounds)
+	hintRepository := repositories.NewHintRepository(db)
 	hintService := services.NewHintService(hintRepository)
 	hintController := controllers.NewHintController(hintService)
 
