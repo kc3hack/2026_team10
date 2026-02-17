@@ -21,3 +21,27 @@
     gap: 15px;
     width: 300px;
 }
+
+/* --- 上の白い大きな箱（結果表示カード） --- */
+.result-card {
+    background-color: white;
+    width: 320px;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* カードとボタンを包むコンテナ（縦並び・中央揃え） */
+.result-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
