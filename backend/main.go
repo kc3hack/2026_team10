@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/kc3hack/2026_team10/backend/controllers"
 	"github.com/kc3hack/2026_team10/backend/model"
 	"github.com/kc3hack/2026_team10/backend/repositories"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+	godotenv.Load()
 	rounds := []model.Round{}
 
 	hintRepository := repositories.NewHintMemoryRepository(rounds)
@@ -22,5 +24,6 @@ func main() {
 		})
 	})
 	r.POST("/solo", hintController.StartGame)
+	r.POST("/solo/ai", hintController.StartGame_AI)
 	r.Run() // デフォルトで0.0.0.0:8080で待機します
 }

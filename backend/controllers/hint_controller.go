@@ -9,6 +9,7 @@ import (
 
 type IHintController interface {
 	StartGame(ctx *gin.Context)
+	StartGame_AI(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -24,6 +25,18 @@ func (c *HintController) StartGame(ctx *gin.Context) {
 	if err != nil {
 		_ = ctx.Error(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to start game"})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"result": result})
+}
+
+func (c *HintController) StartGame_AI(ctx *gin.Context) {
+	result, err := c.service.StartGame_AI()
+	if err != nil {
+		_ = ctx.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"result": result})
