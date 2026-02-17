@@ -39,3 +39,6 @@ tmp/
 
 # Serena
 .serena
+
+# Claude
+.claude
