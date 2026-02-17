@@ -1,65 +1,65 @@
 .message-container {
-    display: flex;
-    align-items: flex-end;
-    /* Align icon to bottom of message */
-    margin-bottom: 20px;
-    max-width: 80%;
-    gap: 10px;
+	display: flex;
+	align-items: flex-end;
+	/* Align icon to bottom of message */
+	margin-bottom: 20px;
+	max-width: 80%;
+	gap: 10px;
 }
 
 .message-container.system {
-    align-self: flex-start;
-    flex-direction: row;
+	align-self: flex-start;
+	flex-direction: row;
 }
 
 .message-container.user {
-    align-self: flex-end;
-    flex-direction: row;
-    justify-content: flex-end;
-    /* Push content to right */
+	align-self: flex-end;
+	flex-direction: row;
+	justify-content: flex-end;
+	/* Push content to right */
 }
 
 .bubble {
-    padding: 15px 20px;
-    border-radius: 20px;
-    font-size: 16px;
-    line-height: 1.4;
-    position: relative;
-    border: 2px solid #888;
-    /* Grey border as seen in image */
-    background-color: white;
-    color: #333;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+	padding: 15px 20px;
+	border-radius: 20px;
+	font-size: 16px;
+	line-height: 1.4;
+	position: relative;
+	border: 2px solid #888;
+	/* Grey border as seen in image */
+	background-color: white;
+	color: #333;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 /* Callout tail simulation (simplified) */
 .bubble::after {
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
+	content: "";
+	position: absolute;
+	bottom: 10px;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
 }
 
 .message-container.system .bubble::after {
-    left: -10px;
-    /* Position on left */
-    border-right-color: #888;
-    border-left: 0;
+	left: -10px;
+	/* Position on left */
+	border-right-color: #888;
+	border-left: 0;
 }
 
 .icon {
-    font-size: 24px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    /* Or transparent */
-    border-radius: 50%;
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); Optional */
-    flex-shrink: 0;
-    object-fit: cover;
+	font-size: 24px;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: white;
+	/* Or transparent */
+	border-radius: 50%;
+	/* box-shadow: 0 2px 4px rgba(0,0,0,0.1); Optional */
+	flex-shrink: 0;
+	object-fit: cover;
 }

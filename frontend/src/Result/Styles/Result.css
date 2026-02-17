@@ -1,47 +1,47 @@
 /* 黒い背景 */
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-    z-index: 1000;
+	z-index: 1000;
 }
 
 /* --- 3つのボタンを包むコンテナ --- */
 .button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 300px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	width: 300px;
 }
 
 /* --- 上の白い大きな箱（結果表示カード） --- */
 .result-card {
-    background-color: white;
-    width: 320px;
-    padding: 30px;
-    border-radius: 16px;
-    text-align: center;
+	background-color: white;
+	width: 320px;
+	padding: 30px;
+	border-radius: 16px;
+	text-align: center;
 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 /* カードとボタンを包むコンテナ（縦並び・中央揃え） */
 .result-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
