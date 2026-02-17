@@ -117,7 +117,7 @@ function Solo() {
 		setMessages((prev) => [...prev, newMessage]);
 		setInputValue("");
 
-		// Mock backend response
+		//正誤判定
 		setTimeout(() => {
 			const isCorrect = newMessage.hint === "大阪";
 			const responseMessage = {
@@ -131,7 +131,7 @@ function Solo() {
 			if (isCorrect) {
 				setHasAnswered(true);
 			}
-		}, 1000);
+		}, 100);
 	};
 
 	return (
