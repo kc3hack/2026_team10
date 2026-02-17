@@ -33,6 +33,7 @@ services:
       PMA_PORT: 3306
     ports:
       - "9090:80"
+    restart: unless-stopped
 
 volumes:
   db-data:
