@@ -57,6 +57,8 @@ function Solo() {
   }, [messages]);
 
   useEffect(() => {
+    if (hasAnswered) return;
+
     const timers: number[] = [];
     const hints = topicData.result.hints;
 
@@ -89,7 +91,7 @@ function Solo() {
       timers.forEach((t) => clearTimeout(t));
       clearInterval(interval);
     };
-  }, []);
+  }, [hasAnswered]);
 
   const handleSubmit = () => {
     if (!inputValue.trim()) return;
@@ -101,7 +103,6 @@ function Solo() {
     };
     setMessages((prev) => [...prev, newMessage]);
     setInputValue("");
-    setHasAnswered(true);
 
     // Mock backend response
     setTimeout(() => {
@@ -113,12 +114,16 @@ function Solo() {
         icon: isCorrect ? "🙆‍♂️" : "🙅‍♂️"
       };
       setMessages((prev) => [...prev, responseMessage]);
-    }, 100);
+
+      if (isCorrect) {
+        setHasAnswered(true);
+      }
+    }, 10);
   };
 
   return (
     <div className="solo-container">
-      <Timer seconds={timeLeft} />
+      {!hasAnswered && <Timer seconds={timeLeft} />}
       <div
         className="messages-area"
         ref={messagesAreaRef}
