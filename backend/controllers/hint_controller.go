@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kc3hack/2026_team10/backend/dto"
 	"github.com/kc3hack/2026_team10/backend/services"
 )
 
@@ -13,6 +14,7 @@ type IHintController interface {
 	StartGame(ctx *gin.Context)
 	StartGame_AI(ctx *gin.Context)
 	GetAnswer(ctx *gin.Context)
+	CheckAnswer(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -63,4 +65,31 @@ func (c *HintController) GetAnswer(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"answer": result})
+}
+
+func (c *HintController) CheckAnswer(ctx *gin.Context) {
+	strID := ctx.Param("id")
+	id, err := strconv.ParseUint(strID, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+
+	var input dto.CheckAnswerRequest
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	result, err := c.service.CheckAnswer(uint(id), input.Answer)
+	if err != nil {
+		if errors.Is(err, services.ErrRoundNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			_ = ctx.Error(err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check answer"})
+		}
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"isCorrect": result})
 }
