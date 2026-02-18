@@ -157,7 +157,7 @@ function Solo() {
 				onChange={setInputValue}
 				onSubmit={handleSubmit}
 				placeholder="回答を記入してください"
-				showResultButton={hasAnswered}
+				hidden={hasAnswered}
 			/>
 		</div>
 	);
