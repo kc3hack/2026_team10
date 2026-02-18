@@ -10,6 +10,8 @@ const HINT_ICONS = [
 	"http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png",
 ];
 
+import ThanksConfetti from "../Result/Components/ThanksConfetti";
+
 function Solo() {
 	const [messages, setMessages] = useState<
 		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
@@ -126,10 +128,9 @@ function Solo() {
 			const isCorrect = newMessage.hint === "大阪";
 			const responseMessage = {
 				messageId: Date.now() + 1,
-				hint: isCorrect ? "正解じゃ！" : "不正解じゃ...",
+				hint: isCorrect ? "正解です！" : "不正解です...",
 				isUser: false,
-				// biome-ignore format: URLが長いため改行を防止
-				icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
+				icon: isCorrect ? "🙆‍♂️" : "🙅‍♂️",
 			};
 			setMessages((prev) => [...prev, responseMessage]);
 
@@ -141,6 +142,7 @@ function Solo() {
 
 	return (
 		<div className="solo-container">
+			{hasAnswered && <ThanksConfetti />}
 			{!hasAnswered && <Timer seconds={timeLeft} />}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
