@@ -22,7 +22,6 @@ type IHintService interface {
 	StartGame_AI() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
-	getRound(id uint) (*models.Round, error)
 }
 
 type HintService struct {
@@ -128,7 +127,7 @@ func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	correct := strings.ToLower(strings.TrimSpace(round.Answer))
-	user := strings.ToLower(strings.TrimSpace(answer))
-	return correct == user, nil
+	correct := strings.TrimSpace(round.Answer)
+	user := strings.TrimSpace(answer)
+	return strings.EqualFold(correct, user), nil
 }
