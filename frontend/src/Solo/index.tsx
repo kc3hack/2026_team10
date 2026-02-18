@@ -128,6 +128,7 @@ function Solo() {
 				messageId: Date.now() + 1,
 				hint: isCorrect ? "正解じゃ！" : "不正解じゃ...",
 				isUser: false,
+				// biome-ignore format: URLが長いため改行を防止
 				icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
 			};
 			setMessages((prev) => [...prev, responseMessage]);
