@@ -128,6 +128,7 @@ func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	result := round.Answer == answer
-	return result, nil
+	correct := strings.ToLower(strings.TrimSpace(round.Answer))
+	user := strings.ToLower(strings.TrimSpace(answer))
+	return correct == user, nil
 }
