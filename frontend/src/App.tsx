@@ -17,7 +17,12 @@ function App() {
 				</button>
 			) : (
 				<div>
-					<button type="button" onClick={() => navigate("/solo")}>
+					<button
+						type="button"
+						onClick={() => {
+							navigate("/solo");
+						}}
+					>
 						ソロモード
 					</button>
 
