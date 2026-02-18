@@ -11,6 +11,7 @@ const HINT_ICONS = [
 ];
 
 import ThanksConfetti from "../Result/Components/ThanksConfetti";
+import ResultOverlay from "../Result/Components/ResultOverlay";
 
 function Solo() {
 	const [messages, setMessages] = useState<
@@ -21,6 +22,7 @@ function Solo() {
 
 	const [timeLeft, setTimeLeft] = useState(10);
 	const [hasAnswered, setHasAnswered] = useState(false);
+	const [showResultOverlay, setShowResultOverlay] = useState(false);
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
@@ -128,9 +130,10 @@ function Solo() {
 			const isCorrect = newMessage.hint === "大阪";
 			const responseMessage = {
 				messageId: Date.now() + 1,
-				hint: isCorrect ? "正解です！" : "不正解です...",
+				hint: isCorrect ? "正解じゃ！" : "不正解じゃ...",
 				isUser: false,
-				icon: isCorrect ? "🙆‍♂️" : "🙅‍♂️",
+				// biome-ignore format: URLが長いため改行を防止
+				icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
 			};
 			setMessages((prev) => [...prev, responseMessage]);
 
@@ -142,7 +145,10 @@ function Solo() {
 
 	return (
 		<div className="solo-container">
-			{hasAnswered && <ThanksConfetti />}
+			{hasAnswered && !showResultOverlay && (
+				<ThanksConfetti onClose={() => setShowResultOverlay(true)} />
+			)}
+			{showResultOverlay && <ResultOverlay onClose={() => setShowResultOverlay(false)} />}
 			{!hasAnswered && <Timer seconds={timeLeft} />}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
