@@ -45,3 +45,80 @@
 	flex-direction: column;
 	align-items: center;
 }
+
+.confetti-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 100;
+	/* 最前面に持ってくる */
+	cursor: pointer;
+	/* クリックできることをマウスカーソルで示す */
+
+	/* これ重要：ここをautoにしないとクリックに反応しません */
+	pointer-events: auto;
+}
+
+.confetti-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	width: 100%;
+	pointer-events: none;
+	/* 文字自体はクリック判定を親に任せる */
+}
+
+/* 「正解！」の文字スタイル */
+.seikai-text {
+	font-size: 5rem;
+	color: #ff4757;
+	margin: 0;
+	text-shadow: 4px 4px 0px #fff, 7px 7px 0px rgba(0, 0, 0, 0.2);
+	font-family: "Arial Black", Gadget, sans-serif;
+
+	/* アニメーションの適用 */
+	animation: bounce-in 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both,
+		floating 2s ease-in-out infinite 0.8s;
+}
+
+/* --- アニメーション定義 --- */
+
+/* ボヨヨンと跳ねる動き */
+@keyframes bounce-in {
+	0% {
+		transform: scale(0);
+		opacity: 0;
+	}
+
+	50% {
+		transform: scale(1.2);
+	}
+
+	70% {
+		transform: scale(0.9);
+	}
+
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+/* ふわふわ浮く動き */
+@keyframes floating {
+	0% {
+		transform: translateY(0px);
+	}
+
+	50% {
+		transform: translateY(-15px);
+	}
+
+	100% {
+		transform: translateY(0px);
+	}
+}
