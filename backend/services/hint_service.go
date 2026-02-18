@@ -19,7 +19,6 @@ var ErrRoundNotFound = errors.New("round not found")
 
 type IHintService interface {
 	StartGame() (*dto.StartGameResult, error)
-	StartGame_AI() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
 }
@@ -33,25 +32,6 @@ func NewHintService(repository repositories.IHintRepository) IHintService {
 }
 
 func (s *HintService) StartGame() (*dto.StartGameResult, error) {
-	// お題、ヒントを作成
-	answer := "お題"
-	hints := []string{"ヒント1", "ヒント2", "ヒント3"}
-
-	// データを保存
-	result, err := s.repository.CreateRound(answer, hints)
-	if err != nil {
-		return nil, fmt.Errorf("failed to save hint data: %w", err)
-	}
-
-	// IDとヒントを返す
-	response := &dto.StartGameResult{
-		ID:    result.ID,
-		Hints: result.Hints,
-	}
-	return response, nil
-}
-
-func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
 	ctx := context.Background()
 
 	apiKey := os.Getenv("GEMINI_API_KEY")
@@ -97,10 +77,12 @@ func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
 		return nil, fmt.Errorf("failed to save hint data: %w", err)
 	}
 
-	return &dto.StartGameResult{
+	// IDとヒントを返す
+	response := &dto.StartGameResult{
 		ID:    result.ID,
 		Hints: result.Hints,
-	}, nil
+	}
+	return response, nil
 }
 
 func (s *HintService) getRound(id uint) (*models.Round, error) {
