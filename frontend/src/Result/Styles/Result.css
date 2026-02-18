@@ -59,6 +59,11 @@
 
 	/* これ重要：ここをautoにしないとクリックに反応しません */
 	pointer-events: auto;
+
+	/* ▼▼ ボタン用のリセットスタイルを追加 ▼▼ */
+	background: transparent;
+	border: none;
+	padding: 0;
 }
 
 .confetti-content {

@@ -30,7 +30,7 @@ const ThanksConfetti = ({ onClose }: Props) => {
 	if (!isVisible) return null;
 
 	return (
-		<div className="confetti-overlay" onClick={handleDismiss}>
+		<button type="button" className="confetti-overlay" onClick={handleDismiss}>
 			<Confetti
 				width={width}
 				height={height}
@@ -43,7 +43,7 @@ const ThanksConfetti = ({ onClose }: Props) => {
 			<div className="confetti-content">
 				<h1 className="seikai-text">正解！</h1>
 			</div>
-		</div>
+		</button>
 	);
 };
 
