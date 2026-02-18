@@ -8,7 +8,7 @@ import (
 )
 
 type IHintRepository interface {
-	CreateRound(answer string, hints []string) (*models.Round, error)
+	CreateRound(answers []string, hints []string) (*models.Round, error)
 	GetRoundByID(id uint) (*models.Round, error)
 }
 
@@ -20,10 +20,10 @@ func NewHintRepository(db *gorm.DB) IHintRepository {
 	return &HintRepository{db: db}
 }
 
-func (r *HintRepository) CreateRound(answer string, hints []string) (*models.Round, error) {
+func (r *HintRepository) CreateRound(answers []string, hints []string) (*models.Round, error) {
 	round := models.Round{
-		Answer: answer,
-		Hints:  hints,
+		Answers: answers,
+		Hints:   hints,
 	}
 	if err := r.db.Create(&round).Error; err != nil {
 		return nil, err

@@ -51,7 +51,7 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	prompt := "連想ゲームのヒントを作成してください。お題は【大阪】です。" +
 		"人が話しているような文章で出力してください" +
 		"以下のJSON形式で出力してください。他の説明は一切不要です。" +
-		`{"answer": "大阪", "hints": ["ヒント1", "ヒント2", "ヒント3"]}`
+		`{"answers": ["大阪", "おおさか", "Osaka"], "hints": ["ヒント1", "ヒント2", "ヒント3"]}`
 
 	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
@@ -64,15 +64,15 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	rawText = strings.TrimPrefix(rawText, "json")
 
 	var geminiData struct {
-		Answer string   `json:"answer"`
-		Hints  []string `json:"hints"`
+		Answers []string `json:"answers"`
+		Hints   []string `json:"hints"`
 	}
 
 	if err := json.Unmarshal([]byte(rawText), &geminiData); err != nil {
 		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, rawText)
 	}
 
-	result, err := s.repository.CreateRound(geminiData.Answer, geminiData.Hints)
+	result, err := s.repository.CreateRound(geminiData.Answers, geminiData.Hints)
 	if err != nil {
 		return nil, fmt.Errorf("failed to save hint data: %w", err)
 	}
@@ -101,7 +101,7 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return round.Answer, nil
+	return round.Answers[0], nil
 }
 
 func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
@@ -109,7 +109,11 @@ func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	correct := strings.TrimSpace(round.Answer)
 	user := strings.TrimSpace(answer)
-	return strings.EqualFold(correct, user), nil
+	for _, a := range round.Answers {
+		if strings.EqualFold(strings.TrimSpace(a), user) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
