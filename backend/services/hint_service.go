@@ -19,7 +19,6 @@ var ErrRoundNotFound = errors.New("round not found")
 
 type IHintService interface {
 	StartGame() (*dto.StartGameResult, error)
-	StartGame_AI() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
 }
@@ -84,58 +83,6 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		Hints: result.Hints,
 	}
 	return response, nil
-}
-
-func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
-	ctx := context.Background()
-
-	apiKey := os.Getenv("GEMINI_API_KEY")
-	if apiKey == "" {
-		return nil, fmt.Errorf("GEMINI_API_KEY が設定されていません")
-	}
-
-	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
-	if err != nil {
-		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
-	}
-	defer client.Close()
-
-	modelGemini := client.GenerativeModel("gemini-2.5-flash")
-	modelGemini.ResponseMIMEType = "application/json"
-
-	prompt := "連想ゲームのヒントを作成してください。お題は【大阪】です。" +
-		"人が話しているような文章で出力してください" +
-		"以下のJSON形式で出力してください。他の説明は一切不要です。" +
-		`{"answer": "大阪", "hints": ["ヒント1", "ヒント2", "ヒント3"]}`
-
-	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate content: %w", err)
-	}
-
-	rawText := fmt.Sprintf("%v", resp.Candidates[0].Content.Parts[0])
-
-	rawText = strings.Trim(rawText, "`\n ")
-	rawText = strings.TrimPrefix(rawText, "json")
-
-	var geminiData struct {
-		Answer string   `json:"answer"`
-		Hints  []string `json:"hints"`
-	}
-
-	if err := json.Unmarshal([]byte(rawText), &geminiData); err != nil {
-		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, rawText)
-	}
-
-	result, err := s.repository.CreateRound(geminiData.Answer, geminiData.Hints)
-	if err != nil {
-		return nil, fmt.Errorf("failed to save hint data: %w", err)
-	}
-
-	return &dto.StartGameResult{
-		ID:    result.ID,
-		Hints: result.Hints,
-	}, nil
 }
 
 func (s *HintService) getRound(id uint) (*models.Round, error) {
