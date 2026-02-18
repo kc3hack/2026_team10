@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
 	"github.com/kc3hack/2026_team10/backend/dto"
+	"github.com/kc3hack/2026_team10/backend/models"
 	"github.com/kc3hack/2026_team10/backend/repositories"
 	"google.golang.org/api/option"
 )
@@ -21,6 +22,7 @@ type IHintService interface {
 	StartGame_AI() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
+	getRound(id uint) (*models.Round, error)
 }
 
 type HintService struct {
@@ -102,24 +104,29 @@ func (s *HintService) StartGame_AI() (*dto.StartGameResult, error) {
 	}, nil
 }
 
-func (s *HintService) GetAnswer(id uint) (string, error) {
+func (s *HintService) getRound(id uint) (*models.Round, error) {
 	round, err := s.repository.GetRoundByID(id)
 	if err != nil {
-		return "", fmt.Errorf("failed to get round: %w", err)
+		return nil, fmt.Errorf("failed to get round: %w", err)
 	}
 	if round == nil {
-		return "", fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
+		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
+	}
+	return round, nil
+}
+
+func (s *HintService) GetAnswer(id uint) (string, error) {
+	round, err := s.getRound(id)
+	if err != nil {
+		return "", err
 	}
 	return round.Answer, nil
 }
 
 func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
-	round, err := s.repository.GetRoundByID(id)
+	round, err := s.getRound(id)
 	if err != nil {
-		return false, fmt.Errorf("failed to get round: %w", err)
-	}
-	if round == nil {
-		return false, fmt.Errorf("%w: id=%d", ErrRoundNotFound, id)
+		return false, err
 	}
 	result := round.Answer == answer
 	return result, nil
