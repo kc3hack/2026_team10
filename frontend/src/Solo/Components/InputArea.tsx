@@ -6,7 +6,7 @@ interface InputAreaProps {
 	onChange: (value: string) => void;
 	onSubmit: () => void;
 	placeholder?: string;
-	showResultButton?: boolean;
+	hidden?: boolean;
 }
 
 const InputArea: React.FC<InputAreaProps> = ({
@@ -14,10 +14,10 @@ const InputArea: React.FC<InputAreaProps> = ({
 	onChange,
 	onSubmit,
 	placeholder,
-	showResultButton,
+	hidden,
 }) => {
 	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === "Enter") {
+		if (e.key === "Enter" && !hidden) {
 			onSubmit();
 		}
 	};
@@ -31,17 +31,14 @@ const InputArea: React.FC<InputAreaProps> = ({
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={handleKeyDown}
 				placeholder={placeholder}
+				style={{ visibility: hidden ? "hidden" : "visible" }}
 			/>
-			<div className="button-group">
+			<div
+				className="button-group"
+				style={{ visibility: hidden ? "hidden" : "visible" }}
+			>
 				<button type="button" className="send-button" onClick={onSubmit}>
 					送信
-				</button>
-				<button
-					type="button"
-					className="result-button"
-					style={{ visibility: showResultButton ? "visible" : "hidden" }}
-				>
-					結果発表へ進む
 				</button>
 			</div>
 		</div>
