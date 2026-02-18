@@ -148,7 +148,9 @@ function Solo() {
 			{hasAnswered && !showResultOverlay && (
 				<ThanksConfetti onClose={() => setShowResultOverlay(true)} />
 			)}
-			{showResultOverlay && <ResultOverlay onClose={() => setShowResultOverlay(false)} />}
+			{showResultOverlay && (
+				<ResultOverlay onClose={() => setShowResultOverlay(false)} />
+			)}
 			{!hasAnswered && <Timer seconds={timeLeft} />}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
