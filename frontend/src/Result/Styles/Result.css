@@ -77,11 +77,14 @@
 	font-size: 5rem;
 	color: #ff4757;
 	margin: 0;
-	text-shadow: 4px 4px 0px #fff, 7px 7px 0px rgba(0, 0, 0, 0.2);
+	text-shadow:
+		4px 4px 0px #fff,
+		7px 7px 0px rgba(0, 0, 0, 0.2);
 	font-family: "Arial Black", Gadget, sans-serif;
 
 	/* アニメーションの適用 */
-	animation: bounce-in 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000) both,
+	animation:
+		bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both,
 		floating 2s ease-in-out infinite 0.8s;
 }
 
