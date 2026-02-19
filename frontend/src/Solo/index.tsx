@@ -18,6 +18,7 @@ function Solo() {
 		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
 	>([]);
 	const [hints, setHints] = useState<string[]>([]);
+	const [gameId, setGameId] = useState<number | null>(null);
 	const [inputValue, setInputValue] = useState("");
 
 	const [timeLeft, setTimeLeft] = useState(10);
@@ -40,6 +41,7 @@ function Solo() {
 				const data = await res.json();
 				if (data.result && data.result.hints) {
 					setHints(data.result.hints);
+					setGameId(data.result.id);
 					if (data.result.hints.length > 0) {
 						setMessages([
 							{
@@ -118,7 +120,7 @@ function Solo() {
 		};
 	}, [hasAnswered, hints]);
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		if (!inputValue.trim()) return;
 		const newMessage = {
 			messageId: Date.now(),
@@ -129,12 +131,20 @@ function Solo() {
 		setMessages((prev) => [...prev, newMessage]);
 		setInputValue("");
 
-		//正誤判定
-		setTimeout(() => {
-			const isCorrect = newMessage.hint === "大阪";
+		if (gameId === null) return;
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/answer`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ answer: newMessage.hint }),
+			});
+			const data = await res.json();
+			const isCorrect = data.isCorrect;
+
 			const responseMessage = {
 				messageId: Date.now() + 1,
-				hint: isCorrect ? "正解じゃ！" : "不正解じゃ...",
+				hint: isCorrect ? "正解やで！" : "不正解どす...",
 				isUser: false,
 				// biome-ignore format: URLが長いため改行を防止
 				icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
@@ -144,7 +154,9 @@ function Solo() {
 			if (isCorrect) {
 				setHasAnswered(true);
 			}
-		}, 100);
+		} catch (error) {
+			console.error("Error submitting answer:", error);
+		}
 	};
 
 	if (isLoading) {
