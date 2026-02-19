@@ -54,7 +54,7 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 			"answers": {
 				Type:        genai.TypeArray,
 				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "正解の単語、ひらがな表記、英語表記の配列",
+				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
 			},
 			"hints": {
 				Type:        genai.TypeArray,
@@ -75,9 +75,9 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		- お題を当てるクイズ形式にする。
 		- お題 そのものの単語は絶対にセリフに含めない。
 		- 具体的な 商品名 は避け、一般名詞を正解とする。
-		- ヒント(セリフ)は10個。京都のターン → 大阪のターン の順番で交互にループさせる。
+		- ヒント(セリフ)は10個程度で。京都のターン → 大阪のターン の順番で交互にループさせる。
 		- 1つのセリフはできるだけ短くする。
-		- 登場人物は20代で構成してください。
+		- すべてのセリフを通して会話のオチができるような流れにしてください
 		- 各地域のキャラ付け(※出力には地名を書かないこと):
 			- 京都(奇数番目): 丁寧な言葉遣いの中に鋭い皮肉を込める(例：〜しはる、〜してはりますなぁ)。
 			- 大阪(偶数番目): 直感的で、お金や効率を重視する(例：〜やん、〜知らんけど)。
@@ -87,7 +87,7 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 
 		# JSON Format
 		{
-			"answers": ["正解の単語", "ひらがな表記", "英語表記"],
+			"answers": [],
 			"hints": [
 				"1つ目のセリフ(京都：難易度 高)",
 				"2つ目のセリフ(大阪)",
