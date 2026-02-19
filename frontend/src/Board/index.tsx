@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "./Solo.css";
+import "./Board.css";
 import MessageBubble from "./Components/MessageBubble";
 import InputArea from "./Components/InputArea";
 import Timer from "./Components/Timer";
