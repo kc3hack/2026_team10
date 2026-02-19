@@ -23,6 +23,8 @@ function Solo() {
 	const [timeLeft, setTimeLeft] = useState(10);
 	const [hasAnswered, setHasAnswered] = useState(false);
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
+	const [animationFinished, setAnimationFinished] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
@@ -51,6 +53,8 @@ function Solo() {
 				}
 			} catch (e) {
 				console.error(e);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 		fetchGameData();
@@ -143,10 +147,19 @@ function Solo() {
 		}, 100);
 	};
 
+	if (isLoading) {
+		return <div className="loading-container">ロード中．．．</div>;
+	}
+
 	return (
 		<div className="solo-container">
-			{hasAnswered && !showResultOverlay && (
-				<ThanksConfetti onClose={() => setShowResultOverlay(true)} />
+			{hasAnswered && !animationFinished && (
+				<ThanksConfetti
+					onClose={() => {
+						setAnimationFinished(true);
+						setShowResultOverlay(true);
+					}}
+				/>
 			)}
 			{showResultOverlay && (
 				<ResultOverlay onClose={() => setShowResultOverlay(false)} />
