@@ -51,31 +51,47 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 
 	modelGemini := client.GenerativeModel("gemini-2.5-flash")
 	modelGemini.ResponseMIMEType = "application/json"
+	modelGemini.ResponseSchema = &genai.Schema{
+		Type:     genai.TypeObject,
+		Required: []string{"answers", "hints"},
+		Properties: map[string]*genai.Schema{
+			"answers": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
+			},
+			"hints": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
+			},
+		},
+	}
 
 	const prompt = `
-			# Role
-			あなたは京都(上品・皮肉)と大阪(効率・本音)の個性を完璧に描き分ける脚本家であり、厳密なJSONデータを出力するシステムです。
+		# Role
+		あなたは京都(上品・皮肉)と大阪(効率・本音)の個性を完璧に描き分ける脚本家であり、厳密なJSONデータを出力するシステムです。
 
-			# Task
-			ある お題 に関する偏見とリスペクトが入り混じった会話劇(10文)を ヒント として作成し、JSON形式で出力してください。
+		# Task
+		ある お題 に関する偏見とリスペクトが入り混じった会話劇(10文)を ヒント として作成し、JSON形式で出力してください。
 
-			# Constraints
-			- お題を当てるクイズ形式にする。
-			- お題 そのものの単語は絶対にセリフに含めない。
-			- 具体的な 商品名 は避け、一般名詞を正解とする。
-			- ヒント(セリフ)は10個。京都のターン → 大阪のターン の順番で交互にループさせる。
-			- 1つのセリフはできるだけ短くする。
-			- 登場人物は20代で構成してください。
-			- 各地域のキャラ付け(※出力には地名を書かないこと):
-				- 京都(奇数番目): 丁寧な言葉遣いの中に鋭い皮肉を込める(例：〜しはる、〜してはりますなぁ)。
-				- 大阪(偶数番目): 直感的で、お金や効率を重視する(例：〜やん、〜知らんけど)。
-			- 後半になるにつれて、正解が容易に推測できるように構成する。
-			- セリフに カギかっこ や 発言者名(京都：等) は絶対に含めない。セリフの文章のみを記述すること。
-			- 出力は以下のJSONフォーマットのみとし、他の文章は一切含めないこと。
+		# Constraints
+		- お題を当てるクイズ形式にする。
+		- お題 そのものの単語は絶対にセリフに含めない。
+		- 具体的な 商品名 は避け、一般名詞を正解とする。
+		- ヒント(セリフ)は10個程度で。京都のターン → 大阪のターン の順番で交互にループさせる。
+		- 1つのセリフはできるだけ短くする。
+		- すべてのセリフを通して会話のオチができるような流れにしてください
+		- 各地域のキャラ付け(※出力には地名を書かないこと):
+			- 京都(奇数番目): 丁寧な言葉遣いの中に鋭い皮肉を込める(例：〜しはる、〜してはりますなぁ)。
+			- 大阪(偶数番目): 直感的で、お金や効率を重視する(例：〜やん、〜知らんけど)。
+		- 後半になるにつれて、正解が容易に推測できるように構成する。
+		- セリフに カギかっこ や 発言者名(京都：等) は絶対に含めない。セリフの文章のみを記述すること。
+		- 出力は以下のJSONフォーマットのみとし、他の文章は一切含めないこと。
 
-			# JSON Format
-			{
-			"answers": ["正解の単語", "ひらがな表記", "英語表記"],
+		# JSON Format
+		{
+			"answers": [],
 			"hints": [
 				"1つ目のセリフ(京都：難易度 高)",
 				"2つ目のセリフ(大阪)",
@@ -88,25 +104,24 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"9つ目のセリフ(京都)",
 				"10個目のセリフ(大阪：難易度 低)"
 			]
-			}`
+		}`
 
 	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	rawText := fmt.Sprintf("%v", resp.Candidates[0].Content.Parts[0])
-
-	rawText = strings.Trim(rawText, "`\n ")
-	rawText = strings.TrimPrefix(rawText, "json")
-
 	var geminiData struct {
 		Answers []string `json:"answers"`
 		Hints   []string `json:"hints"`
 	}
 
-	if err := json.Unmarshal([]byte(rawText), &geminiData); err != nil {
-		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, rawText)
+	if part, ok := resp.Candidates[0].Content.Parts[0].(genai.Text); ok {
+		if err := json.Unmarshal([]byte(part), &geminiData); err != nil {
+			return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, string(part))
+		}
+	} else {
+		return nil, fmt.Errorf("Geminiからのレスポンス形式が不正です")
 	}
 
 	result, err := s.repository.CreateRound(geminiData.Answers, geminiData.Hints)
