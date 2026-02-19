@@ -210,12 +210,17 @@ function Solo() {
 				placeholder="回答を記入してください"
 				hidden={hasAnswered}
 			/> */}
-<div className="answer-section" onClick={() => setIsAnswerVisible(!isAnswerVisible)}>
-            <p className="answer-label">答え：(タップで表示)</p>
+<div className="fixed-answer-bar">
+    <div className="answer-section" onClick={() => setIsAnswerVisible(!isAnswerVisible)}>
+        <p className="answer-label">答えを確認する</p>
+        <div className="answer-container">
             <span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
                 東京
             </span>
         </div>
+        <p className="answer-sub-text">{isAnswerVisible ? "タップで隠す" : "タップで表示"}</p>
+    </div>
+</div>
 		</div>
 	);
 }
