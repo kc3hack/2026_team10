@@ -30,5 +30,6 @@ func main() {
 	r.GET("/solo/:id/answer", hintController.GetAnswer)
 	r.POST("/solo/:id/answer", hintController.CheckAnswer)
 	r.GET("/solo/board/:id", hintController.GetFinishedRoundByID)
+	r.POST("/solo/:id/bookmark", hintController.BookmarkRound)
 	r.Run() // デフォルトで0.0.0.0:8080で待機します
 }
