@@ -48,7 +48,7 @@ func (c *HintController) GetAnswer(ctx *gin.Context) {
 		if errors.Is(err, services.ErrRoundNotFound) {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		} else if errors.Is(err, services.ErrRoundTooEarly) {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
 		} else {
 			_ = ctx.Error(err)
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get answer"})
