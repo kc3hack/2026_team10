@@ -33,7 +33,7 @@
 .messages-area {
 	flex: 1;
 	overflow-y: auto;
-	padding: 100px 20px 20px 20px;
+	padding: 40px 20px 20px 20px;
 	display: flex;
 	flex-direction: column;
 	/* Ensure messages stack from top */
@@ -67,22 +67,29 @@
     border-top: 2px solid #ddd; /* 境界線を太くして存在感を出す */
     padding: 15px 0 calc(15px + env(safe-area-inset-bottom));
     display: flex;
+
+	flex-direction: column;
+
     justify-content: center;
+	align-items: center;    /* 横方向の中央 */
     box-shadow: 0 -5px 15px rgba(0,0,0,0.05); /* 上方向に影をつけて浮かす */
 }
 
 /* 解答ラベル */
 .answer-label {
     font-size: 13px;
-    color: #666; /* グレーを濃くして読みやすく */
+    color: #333; /* グレーを濃くして読みやすく */
     margin: 0 0 8px 0;
+	/* justify-content: center;
+	text-align: center; */
+	text-align: center;
 }
 
 /* 伏せ字の基本スタイル（未タップ時：黒） */
 .answer-mask {
     display: inline-block;
     /* 真っ黒ではなく、深みのある濃いグレーのグラデーション */
-    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+    background-color: #cccccc;
     color: transparent; /* 文字を完全に隠す */
     padding: 12px 40px;
     border-radius: 50px; /* 角を丸くしてボタンらしく */
@@ -90,8 +97,8 @@
     font-size: 1.2rem;
     cursor: pointer;
     user-select: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 15px rgba(65, 47, 47, 0.1);
+    border: 1px solid rgba(255,255,255,0.5);
 }
 
 /* ★ 解答表示時（タップ後）：ここを白バックにせず、文字色をはっきりさせる */
@@ -105,9 +112,11 @@
 
 /* スマホ向けの微調整 */
 @media (max-width: 768px) {
-    .answer-section {
-        bottom: 20px; /* 下に詰めすぎない */
-        right: 20px;
-        padding: 12px 20px; /* タップ領域を広げる */
+    .answer-label {
+        font-size: 11px; /* さらに小さく */
+        margin-bottom: 2px;
+    }
+    .fixed-answer-bar {
+        padding-bottom: 5px; /* 上側をさらに詰める */
     }
 }
