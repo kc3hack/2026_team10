@@ -67,3 +67,20 @@
 	flex-direction: column;
 	gap: 10px;
 }
+
+@media (max-width: 768px) {
+	.input-area-container {
+		padding: 10px 5px;
+		/* Minimal padding on input area */
+	}
+
+	.input-field {
+		max-width: 100%;
+		/* Take full width */
+		padding: 10px;
+	}
+
+	.send-button {
+		padding: 10px 15px;
+	}
+}
