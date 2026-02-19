@@ -47,6 +47,22 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 
 	modelGemini := client.GenerativeModel("gemini-2.5-flash")
 	modelGemini.ResponseMIMEType = "application/json"
+	modelGemini.ResponseSchema = &genai.Schema{
+		Type:     genai.TypeObject,
+		Required: []string{"answers", "hints"},
+		Properties: map[string]*genai.Schema{
+			"answers": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "正解の単語、ひらがな表記、英語表記の配列",
+			},
+			"hints": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
+			},
+		},
+	}
 
 	const prompt = `
 			# Role
@@ -84,25 +100,24 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"9つ目のセリフ(京都)",
 				"10個目のセリフ(大阪：難易度 低)"
 			]
-			}`;
+			}`
 
 	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	rawText := fmt.Sprintf("%v", resp.Candidates[0].Content.Parts[0])
-
-	rawText = strings.Trim(rawText, "`\n ")
-	rawText = strings.TrimPrefix(rawText, "json")
-
 	var geminiData struct {
 		Answers []string `json:"answers"`
 		Hints   []string `json:"hints"`
 	}
 
-	if err := json.Unmarshal([]byte(rawText), &geminiData); err != nil {
-		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, rawText)
+	if part, ok := resp.Candidates[0].Content.Parts[0].(genai.Text); ok {
+		if err := json.Unmarshal([]byte(part), &geminiData); err != nil {
+			return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, string(part))
+		}
+	} else {
+		return nil, fmt.Errorf("Geminiからのレスポンス形式が不正です")
 	}
 
 	result, err := s.repository.CreateRound(geminiData.Answers, geminiData.Hints)
