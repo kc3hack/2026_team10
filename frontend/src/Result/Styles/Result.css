@@ -1,17 +1,17 @@
-/* 黒い背景 */
+/* 画面全体を覆うグレー半透明の背景 */
 .overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.5);
-
 	display: flex;
 	justify-content: center;
 	align-items: center;
-
 	z-index: 1000;
+	border: none;
+	cursor: default;
 }
 
 /* --- 3つのボタンを包むコンテナ --- */
@@ -22,59 +22,14 @@
 	width: 300px;
 }
 
-/* --- 上の白い大きな箱（結果表示カード） --- */
-.result-card {
-	background-color: white;
-	width: 320px;
-	padding: 30px;
-	border-radius: 16px;
-	text-align: center;
-
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-
-	margin-bottom: 20px;
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-/* カードとボタンを包むコンテナ（縦並び・中央揃え） */
-.result-content-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
 .confetti-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
 	z-index: 100;
-	/* 最前面に持ってくる */
-	cursor: pointer;
-	/* クリックできることをマウスカーソルで示す */
-
-	/* これ重要：ここをautoにしないとクリックに反応しません */
-	pointer-events: auto;
-
-	/* ▼▼ ボタン用のリセットスタイルを追加 ▼▼ */
-	background: transparent;
-	border: none;
-	padding: 0;
+	pointer-events: none;
 }
 
 .confetti-content {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	text-align: center;
-	width: 100%;
 	pointer-events: none;
-	/* 文字自体はクリック判定を親に任せる */
 }
 
 /* 「正解！」の文字スタイル */
@@ -91,6 +46,34 @@
 	animation:
 		bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both,
 		floating 2s ease-in-out infinite 0.8s;
+}
+
+/* 文字とボタンを縦に並べる箱（この箱自体が画面中央に配置されます） */
+.result-content-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 40px;
+	z-index: 1001;
+}
+
+/* 文字とボタンをまとめるグループ */
+.result-action-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	/* ★ここで「正解！」文字と「ボタン」の隙間を調整できます */
+	z-index: 10;
+}
+
+/* ボタン群の配置 */
+.result-buttons-wrapper {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	position: relative;
+	z-index: 1002;
 }
 
 /* --- アニメーション定義 --- */
