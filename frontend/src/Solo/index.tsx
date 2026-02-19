@@ -5,9 +5,8 @@ import InputArea from "./Components/InputArea";
 import Timer from "./Components/Timer";
 
 const HINT_ICONS = [
-	"http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png",
-	"http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png",
-	"http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png",
+	"/Image/Kyoto.jpg",
+	"/Image/Osaka.jpg",
 ];
 
 import ThanksConfetti from "../Result/Components/ThanksConfetti";
@@ -151,7 +150,7 @@ function Solo() {
 				hint: isCorrect ? "正解やで！" : "不正解どす...",
 				isUser: false,
 				// biome-ignore format: URLが長いため改行を防止
-				icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
+				icon: isCorrect ? "/Image/Osaka.jpg" : "/Image/Kyoto.jpg",
 			};
 			setMessages((prev) => [...prev, responseMessage]);
 
