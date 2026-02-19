@@ -27,10 +27,17 @@ function Solo() {
 	const [animationFinished, setAnimationFinished] = useState(false);
 	// const [isLoading, setIsLoading] = useState(true);
 
-		const [hints, setHints] = useState<string[]>([
+	const [hints, setHints] = useState<string[]>([
 		"日本の首都は？", 
 		"高いタワーがあります", 
-		"雷門が有名です"
+		"雷門が有名です",
+		"日本の首都は？", 
+		"高いタワーがあります", 
+		"雷門が有名です",
+		"日本の首都は？", 
+		"高いタワーがあります", 
+		"雷門が有名です",
+		"日本の首都は？"
 	]);
 
 	// 2. messagesの初期値で、hintsの中身をすべてメッセージ形式にする
@@ -183,7 +190,7 @@ function Solo() {
 			{showResultOverlay && (
 				<ResultOverlay onClose={() => setShowResultOverlay(false)} />
 			)}
-			{!hasAnswered && <Timer seconds={timeLeft} />}
+			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
 					<MessageBubble
@@ -194,13 +201,13 @@ function Solo() {
 					/>
 				))}
 			</div>
-			<InputArea
+			{/* <InputArea
 				value={inputValue}
 				onChange={setInputValue}
 				onSubmit={handleSubmit}
 				placeholder="回答を記入してください"
 				hidden={hasAnswered}
-			/>
+			/> */}
 		</div>
 	);
 }
