@@ -153,6 +153,11 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if !round.IsFinished {
+		if err := s.repository.FinishRound(id); err != nil {
+			return "", fmt.Errorf("failed to finish round: %w", err)
+		}
+	}
 	return round.Answers[0], nil
 }
 
