@@ -25,6 +25,7 @@ type IHintService interface {
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
 	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
+	BookmarkRound(id uint) (*dto.RoundResponse, error)
 }
 
 type HintService struct {
@@ -185,6 +186,26 @@ func (s *HintService) GetFinishedRoundByID(id uint) (*dto.RoundResponse, error) 
 	}
 	if !round.IsFinished {
 		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
+	}
+	result := &dto.RoundResponse{
+		ID:        round.ID,
+		Answer:    round.Answers[0],
+		Hints:     round.Hints,
+		UpdatedAt: round.UpdatedAt,
+	}
+	return result, nil
+}
+
+func (s *HintService) BookmarkRound(id uint) (*dto.RoundResponse, error) {
+	round, err := s.getRound(id)
+	if err != nil {
+		return nil, err
+	}
+	if !round.IsFinished {
+		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
+	}
+	if err := s.repository.BookmarkRound(id); err != nil {
+		return nil, fmt.Errorf("failed to bookmark round: %w", err)
 	}
 	result := &dto.RoundResponse{
 		ID:        round.ID,

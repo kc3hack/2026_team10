@@ -11,6 +11,7 @@ type IHintRepository interface {
 	CreateRound(answers []string, hints []string) (*models.Round, error)
 	GetRoundByID(id uint) (*models.Round, error)
 	FinishRound(id uint) error
+	BookmarkRound(id uint) error
 }
 
 type HintRepository struct {
@@ -47,5 +48,12 @@ func (r *HintRepository) FinishRound(id uint) error {
 	result := r.db.Model(&models.Round{}).
 		Where("id = ?", id).
 		Update("is_finished", true)
+	return result.Error
+}
+
+func (r *HintRepository) BookmarkRound(id uint) error {
+	result := r.db.Model(&models.Round{}).
+		Where("id = ?", id).
+		Update("is_bookmarked", true)
 	return result.Error
 }

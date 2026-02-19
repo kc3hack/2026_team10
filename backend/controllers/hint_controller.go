@@ -15,6 +15,7 @@ type IHintController interface {
 	GetAnswer(ctx *gin.Context)
 	CheckAnswer(ctx *gin.Context)
 	GetFinishedRoundByID(ctx *gin.Context)
+	BookmarkRound(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -102,4 +103,26 @@ func (c *HintController) GetFinishedRoundByID(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"round": result})
+}
+
+func (c *HintController) BookmarkRound(ctx *gin.Context) {
+	strID := ctx.Param("id")
+	id, err := strconv.ParseUint(strID, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+	result, err := c.service.BookmarkRound(uint(id))
+	if err != nil {
+		if errors.Is(err, services.ErrRoundNotFound) {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else if errors.Is(err, services.ErrRoundNotFinished) {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		} else {
+			_ = ctx.Error(err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bookmark round"})
+		}
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"bookmark": result})
 }
