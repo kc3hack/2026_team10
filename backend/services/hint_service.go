@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
 	"github.com/kc3hack/2026_team10/backend/dto"
@@ -15,9 +16,12 @@ import (
 	"google.golang.org/api/option"
 )
 
+const MinRoundAnswerRevealDuration = 90 * time.Second
+
 var (
 	ErrRoundNotFound    = errors.New("round not found")
 	ErrRoundNotFinished = errors.New("round is not finished yet")
+	ErrRoundTooEarly    = errors.New("game has not been played long enough")
 )
 
 type IHintService interface {
@@ -155,6 +159,9 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 		return "", err
 	}
 	if !round.IsFinished {
+		if time.Since(round.CreatedAt) < MinRoundAnswerRevealDuration {
+			return "", fmt.Errorf("%w", ErrRoundTooEarly)
+		}
 		if err := s.repository.FinishRound(id); err != nil {
 			return "", fmt.Errorf("failed to finish round: %w", err)
 		}
