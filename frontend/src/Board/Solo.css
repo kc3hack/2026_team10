@@ -59,3 +59,31 @@
 	color: #555;
 	background-color: #f5f5f5;
 }
+
+/* 伏せ字の基本スタイル */
+.answer-mask {
+    display: inline-block;
+    background-color: #333;
+    color: #333;
+    padding: 5px 12px; /* 少し太めにしてタップしやすく */
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.2s, color 0.2s;
+    user-select: none; /* 文字が選択されて青くなるのを防ぐ */
+    -webkit-tap-highlight-color: transparent; /* タップ時の青い枠を消す */
+}
+
+/* visibleクラスがついた時（クリック後）の見た目 */
+.answer-mask.visible {
+    background-color: transparent;
+    color: #ff4757;
+}
+
+/* スマホ向けの微調整 */
+@media (max-width: 768px) {
+    .answer-section {
+        bottom: 20px; /* 下に詰めすぎない */
+        right: 20px;
+        padding: 12px 20px; /* タップ領域を広げる */
+    }
+}

@@ -55,6 +55,8 @@ function Solo() {
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
 
+	const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+
 	// useEffect(() => {
 	// 	const fetchGameData = async () => {
 	// 		try {
@@ -208,6 +210,12 @@ function Solo() {
 				placeholder="回答を記入してください"
 				hidden={hasAnswered}
 			/> */}
+<div className="answer-section" onClick={() => setIsAnswerVisible(!isAnswerVisible)}>
+            <p className="answer-label">答え：(タップで表示)</p>
+            <span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
+                東京
+            </span>
+        </div>
 		</div>
 	);
 }
