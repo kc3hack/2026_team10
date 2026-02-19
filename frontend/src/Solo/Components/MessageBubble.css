@@ -63,3 +63,24 @@
 	flex-shrink: 0;
 	object-fit: cover;
 }
+
+@media (max-width: 768px) {
+	.message-container {
+		max-width: 80%;
+		/* Reduce max width on mobile */
+		margin-bottom: 10px;
+	}
+
+	.icon {
+		width: 32px;
+		/* Slightly smaller icon on mobile */
+		height: 32px;
+		font-size: 20px;
+	}
+
+	.bubble {
+		padding: 10px 14px;
+		/* Adjust padding */
+		font-size: 14px;
+	}
+}

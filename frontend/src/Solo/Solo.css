@@ -8,6 +8,21 @@
 	background-color: #f5f5f5;
 	/* Light grey background for the whole page */
 	box-sizing: border-box;
+	position: relative;
+}
+
+@media (max-width: 768px) {
+	.solo-container {
+		padding: 0 5px;
+		/* Minimal horizontal padding */
+	}
+
+	.messages-area {
+		padding-left: 0;
+		/* No extra padding */
+		padding-right: 100px;
+		/* Ensure chat ends before timer starts (approx 84px from right) */
+	}
 }
 
 /* Optional: Add a central content area if a constrained chat width is desired, 
