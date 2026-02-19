@@ -4,10 +4,7 @@ import MessageBubble from "./Components/MessageBubble";
 import InputArea from "./Components/InputArea";
 import Timer from "./Components/Timer";
 
-const HINT_ICONS = [
-	"/Image/Kyoto.jpg",
-	"/Image/Osaka.jpg",
-];
+const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
 import ThanksConfetti from "../Result/Components/ThanksConfetti";
 import ResultOverlay from "../Result/Components/ResultOverlay";
