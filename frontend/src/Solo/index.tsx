@@ -29,8 +29,12 @@ function Solo() {
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
+	const hasFetchedData = useRef(false);
 
 	useEffect(() => {
+		if (hasFetchedData.current) return;
+		hasFetchedData.current = true;
+
 		const fetchGameData = async () => {
 			try {
 				const res = await fetch("/api/solo", {
