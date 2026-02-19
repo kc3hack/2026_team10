@@ -50,18 +50,26 @@
 }
 
 .icon {
-	font-size: 24px;
-	width: 40px;
-	height: 40px;
+	width: 60px;
+	/* Base size */
+	height: 60px;
+	border-radius: 50%;
+	background: white;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: white;
-	/* Or transparent */
-	border-radius: 50%;
-	/* box-shadow: 0 2px 4px rgba(0,0,0,0.1); Optional */
 	flex-shrink: 0;
+	overflow: hidden;
+	/* Ensure image stays inside circle */
+	position: relative;
+}
+
+.icon-img {
+	width: 100%;
+	height: 100%;
 	object-fit: cover;
+	transform: scale(1.4);
+	/* Zoom in the image inside the icon */
 }
 
 @media (max-width: 768px) {
@@ -72,10 +80,13 @@
 	}
 
 	.icon {
-		width: 32px;
-		/* Slightly smaller icon on mobile */
-		height: 32px;
-		font-size: 20px;
+		width: 48px;
+		height: 48px;
+	}
+
+	.icon-img {
+		transform: scale(1.4);
+		/* Keep zoom on mobile */
 	}
 
 	.bubble {
