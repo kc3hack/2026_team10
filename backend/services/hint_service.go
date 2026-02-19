@@ -112,6 +112,9 @@ func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
 	user := strings.TrimSpace(answer)
 	for _, a := range round.Answers {
 		if strings.EqualFold(strings.TrimSpace(a), user) {
+			if err := s.repository.FinishRound(id); err != nil {
+				return false, fmt.Errorf("failed to finish round: %w", err)
+			}
 			return true, nil
 		}
 	}

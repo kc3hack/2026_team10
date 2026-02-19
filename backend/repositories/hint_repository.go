@@ -10,6 +10,7 @@ import (
 type IHintRepository interface {
 	CreateRound(answers []string, hints []string) (*models.Round, error)
 	GetRoundByID(id uint) (*models.Round, error)
+	FinishRound(id uint) error
 }
 
 type HintRepository struct {
@@ -40,4 +41,11 @@ func (r *HintRepository) GetRoundByID(id uint) (*models.Round, error) {
 		return nil, err
 	}
 	return &round, nil
+}
+
+func (r *HintRepository) FinishRound(id uint) error {
+	result := r.db.Model(&models.Round{}).
+		Where("id = ?", id).
+		Update("is_finished", true)
+	return result.Error
 }
