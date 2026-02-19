@@ -15,12 +15,16 @@ import (
 	"google.golang.org/api/option"
 )
 
-var ErrRoundNotFound = errors.New("round not found")
+var (
+	ErrRoundNotFound    = errors.New("round not found")
+	ErrRoundNotFinished = errors.New("round is not finished yet")
+)
 
 type IHintService interface {
 	StartGame() (*dto.StartGameResult, error)
 	GetAnswer(id uint) (string, error)
 	CheckAnswer(id uint, answer string) (bool, error)
+	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
 }
 
 type HintService struct {
@@ -84,7 +88,7 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"9つ目のセリフ(京都)",
 				"10個目のセリフ(大阪：難易度 低)"
 			]
-			}`;
+			}`
 
 	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
 	if err != nil {
@@ -152,4 +156,21 @@ func (s *HintService) CheckAnswer(id uint, answer string) (bool, error) {
 		}
 	}
 	return false, nil
+}
+
+func (s *HintService) GetFinishedRoundByID(id uint) (*dto.RoundResponse, error) {
+	round, err := s.getRound(id)
+	if err != nil {
+		return nil, err
+	}
+	if !round.IsFinished {
+		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
+	}
+	result := &dto.RoundResponse{
+		ID:        round.ID,
+		Answer:    round.Answers[0],
+		Hints:     round.Hints,
+		UpdatedAt: round.UpdatedAt,
+	}
+	return result, nil
 }
