@@ -1,0 +1,86 @@
+.input-area-container {
+	width: 100%;
+	padding: 30px 0 20px 0;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 10px;
+	background-color: #f5f5f5;
+	border-top: 1px solid #ddd;
+}
+
+.input-field {
+	flex: 1;
+	/* Take up available space */
+	max-width: 70%;
+	/* Adjust max-width to make room for button */
+	padding: 15px 20px;
+	border: 2px solid #888;
+	border-radius: 8px;
+	font-size: 16px;
+	outline: none;
+	text-align: left;
+	/* Usually left aligned when typing */
+	transition: border-color 0.3s;
+}
+
+.input-field:focus {
+	border-color: #555;
+}
+
+.send-button {
+	padding: 15px 25px;
+	background-color: #4caf50;
+	/* Green submit button */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	white-space: nowrap;
+}
+
+.send-button:hover {
+	background-color: #45a049;
+}
+
+.result-button {
+	padding: 15px 25px;
+	background-color: #2196f3;
+	/* Blue result button */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	white-space: nowrap;
+}
+
+.result-button:hover {
+	background-color: #0b7dda;
+}
+
+.button-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+@media (max-width: 768px) {
+	.input-area-container {
+		padding: 10px 5px;
+		/* Minimal padding on input area */
+	}
+
+	.input-field {
+		max-width: 100%;
+		/* Take full width */
+		padding: 10px;
+	}
+
+	.send-button {
+		padding: 10px 15px;
+	}
+}
