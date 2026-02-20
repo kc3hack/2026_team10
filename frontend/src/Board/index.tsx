@@ -28,20 +28,20 @@ function Solo() {
 	// const [isLoading, setIsLoading] = useState(true);
 
 	const [hints, setHints] = useState<string[]>([
-		"日本の首都は？", 
-		"高いタワーがあります", 
-		"雷門が有名です",
-		"日本の首都は？", 
-		"高いタワーがあります", 
-		"雷門が有名です",
-		"日本の首都は？", 
-		"高いタワーがあります", 
+		"日本の首都は？",
+		"高いタワーがあります",
 		"雷門が有名です",
 		"日本の首都は？",
-		"高いタワーがあります", 
+		"高いタワーがあります",
 		"雷門が有名です",
 		"日本の首都は？",
-		"高いタワーがあります", 
+		"高いタワーがあります",
+		"雷門が有名です",
+		"日本の首都は？",
+		"高いタワーがあります",
+		"雷門が有名です",
+		"日本の首都は？",
+		"高いタワーがあります",
 		"雷門が有名です",
 		"日本の首都は？",
 	]);
@@ -53,7 +53,7 @@ function Solo() {
 			hint: hint,
 			isUser: false,
 			icon: HINT_ICONS[index % HINT_ICONS.length],
-		}))
+		})),
 	);
 
 	const [isLoading, setIsLoading] = useState(false); // 最初からロード完了にする
@@ -216,17 +216,22 @@ function Solo() {
 				placeholder="回答を記入してください"
 				hidden={hasAnswered}
 			/> */}
-<div className="fixed-answer-bar">
-    <div className="answer-section" onClick={() => setIsAnswerVisible(!isAnswerVisible)}>
-        <p className="answer-label">答えを確認する</p>
-        <div className="answer-container">
-            <span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
-                東京
-            </span>
-        </div>
-        <p className="answer-sub-text">{isAnswerVisible ? "タップで隠す" : "タップで表示"}</p>
-    </div>
-</div>
+			<div className="fixed-answer-bar">
+				<div
+					className="answer-section"
+					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
+				>
+					<p className="answer-label">答えを確認する</p>
+					<div className="answer-container">
+						<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
+							東京
+						</span>
+					</div>
+					<p className="answer-sub-text">
+						{isAnswerVisible ? "タップで隠す" : "タップで表示"}
+					</p>
+				</div>
+			</div>
 		</div>
 	);
 }
