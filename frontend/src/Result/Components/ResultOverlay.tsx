@@ -17,7 +17,7 @@ export default function ResultOverlay({ gameId, onClose }: Props) {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
-	const handleRetry = () => alert("ゲームをリスタートします");
+  const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
 
 	return (
