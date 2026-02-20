@@ -8,7 +8,6 @@ const HINT_ICONS = [
 	"http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png",
 ];
 
-// import ThanksConfetti from "../Result/Components/ThanksConfetti";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 
 function Solo() {
@@ -20,12 +19,10 @@ function Solo() {
 	const [isLoading, setIsLoading] = useState(false);
 		const hasFetchedRef = useRef(false);
 
-		// 2. データ取得のロジック
 	useEffect(() => {
 		if (hasFetchedRef.current) return;
 		const fetchGameData = async () => {
 			try {
-				// ローカルサーバーのURLを叩く
 				const res = await fetch("http://localhost:8080/solo/board/2");
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
@@ -39,12 +36,11 @@ function Solo() {
 
 					const formattedMessages = fetchedHints.map((hintText: string, index: number) => ({
 						messageId: index,                 
-						hint: hintText,                   // JSONから来たヒント本文
+						hint: hintText,             
 						isUser: false,                  
 						icon: HINT_ICONS[index % HINT_ICONS.length],
 					}));
 
-					// 2. 整形したデータをステートに保存する
 					setMessages(formattedMessages);
 				}
 			} catch (e) {
