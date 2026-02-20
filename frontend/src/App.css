@@ -42,55 +42,9 @@
 	}
 }
 
+
 .button-group {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-	/* Space between buttons */
 	width: 100%;
 	max-width: 320px;
 	/* Max width for button container on larger screens */
-}
-
-.menu-button {
-	width: 100%;
-	padding: 1rem;
-	font-size: 1.1rem;
-	font-weight: 600;
-	border-radius: 12px;
-	background-color: #ffffff;
-	color: #333;
-	border: 1px solid #e0e0e0;
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-	transition: all 0.2s ease;
-	cursor: pointer;
-	appearance: none;
-	-webkit-appearance: none;
-}
-
-.menu-button:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-	background-color: #f8f9fa;
-	border-color: #d0d0d0;
-}
-
-.menu-button:active {
-	transform: translateY(0);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Dark mode styles for buttons */
-@media (prefers-color-scheme: dark) {
-	.menu-button {
-		background-color: #3a3a3a;
-		color: #fff;
-		border-color: #4a4a4a;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-	}
-
-	.menu-button:hover {
-		background-color: #4a4a4a;
-		border-color: #646cff;
-	}
 }
