@@ -30,6 +30,7 @@ type IHintService interface {
 	CheckAnswer(id uint, answer string) (bool, error)
 	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
 	BookmarkRound(id uint) (*dto.RoundResponse, error)
+	GetRandomBookmark() (*dto.RoundResponse, error)
 }
 
 type HintService struct {
@@ -229,4 +230,21 @@ func (s *HintService) BookmarkRound(id uint) (*dto.RoundResponse, error) {
 		UpdatedAt: round.UpdatedAt,
 	}
 	return result, nil
+}
+
+func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
+	round, err := s.repository.GetRandomBookmarkedRound()
+	if err != nil {
+		return nil, err
+	}
+	if round == nil {
+		return nil, errors.New("bookmark not found")
+	}
+	
+	return &dto.RoundResponse{
+		ID:        round.ID,
+		Answer:    round.Answers[0],
+		Hints:     round.Hints,
+		UpdatedAt: round.UpdatedAt,
+	}, nil
 }
