@@ -25,13 +25,13 @@ function Solo() {
 		if (hasFetchedRef.current) return;
 		const fetchGameData = async () => {
 			try {
-				const res = await fetch(`/api/solo/board/${id}`);
+				const res = await fetch(`/api/solo/bookmark/random`); 
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
 
-				if (data.round) {
-					const fetchedHints = data.round.hints;
-					const fetchedAnswer = data.round.answer;
+				if (data.result) {
+					const fetchedHints = data.result.hints;
+					const fetchedAnswer = data.result.answer;
 
 					setAnswer(fetchedAnswer);
 
