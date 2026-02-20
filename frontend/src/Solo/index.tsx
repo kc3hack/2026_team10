@@ -231,22 +231,25 @@ function Solo() {
 					/>
 				))}
 			</div>
-			<InputArea
-				value={inputValue}
-				onChange={setInputValue}
-				onSubmit={handleSubmit}
-				placeholder="回答を記入してください"
-				hidden={hasAnswered}
-			/>
-			{hasAnswered && !showResultOverlay && (
-				<div className="result-buttons-container">
-					<ResultButtons
-						onBackToTitle={handleTitle}
-						onSNS={handleShare}
-						onRetry={handleRetry}
+			<div className="solo-footer">
+				{!hasAnswered || showResultOverlay ? (
+					<InputArea
+						value={inputValue}
+						onChange={setInputValue}
+						onSubmit={handleSubmit}
+						placeholder="回答を記入してください"
+						hidden={hasAnswered}
 					/>
-				</div>
-			)}
+				) : (
+					<div className="result-buttons-container">
+						<ResultButtons
+							onBackToTitle={handleTitle}
+							onSNS={handleShare}
+							onRetry={handleRetry}
+						/>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }

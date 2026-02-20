@@ -1,12 +1,9 @@
 .input-area-container {
 	width: 100%;
-	padding: 30px 0 20px 0;
 	display: flex;
 	justify-content: center;
-	align-items: flex-start;
+	align-items: center;
 	gap: 10px;
-	background-color: #f5f5f5;
-	border-top: 1px solid #ddd;
 }
 
 .input-field {
@@ -70,8 +67,8 @@
 
 @media (max-width: 768px) {
 	.input-area-container {
-		padding: 10px 5px;
-		/* Minimal padding on input area */
+		padding: 0;
+		/* Remove internal padding to keep footer height stable */
 	}
 
 	.input-field {
