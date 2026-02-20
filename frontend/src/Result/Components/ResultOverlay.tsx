@@ -8,10 +8,11 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
-	onClose?: () => void;
+	readonly gameId: number;
+	readonly onClose?: () => void;
 }
 
-export default function ResultOverlay({ onClose }: Props) {
+export default function ResultOverlay({ gameId, onClose }: Props) {
 	const navigate = useNavigate();
 	const [isShareOpen, setIsShareOpen] = useState(false);
 
@@ -56,7 +57,7 @@ export default function ResultOverlay({ onClose }: Props) {
 			</div>
 
 			{isShareOpen && (
-				<ShareModal onClose={() => setIsShareOpen(false)} />
+				<ShareModal gameId={gameId} onClose={() => setIsShareOpen(false)} />
 			)}
 		</button>
 	);

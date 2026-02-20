@@ -5,14 +5,20 @@ import CloseIcon from "@mui/icons-material/Close";
 import XIcon from "@mui/icons-material/X";
 
 interface Props {
-	onClose: () => void;
+	readonly gameId: number;
+	readonly onClose: () => void;
 }
 
-const SHARE_TEXT = "偏見で遊ぼうで遊んだよ！ #偏見で遊ぼう";
+function buildShareText(gameId: number): string {
+	const shareUrl = `${globalThis.location.origin}/board/${gameId}`;
+	return `偏見で遊ぼうで遊んだよ！\n${shareUrl}\n#偏見で遊ぼう`;
+}
 
-export default function ShareModal({ onClose }: Props) {
+export default function ShareModal({ gameId, onClose }: Props) {
+	const shareText = buildShareText(gameId);
+
 	const handlePostToX = () => {
-		const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}`;
+		const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
 		window.open(url, "_blank", "noopener,noreferrer");
 	};
 
@@ -40,7 +46,7 @@ export default function ShareModal({ onClose }: Props) {
 				</IconButton>
 
 				<p className="share-modal-label">この内容でポストします</p>
-				<div className="share-modal-preview">{SHARE_TEXT}</div>
+				<div className="share-modal-preview">{shareText}</div>
 
 				<Button
 					variant="contained"
