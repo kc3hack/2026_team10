@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import BookmarkButton from "./BookmarkButton";
 
 interface Props {
 	readonly gameId: number;
@@ -47,6 +48,8 @@ export default function ResultOverlay({ gameId, onClose }: Props) {
 				>
 					<CloseIcon />
 				</IconButton>
+
+				<BookmarkButton gameId={gameId} />
 
 				<h1 className="seikai-text">正解</h1>
 

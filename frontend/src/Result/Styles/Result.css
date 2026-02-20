@@ -145,6 +145,54 @@
 	word-break: break-all;
 }
 
+/* --- お気に入りボタン --- */
+.bookmark-button {
+	position: absolute !important;
+	top: 8px;
+	right: 8px;
+	transition: transform 0.2s ease !important;
+}
+
+.bookmark-button:hover {
+	transform: scale(1.15);
+}
+
+.bookmark-icon-outline {
+	color: #ccc;
+	transition: color 0.2s ease;
+}
+
+.bookmark-button:hover .bookmark-icon-outline {
+	color: #ff6b81;
+}
+
+.bookmark-icon-filled {
+	color: #ff4757;
+}
+
+/* お気に入り押下時のポップアニメーション */
+.bookmark-pop {
+	animation: bookmark-pop 0.6s ease both !important;
+}
+
+@keyframes bookmark-pop {
+	0% {
+		transform: scale(1);
+	}
+	30% {
+		transform: scale(1.4);
+	}
+	50% {
+		transform: scale(0.9);
+	}
+	70% {
+		transform: scale(1.15);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
 /* --- レスポンシブ: タブレット以上 --- */
 @media (min-width: 600px) {
 	.result-card {
