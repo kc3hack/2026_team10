@@ -3,7 +3,7 @@
 	align-items: flex-end;
 	/* Align icon to bottom of message */
 	margin-bottom: 20px;
-	max-width: 95%;
+	max-width: 80%;
 	gap: 10px;
 }
 
@@ -74,7 +74,7 @@
 
 @media (max-width: 768px) {
 	.message-container {
-		max-width: 95%;
+		max-width: 80%;
 		/* Reduce max width on mobile */
 		margin-bottom: 10px;
 	}
