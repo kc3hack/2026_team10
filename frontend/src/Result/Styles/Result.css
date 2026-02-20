@@ -135,6 +135,58 @@
 	z-index: 1002;
 }
 
+/* --- シェアモーダル --- */
+.share-modal-backdrop {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 2000;
+}
+
+.share-modal {
+	position: relative;
+	background: #fff;
+	border-radius: 16px;
+	padding: 32px 28px 28px;
+	min-width: 300px;
+	max-width: 400px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.share-modal-close {
+	position: absolute !important;
+	top: 8px;
+	right: 8px;
+}
+
+.share-modal-label {
+	font-size: 0.85rem;
+	color: #888;
+	margin: 0;
+}
+
+.share-modal-preview {
+	background: #f5f5f5;
+	border-radius: 8px;
+	padding: 16px;
+	width: 100%;
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: #333;
+	text-align: center;
+	box-sizing: border-box;
+}
+
 /* --- アニメーション定義 --- */
 
 /* ボヨヨンと跳ねる動き */
