@@ -6,7 +6,7 @@ const ThanksConfetti = () => {
 	const { width, height } = useWindowSize();
 
 	return (
-		<div className="confetti-overlay" style={{ pointerEvents: 'none' }}>
+		<div className="confetti-overlay" style={{ pointerEvents: "none" }}>
 			<Confetti
 				width={width}
 				height={height}

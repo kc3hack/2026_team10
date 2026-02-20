@@ -2,8 +2,8 @@ import "../Styles/Result.css";
 import ResultButtons from "./ResultButtons";
 import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
 	onClose?: () => void;
