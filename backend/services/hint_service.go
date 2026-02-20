@@ -22,6 +22,7 @@ var (
 	ErrRoundNotFound    = errors.New("round not found")
 	ErrRoundNotFinished = errors.New("round is not finished yet")
 	ErrRoundTooEarly    = errors.New("game has not been played long enough")
+	ErrBookmarkNotFound = errors.New("bookmark not found")
 )
 
 type IHintService interface {
@@ -238,9 +239,9 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 		return nil, err
 	}
 	if round == nil {
-		return nil, errors.New("bookmark not found")
+		return nil, ErrBookmarkNotFound
 	}
-	
+
 	return &dto.RoundResponse{
 		ID:        round.ID,
 		Answer:    round.Answers[0],

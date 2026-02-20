@@ -133,7 +133,7 @@ func (c *HintController) BookmarkRound(ctx *gin.Context) {
 func (c *HintController) GetRandomBookmark(ctx *gin.Context) {
 	result, err := c.service.GetRandomBookmark()
 	if err != nil {
-		if err.Error() == "bookmark not found" {
+		if errors.Is(err, services.ErrBookmarkNotFound) {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "No bookmarks available"})
 		} else {
 			_ = ctx.Error(err)
