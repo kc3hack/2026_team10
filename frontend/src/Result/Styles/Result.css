@@ -5,7 +5,7 @@
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.5);
+	background-color: rgba(221, 214, 214, 0.5);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -14,17 +14,76 @@
 	cursor: default;
 }
 
-/* --- 3つのボタンを包むコンテナ --- */
-.button-container {
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	width: 300px;
+/* --- 左上の閉じるボタン（×マーク） --- */
+.close-icon-button {
+	position: absolute !important;
+	top: 20px;
+	left: 20px;
+
+	background-color: transparent !important;
+	box-shadow: none !important;
+	border-radius: 50% !important;
+	color: #000000 !important;
+
+	width: 64px !important;
+	height: 64px !important;
+	z-index: 1100;
 }
 
+/*2. 中の「×」アイコン自体のサイズを大きくする */
+.close-icon-button svg {
+	width: 40px !important;
+	height: 40px !important;
+}
+
+.close-icon-button:hover {
+	background-color: #f0f0f0 !important;
+}
+
+/* --- アイコンと文字が縦に並んだ四角いボタン --- */
+.square-icon-button {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: center;
+	justify-content: center;
+	width: 100px !important;
+	height: 80px !important;
+	gap: 4px !important;
+	font-size: 0.8rem !important;
+	padding: 8px !important;
+	border-radius: 8px !important;
+	background-color: white !important;
+	color: #333 !important;
+	border: 1px solid #ccc !important;
+	font-weight: bold !important;
+	text-transform: none !important;
+}
+
+.square-icon-button:hover {
+	background-color: #f5f5f5 !important;
+	border-color: #999 !important;
+}
+
+.square-icon-button:hover {
+	background-color: #f5f5f5 !important;
+	border-color: #999 !important;
+}
+
+/* ボタンを包むコンテナ（横並びの確認） */
+.button-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 15px;
+}
+
+/* --- 文字が入っているコンテナ --- */
 .confetti-overlay {
 	z-index: 100;
 	pointer-events: none;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 .confetti-content {

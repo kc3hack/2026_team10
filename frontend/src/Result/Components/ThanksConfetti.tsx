@@ -16,7 +16,7 @@ const ThanksConfetti = () => {
 				style={{ position: "fixed", top: 0, left: 0 }}
 			/>
 			<div className="confetti-content">
-				<h1 className="seikai-text">正解！</h1>
+				<h1 className="seikai-text">正解</h1>
 			</div>
 		</div>
 	);
