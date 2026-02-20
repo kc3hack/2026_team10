@@ -13,7 +13,7 @@ export default function ResultOverlay({ onClose }: Props) {
 	const navigate = useNavigate();
 
 	const handleTitle = () => navigate("/");
-	const handleRetry = () => alert("ゲームをリスタートします");
+	const handleRetry = () => window.location.reload();
 	const handleSNS = () => alert("SNSシェア用の処理をここに書きます");
 
 	return (
