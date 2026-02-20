@@ -35,6 +35,7 @@ function App() {
 				<Button
 					variant="outlined"
 					size="large"
+					onClick={() => navigate("/board")}
 					sx={{
 						width: "300px",
 						minHeight: "60px",

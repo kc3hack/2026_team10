@@ -2,15 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import "./Board.css";
 import MessageBubble from "./Components/MessageBubble";
 
-const HINT_ICONS = [
-	"http://flat-icon-design.com/f/f_object_174/s512_f_object_174_0bg.png",
-	"http://flat-icon-design.com/f/f_object_112/s512_f_object_112_0bg.png",
-	"http://flat-icon-design.com/f/f_object_151/s256_f_object_151_0bg.png",
-];
+const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
 import ResultOverlay from "../Result/Components/ResultOverlay";
+import Button from "@mui/material/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useNavigate } from "react-router-dom";
 
 function Solo() {
+	const navigate = useNavigate();
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 
 	const [answer, setAnswer] = useState("");
@@ -25,7 +25,7 @@ function Solo() {
 		if (hasFetchedRef.current) return;
 		const fetchGameData = async () => {
 			try {
-				const res = await fetch("http://localhost:8080/solo/board/2");
+				const res = await fetch("http://localhost:8080/solo/board/105");
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
 
@@ -100,19 +100,25 @@ function Solo() {
 				))}
 			</div>
 			<div className="fixed-answer-bar">
+				<Button
+					variant="outlined"
+					onClick={() => navigate("/")}
+					className="square-icon-button back-to-title-btn"
+				>
+					<ArrowBackIcon fontSize="medium" />
+					<span>
+						タイトルに
+						<br />
+						戻る
+					</span>
+				</Button>
 				<button
 					className="answer-section"
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
 				>
-					<p className="answer-label">答えを確認する</p>
-					<div className="answer-container">
-						<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
-							{answer}
-						</span>
-					</div>
-					<p className="answer-sub-text">
-						{isAnswerVisible ? "タップで隠す" : "タップで表示"}
-					</p>
+					<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
+						{isAnswerVisible ? answer : "タップで答えを確認"}
+					</span>
 				</button>
 			</div>
 		</div>
