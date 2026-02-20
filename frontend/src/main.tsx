@@ -17,8 +17,8 @@ createRoot(rootElement).render(
 				<Route path="/" element={<App />} />
 				{/* localhost:5173/solo */}
 				<Route path="/solo" element={<Solo />} />
-				{/* localhost:5173/board/:id */}
-				<Route path="/board/:id" element={<Board />} />
+				{/* localhost:5173/board */}
+				<Route path="/board" element={<Board />} />
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,
