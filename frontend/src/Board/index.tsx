@@ -63,37 +63,6 @@ function Solo() {
 
 	const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
-	// useEffect(() => {
-	// 	const fetchGameData = async () => {
-	// 		try {
-	// 			const res = await fetch("/api/solo", {
-	// 				method: "POST",
-	// 				headers: { "Content-Type": "application/json" },
-	// 				body: JSON.stringify({}),
-	// 			});
-	// 			const data = await res.json();
-	// 			if (data.result && data.result.hints) {
-	// 				setHints(data.result.hints);
-	// 				if (data.result.hints.length > 0) {
-	// 					setMessages([
-	// 						{
-	// 							messageId: 1,
-	// 							hint: data.result.hints[0],
-	// 							isUser: false,
-	// 							icon: HINT_ICONS[0],
-	// 						},
-	// 					]);
-	// 				}
-	// 			}
-	// 		} catch (e) {
-	// 			console.error(e);
-	// 		} finally {
-	// 			setIsLoading(false);
-	// 		}
-	// 	};
-	// 	fetchGameData();
-	// }, []);
-
 	//スクロールされたときに、画面の最も下にあるかどうかを判定する
 	const handleScroll = () => {
 		if (messagesAreaRef.current) {
@@ -111,47 +80,6 @@ function Solo() {
 		}
 	}, [messages]);
 
-	// useEffect(() => {
-	// 	if (hasAnswered || hints.length === 0) return;
-
-	// 	const timers: number[] = [];
-
-	// 	for (let i = 1; i < hints.length; i++) {
-	// 		const delay = i * 10000;
-
-	// 		const timer = setTimeout(() => {
-	// 			setMessages((prev) => [
-	// 				...prev,
-	// 				{
-	// 					messageId: i + 1,
-	// 					hint: hints[i],
-	// 					isUser: false,
-	// 					icon: HINT_ICONS[i % HINT_ICONS.length],
-	// 				},
-	// 			]);
-
-	// 			if (i < hints.length - 1) {
-	// 				setTimeLeft(11); // Reset timer
-	// 			} else {
-	// 				setTimeLeft(0); // Stop timer after last message
-	// 			}
-	// 		}, delay);
-
-	// 		timers.push(timer);
-	// 	}
-
-	// 	const interval = setInterval(() => {
-	// 		setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-	// 	}, 1000);
-
-	// 	return () => {
-	// 		for (const t of timers) {
-	// 			clearTimeout(t);
-	// 		}
-	// 		clearInterval(interval);
-	// 	};
-	// }, [hasAnswered, hints]);
-
 	const handleSubmit = () => {
 		if (!inputValue.trim()) return;
 		const newMessage = {
@@ -163,22 +91,6 @@ function Solo() {
 		setMessages((prev) => [...prev, newMessage]);
 		setInputValue("");
 
-		//正誤判定
-		// setTimeout(() => {
-		// 	const isCorrect = newMessage.hint === "大阪";
-		// 	const responseMessage = {
-		// 		messageId: Date.now() + 1,
-		// 		hint: isCorrect ? "正解じゃ！" : "不正解じゃ...",
-		// 		isUser: false,
-		// 		// biome-ignore format: URLが長いため改行を防止
-		// 		icon: "http://flat-icon-design.com/f/f_object_170/s256_f_object_170_0bg.png",
-		// 	};
-		// 	setMessages((prev) => [...prev, responseMessage]);
-
-		// 	if (isCorrect) {
-		// 		setHasAnswered(true);
-		// 	}
-		// }, 100);
 	};
 
 	if (isLoading) {
@@ -209,13 +121,6 @@ function Solo() {
 					/>
 				))}
 			</div>
-			{/* <InputArea
-				value={inputValue}
-				onChange={setInputValue}
-				onSubmit={handleSubmit}
-				placeholder="回答を記入してください"
-				hidden={hasAnswered}
-			/> */}
 			<div className="fixed-answer-bar">
 				<div
 					className="answer-section"
