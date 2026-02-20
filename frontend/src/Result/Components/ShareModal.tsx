@@ -39,7 +39,7 @@ export default function ShareModal({ onClose }: Props) {
 					<CloseIcon />
 				</IconButton>
 
-				<p className="share-modal-label">投稿内容プレビュー</p>
+				<p className="share-modal-label">この内容でポストします</p>
 				<div className="share-modal-preview">{SHARE_TEXT}</div>
 
 				<Button
@@ -58,7 +58,7 @@ export default function ShareModal({ onClose }: Props) {
 						},
 					}}
 				>
-					Xに投稿する
+					Xにポスト
 				</Button>
 			</div>
 		</div>
