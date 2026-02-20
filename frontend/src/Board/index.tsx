@@ -27,36 +27,84 @@ function Solo() {
 	const [animationFinished, setAnimationFinished] = useState(false);
 	// const [isLoading, setIsLoading] = useState(true);
 
-	const [hints, setHints] = useState<string[]>([
-		"日本の首都は？",
-		"高いタワーがあります",
-		"雷門が有名です",
-		"日本の首都は？",
-		"高いタワーがあります",
-		"雷門が有名です",
-		"日本の首都は？",
-		"高いタワーがあります",
-		"雷門が有名です",
-		"日本の首都は？",
-		"高いタワーがあります",
-		"雷門が有名です",
-		"日本の首都は？",
-		"高いタワーがあります",
-		"雷門が有名です",
-		"日本の首都は？",
-	]);
+	// 1. 答えを保持するステートを追加
+	const [answer, setAnswer] = useState(""); 
+	const [hints, setHints] = useState<string[]>([]);
+	const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string }[]>([]); // 👈 ここに持ってくる
+	const [isLoading, setIsLoading] = useState(false);
+	const hasFetchedRef = useRef(false);
+
+	// 2. データ取得のロジック
+useEffect(() => {
+	if (hasFetchedRef.current) return;
+    const fetchGameData = async () => {
+        try {
+            // ローカルサーバーのURLを叩く
+            const res = await fetch("http://localhost:8080/solo/board/2");
+            const data = await res.json();
+			console.log("APIから届いた生データ:", data); // 👈 これを追加
+            
+			if (data.round) {
+				const fetchedHints = data.round.hints; // JSONのhints配列を取得
+				const fetchedAnswer = data.round.answer;
+
+				setHints(fetchedHints);
+				setAnswer(fetchedAnswer);
+
+				// 1. JSONの文字列配列を、messagesの型に合わせてオブジェクトの配列に変換する
+				const formattedMessages = fetchedHints.map((hintText: string, index: number) => ({
+					messageId: index,                 // 重複しないID（インデックスを利用）
+					hint: hintText,                   // JSONから来たヒント本文
+					isUser: false,                    // システム（出題者）側なのでfalse
+					icon: HINT_ICONS[index % HINT_ICONS.length], // アイコンを順番に割り当て
+				}));
+
+				// 2. 整形したデータをステートに保存する
+				setMessages(formattedMessages);
+			}
+        } catch (e) {
+            console.error("データの取得に失敗しました:", e);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    fetchGameData();
+}, []);
+
+	// const [hints, setHints] = useState<string[]>([
+	// 	"日本の首都は？",
+	// 	"高いタワーがあります",
+	// 	"雷門が有名です",
+	// 	"日本の首都は？",
+	// 	"高いタワーがあります",
+	// 	"雷門が有名です",
+	// 	"日本の首都は？",
+	// 	"高いタワーがあります",
+	// 	"雷門が有名です",
+	// 	"日本の首都は？",
+	// 	"高いタワーがあります",
+	// 	"雷門が有名です",
+	// 	"日本の首都は？",
+	// 	"高いタワーがあります",
+	// 	"雷門が有名です",
+	// 	"日本の首都は？",
+	// ]);
 
 	// 2. messagesの初期値で、hintsの中身をすべてメッセージ形式にする
-	const [messages, setMessages] = useState(
-		hints.map((hint, index) => ({
-			messageId: index,
-			hint: hint,
-			isUser: false,
-			icon: HINT_ICONS[index % HINT_ICONS.length],
-		})),
-	);
+	// const [messages, setMessages] = useState(
+	// 	hints.map((hint, index) => ({
+	// 		messageId: index,
+	// 		hint: hint,
+	// 		isUser: false,
+	// 		icon: HINT_ICONS[index % HINT_ICONS.length],
+	// 	})),
+	// );
 
-	const [isLoading, setIsLoading] = useState(false); // 最初からロード完了にする
+	// const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string }[]>([]);
+
+	// const [isLoading, setIsLoading] = useState(false); // 最初からロード完了にする
+
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
@@ -127,11 +175,11 @@ function Solo() {
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
 				>
 					<p className="answer-label">答えを確認する</p>
-					<div className="answer-container">
-						<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
-							東京
-						</span>
-					</div>
+			<div className="answer-container">
+				<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
+					{answer}
+				</span>
+			</div>
 					<p className="answer-sub-text">
 						{isAnswerVisible ? "タップで隠す" : "タップで表示"}
 					</p>
