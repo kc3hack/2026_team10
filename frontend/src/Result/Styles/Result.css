@@ -1,80 +1,94 @@
-/* 黒い背景 */
+/* 画面全体を覆うグレー半透明の背景 */
 .overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.5);
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
-	z-index: 1000;
-}
-
-/* --- 3つのボタンを包むコンテナ --- */
-.button-container {
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	width: 300px;
-}
-
-/* --- 上の白い大きな箱（結果表示カード） --- */
-.result-card {
-	background-color: white;
-	width: 320px;
-	padding: 30px;
-	border-radius: 16px;
-	text-align: center;
-
-	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-
-	margin-bottom: 20px;
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-/* カードとボタンを包むコンテナ（縦並び・中央揃え） */
-.result-content-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.confetti-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	z-index: 100;
-	/* 最前面に持ってくる */
-	cursor: pointer;
-	/* クリックできることをマウスカーソルで示す */
-
-	/* これ重要：ここをautoにしないとクリックに反応しません */
-	pointer-events: auto;
-
-	/* ▼▼ ボタン用のリセットスタイルを追加 ▼▼ */
-	background: transparent;
+	background-color: rgba(221, 214, 214, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
 	border: none;
-	padding: 0;
+	cursor: default;
+}
+
+/* --- 左上の閉じるボタン（×マーク） --- */
+.close-icon-button {
+	position: absolute !important;
+	top: 20px;
+	left: 20px;
+
+	background-color: transparent !important;
+	box-shadow: none !important;
+	border-radius: 50% !important;
+	color: #000000 !important;
+
+	width: 64px !important;
+	height: 64px !important;
+	z-index: 1100;
+}
+
+/*2. 中の「×」アイコン自体のサイズを大きくする */
+.close-icon-button svg {
+	width: 40px !important;
+	height: 40px !important;
+}
+
+.close-icon-button:hover {
+	background-color: #f0f0f0 !important;
+}
+
+/* --- アイコンと文字が縦に並んだ四角いボタン --- */
+.square-icon-button {
+	display: flex !important;
+	flex-direction: column !important;
+	align-items: center;
+	justify-content: center;
+	width: 100px !important;
+	height: 80px !important;
+	gap: 4px !important;
+	font-size: 0.8rem !important;
+	padding: 8px !important;
+	border-radius: 8px !important;
+	background-color: white !important;
+	color: #333 !important;
+	border: 1px solid #ccc !important;
+	font-weight: bold !important;
+	text-transform: none !important;
+}
+
+.square-icon-button:hover {
+	background-color: #f5f5f5 !important;
+	border-color: #999 !important;
+}
+
+.square-icon-button:hover {
+	background-color: #f5f5f5 !important;
+	border-color: #999 !important;
+}
+
+/* ボタンを包むコンテナ（横並びの確認） */
+.button-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 15px;
+}
+
+/* --- 文字が入っているコンテナ --- */
+.confetti-overlay {
+	z-index: 100;
+	pointer-events: none;
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
 
 .confetti-content {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	text-align: center;
-	width: 100%;
 	pointer-events: none;
-	/* 文字自体はクリック判定を親に任せる */
 }
 
 /* 「正解！」の文字スタイル */
@@ -91,6 +105,34 @@
 	animation:
 		bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both,
 		floating 2s ease-in-out infinite 0.8s;
+}
+
+/* 文字とボタンを縦に並べる箱（この箱自体が画面中央に配置されます） */
+.result-content-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 40px;
+	z-index: 1001;
+}
+
+/* 文字とボタンをまとめるグループ */
+.result-action-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	/* ★ここで「正解！」文字と「ボタン」の隙間を調整できます */
+	z-index: 10;
+}
+
+/* ボタン群の配置 */
+.result-buttons-wrapper {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	position: relative;
+	z-index: 1002;
 }
 
 /* --- アニメーション定義 --- */
