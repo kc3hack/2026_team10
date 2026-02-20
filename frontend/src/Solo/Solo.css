@@ -173,9 +173,29 @@
 	}
 }
 
+/* フッター固定エリア：解答中もボタン表示時も線の位置を固定 */
+.solo-footer {
+	width: 100%;
+	background-color: #f5f5f5;
+	border-top: 1px solid #ddd;
+	height: 130px;
+	/* 高さを完全に固定する */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+}
+
 .result-buttons-container {
-	padding: 10px 0;
 	display: flex;
 	justify-content: center;
 	width: 100%;
+}
+
+@media (max-width: 768px) {
+	.solo-footer {
+		height: 90px;
+		/* モバイルも高さを固定 */
+		padding: 0;
+	}
 }
