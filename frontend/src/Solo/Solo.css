@@ -25,8 +25,8 @@
 	}
 }
 
-/* Optional: Add a central content area if a constrained chat width is desired, 
-   but user asked for 'web site' look, so full width or wide container is good. 
+/* Optional: Add a central content area if a constrained chat width is desired,
+   but user asked for 'web site' look, so full width or wide container is good.
    Let's keep the messages area full width but maybe limit reading width if needed.
    For now, we'll keep it flexible. */
 
@@ -184,6 +184,8 @@
 	justify-content: center;
 	align-items: center;
 	box-sizing: border-box;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 .result-buttons-container {
@@ -194,9 +196,10 @@
 
 @media (max-width: 768px) {
 	.solo-footer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		height: 90px;
-		/* モバイルも高さを固定 */
-		padding: 0;
 	}
 }
 
