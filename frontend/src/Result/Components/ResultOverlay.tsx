@@ -17,7 +17,7 @@ export default function ResultOverlay({ gameId, onClose }: Props) {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
-  const handleRetry = () => window.location.reload();
+	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
 
 	return (
@@ -28,32 +28,33 @@ export default function ResultOverlay({ gameId, onClose }: Props) {
 			type="button"
 			tabIndex={0}
 		>
-			<IconButton
-				className="close-icon-button"
-				onClick={(e) => {
-					e.stopPropagation();
-					if (onClose) onClose();
-				}}
-			>
-				<CloseIcon />
-			</IconButton>
+			<ThanksConfetti />
 
 			<div
+				className="result-card"
 				onClick={(e) => e.stopPropagation()}
 				onKeyDown={(e) => e.stopPropagation()}
 				role="dialog"
 				tabIndex={-1}
-				className="result-content-wrapper"
 			>
-				<ThanksConfetti />
+				<IconButton
+					className="result-card-close"
+					onClick={(e) => {
+						e.stopPropagation();
+						if (onClose) onClose();
+					}}
+					size="small"
+				>
+					<CloseIcon />
+				</IconButton>
 
-				<div className="result-buttons-wrapper">
-					<ResultButtons
-						onBackToTitle={handleTitle}
-						onSNS={handleShare}
-						onRetry={handleRetry}
-					/>
-				</div>
+				<h1 className="seikai-text">正解</h1>
+
+				<ResultButtons
+					onBackToTitle={handleTitle}
+					onSNS={handleShare}
+					onRetry={handleRetry}
+				/>
 			</div>
 
 			{isShareOpen && (

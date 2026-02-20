@@ -5,7 +5,7 @@
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background-color: rgba(221, 214, 214, 0.5);
+	background-color: rgba(0, 0, 0, 0.4);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -14,30 +14,34 @@
 	cursor: default;
 }
 
-/* --- 左上の閉じるボタン（×マーク） --- */
-.close-icon-button {
+/* --- 結果カード --- */
+.result-card {
+	position: relative;
+	background: #fff;
+	border-radius: 20px;
+	padding: 36px 20px 24px;
+	width: calc(100vw - 32px);
+	max-width: 400px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 24px;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+	z-index: 1001;
+}
+
+/* カード内の×ボタン */
+.result-card-close {
 	position: absolute !important;
-	top: 20px;
-	left: 20px;
-
-	background-color: transparent !important;
-	box-shadow: none !important;
-	border-radius: 50% !important;
-	color: #000000 !important;
-
-	width: 64px !important;
-	height: 64px !important;
-	z-index: 1100;
+	top: 8px;
+	left: 8px;
+	color: #888 !important;
 }
 
-/*2. 中の「×」アイコン自体のサイズを大きくする */
-.close-icon-button svg {
-	width: 40px !important;
-	height: 40px !important;
-}
-
-.close-icon-button:hover {
+.result-card-close:hover {
 	background-color: #f0f0f0 !important;
+	color: #333 !important;
 }
 
 /* --- アイコンと文字が縦に並んだ四角いボタン --- */
@@ -46,11 +50,13 @@
 	flex-direction: column !important;
 	align-items: center;
 	justify-content: center;
-	width: 100px !important;
-	height: 80px !important;
+	flex: 1 1 0;
+	min-width: 0;
+	max-width: 100px;
+	height: 72px !important;
 	gap: 4px !important;
-	font-size: 0.8rem !important;
-	padding: 8px !important;
+	font-size: 0.7rem !important;
+	padding: 8px 4px !important;
 	border-radius: 8px !important;
 	background-color: white !important;
 	color: #333 !important;
@@ -64,75 +70,25 @@
 	border-color: #999 !important;
 }
 
-.square-icon-button:hover {
-	background-color: #f5f5f5 !important;
-	border-color: #999 !important;
-}
-
-/* ボタンを包むコンテナ（横並びの確認） */
+/* ボタンを包むコンテナ（横並び） */
 .button-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	gap: 15px;
-}
-
-/* --- 文字が入っているコンテナ --- */
-.confetti-overlay {
-	z-index: 100;
-	pointer-events: none;
+	gap: 10px;
 	width: 100%;
-	display: flex;
-	justify-content: center;
 }
 
-.confetti-content {
-	text-align: center;
-	pointer-events: none;
-}
-
-/* 「正解！」の文字スタイル */
+/* 「正解」の文字スタイル */
 .seikai-text {
-	font-size: 5rem;
+	font-size: 3rem;
 	color: #ff4757;
 	margin: 0;
 	text-shadow:
-		4px 4px 0px #fff,
-		7px 7px 0px rgba(0, 0, 0, 0.2);
+		3px 3px 0px #fff,
+		5px 5px 0px rgba(0, 0, 0, 0.15);
 	font-family: "Arial Black", Gadget, sans-serif;
-
-	/* アニメーションの適用 */
-	animation:
-		bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both,
-		floating 2s ease-in-out infinite 0.8s;
-}
-
-/* 文字とボタンを縦に並べる箱（この箱自体が画面中央に配置されます） */
-.result-content-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 40px;
-	z-index: 1001;
-}
-
-/* 文字とボタンをまとめるグループ */
-.result-action-group {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 20px;
-	/* ★ここで「正解！」文字と「ボタン」の隙間を調整できます */
-	z-index: 10;
-}
-
-/* ボタン群の配置 */
-.result-buttons-wrapper {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	position: relative;
-	z-index: 1002;
+	animation: bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
 }
 
 /* --- シェアモーダル --- */
@@ -153,9 +109,10 @@
 	position: relative;
 	background: #fff;
 	border-radius: 16px;
-	padding: 32px 28px 28px;
-	min-width: 300px;
+	padding: 32px 20px 24px;
+	width: calc(100vw - 32px);
 	max-width: 400px;
+	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -178,13 +135,46 @@
 .share-modal-preview {
 	background: #f5f5f5;
 	border-radius: 8px;
-	padding: 16px;
+	padding: 12px;
 	width: 100%;
-	font-size: 0.95rem;
+	font-size: 0.85rem;
 	line-height: 1.6;
 	color: #333;
 	text-align: center;
 	box-sizing: border-box;
+	word-break: break-all;
+}
+
+/* --- レスポンシブ: タブレット以上 --- */
+@media (min-width: 600px) {
+	.result-card {
+		padding: 44px 32px 32px;
+		gap: 32px;
+	}
+
+	.seikai-text {
+		font-size: 4.5rem;
+	}
+
+	.square-icon-button {
+		max-width: 110px;
+		height: 80px !important;
+		font-size: 0.8rem !important;
+		padding: 8px !important;
+	}
+
+	.button-container {
+		gap: 16px;
+	}
+
+	.share-modal {
+		padding: 32px 28px 28px;
+	}
+
+	.share-modal-preview {
+		padding: 16px;
+		font-size: 0.95rem;
+	}
 }
 
 /* --- アニメーション定義 --- */
@@ -207,20 +197,5 @@
 	100% {
 		transform: scale(1);
 		opacity: 1;
-	}
-}
-
-/* ふわふわ浮く動き */
-@keyframes floating {
-	0% {
-		transform: translateY(0px);
-	}
-
-	50% {
-		transform: translateY(-15px);
-	}
-
-	100% {
-		transform: translateY(0px);
 	}
 }
