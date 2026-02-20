@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import "./Board.css";
 import MessageBubble from "./Components/MessageBubble";
 
@@ -11,10 +12,12 @@ const HINT_ICONS = [
 import ResultOverlay from "../Result/Components/ResultOverlay";
 
 function Solo() {
+	const { id } = useParams<{ id: string }>();
+	const gameId = Number(id);
+
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 
 	const [answer, setAnswer] = useState("");
-	const [hints, setHints] = useState<string[]>([]);
 	const [messages, setMessages] = useState<
 		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
 	>([]);
@@ -25,7 +28,7 @@ function Solo() {
 		if (hasFetchedRef.current) return;
 		const fetchGameData = async () => {
 			try {
-				const res = await fetch("http://localhost:8080/solo/board/2");
+				const res = await fetch(`/api/solo/board/${id}`);
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
 
@@ -33,7 +36,6 @@ function Solo() {
 					const fetchedHints = data.round.hints;
 					const fetchedAnswer = data.round.answer;
 
-					setHints(fetchedHints);
 					setAnswer(fetchedAnswer);
 
 					const formattedMessages = fetchedHints.map(
@@ -86,7 +88,10 @@ function Solo() {
 	return (
 		<div className="solo-container">
 			{showResultOverlay && (
-				<ResultOverlay onClose={() => setShowResultOverlay(false)} />
+				<ResultOverlay
+					gameId={gameId}
+					onClose={() => setShowResultOverlay(false)}
+				/>
 			)}
 			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>

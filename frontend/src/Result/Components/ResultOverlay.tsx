@@ -1,20 +1,24 @@
+import { useState } from "react";
 import "../Styles/Result.css";
 import ResultButtons from "./ResultButtons";
+import ShareModal from "./ShareModal";
 import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
-	onClose?: () => void;
+	readonly gameId: number;
+	readonly onClose?: () => void;
 }
 
-export default function ResultOverlay({ onClose }: Props) {
+export default function ResultOverlay({ gameId, onClose }: Props) {
 	const navigate = useNavigate();
+	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
-	const handleRetry = () => window.location.reload();
-	const handleSNS = () => alert("SNSシェア用の処理をここに書きます");
+  const handleRetry = () => window.location.reload();
+	const handleShare = () => setIsShareOpen(true);
 
 	return (
 		<button
@@ -46,11 +50,15 @@ export default function ResultOverlay({ onClose }: Props) {
 				<div className="result-buttons-wrapper">
 					<ResultButtons
 						onBackToTitle={handleTitle}
-						onSNS={handleSNS}
+						onSNS={handleShare}
 						onRetry={handleRetry}
 					/>
 				</div>
 			</div>
+
+			{isShareOpen && (
+				<ShareModal gameId={gameId} onClose={() => setIsShareOpen(false)} />
+			)}
 		</button>
 	);
 }

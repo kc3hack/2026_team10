@@ -1,7 +1,7 @@
 import "../Styles/Result.css";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ShareIcon from "@mui/icons-material/Share";
+import XIcon from "@mui/icons-material/X";
 import ReplayIcon from "@mui/icons-material/Replay";
 
 interface Props {
@@ -31,8 +31,12 @@ export default function ResultButtons({
 			</Button>
 
 			<Button variant="outlined" onClick={onSNS} className="square-icon-button">
-				<ShareIcon fontSize="medium" />
-				<span>SNS</span>
+				<XIcon fontSize="medium" />
+				<span>
+					Xで
+					<br />
+					シェア
+				</span>
 			</Button>
 
 			<Button variant="outlined" onClick={onRetry} className="square-icon-button">
