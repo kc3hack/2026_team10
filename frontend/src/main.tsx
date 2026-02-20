@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
 import Solo from "./Solo/index.tsx";
+import Board from "./Board/index.tsx";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("Root element not found");
@@ -16,6 +17,8 @@ createRoot(rootElement).render(
 				<Route path="/" element={<App />} />
 				{/* localhost:5173/solo */}
 				<Route path="/solo" element={<Solo />} />
+				{/* localhost:5173/board/:id */}
+				<Route path="/board/:id" element={<Board />} />
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,
