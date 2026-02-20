@@ -13,11 +13,13 @@ import ResultOverlay from "../Result/Components/ResultOverlay";
 function Solo() {
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 
-	const [answer, setAnswer] = useState(""); 
+	const [answer, setAnswer] = useState("");
 	const [hints, setHints] = useState<string[]>([]);
-	const [messages, setMessages] = useState<{ messageId: number; hint: string; isUser: boolean; icon?: string }[]>([]); 
+	const [messages, setMessages] = useState<
+		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
+	>([]);
 	const [isLoading, setIsLoading] = useState(false);
-		const hasFetchedRef = useRef(false);
+	const hasFetchedRef = useRef(false);
 
 	useEffect(() => {
 		if (hasFetchedRef.current) return;
@@ -26,20 +28,22 @@ function Solo() {
 				const res = await fetch("http://localhost:8080/solo/board/2");
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
-				
+
 				if (data.round) {
-					const fetchedHints = data.round.hints; 
+					const fetchedHints = data.round.hints;
 					const fetchedAnswer = data.round.answer;
 
 					setHints(fetchedHints);
 					setAnswer(fetchedAnswer);
 
-					const formattedMessages = fetchedHints.map((hintText: string, index: number) => ({
-						messageId: index,                 
-						hint: hintText,             
-						isUser: false,                  
-						icon: HINT_ICONS[index % HINT_ICONS.length],
-					}));
+					const formattedMessages = fetchedHints.map(
+						(hintText: string, index: number) => ({
+							messageId: index,
+							hint: hintText,
+							isUser: false,
+							icon: HINT_ICONS[index % HINT_ICONS.length],
+						}),
+					);
 
 					setMessages(formattedMessages);
 				}
@@ -101,11 +105,11 @@ function Solo() {
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
 				>
 					<p className="answer-label">答えを確認する</p>
-			<div className="answer-container">
-				<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
-					{answer}
-				</span>
-			</div>
+					<div className="answer-container">
+						<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
+							{answer}
+						</span>
+					</div>
 					<p className="answer-sub-text">
 						{isAnswerVisible ? "タップで隠す" : "タップで表示"}
 					</p>
