@@ -88,7 +88,10 @@ function Solo() {
 	return (
 		<div className="solo-container">
 			{showResultOverlay && (
-				<ResultOverlay gameId={gameId} onClose={() => setShowResultOverlay(false)} />
+				<ResultOverlay
+					gameId={gameId}
+					onClose={() => setShowResultOverlay(false)}
+				/>
 			)}
 			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>

@@ -37,11 +37,7 @@ export default function ShareModal({ gameId, onClose }: Props) {
 				aria-label="シェアプレビュー"
 				tabIndex={-1}
 			>
-				<IconButton
-					className="share-modal-close"
-					onClick={onClose}
-					size="small"
-				>
+				<IconButton className="share-modal-close" onClick={onClose} size="small">
 					<CloseIcon />
 				</IconButton>
 
