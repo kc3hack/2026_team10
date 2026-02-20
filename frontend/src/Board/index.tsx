@@ -100,7 +100,7 @@ function Solo() {
 				))}
 			</div>
 			<div className="fixed-answer-bar">
-				<div
+				<button
 					className="answer-section"
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
 				>
@@ -113,7 +113,7 @@ function Solo() {
 					<p className="answer-sub-text">
 						{isAnswerVisible ? "タップで隠す" : "タップで表示"}
 					</p>
-				</div>
+				</button>
 			</div>
 		</div>
 	);
