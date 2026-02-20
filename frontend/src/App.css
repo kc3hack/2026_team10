@@ -1,44 +1,96 @@
+/* Mobile-first layout styles */
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	padding: 2rem;
+	padding-bottom: 15vh;
+	/* Shift optical center upwards */
+	box-sizing: border-box;
+	text-align: center;
+	background-color: #f8f9fa;
+	/* Light background for cleaner look, or dark if preferred */
+}
+
+/* Adjust root to ensure full height */
 #root {
-	width: 100%;
+	min-height: 100vh;
 	margin: 0;
 	padding: 0;
+	width: 100%;
 }
 
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
+.title {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-bottom: 4rem;
+	/* Increased spacing to separate title */
+	color: #333;
+	line-height: 1.2;
 }
 
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-	from {
-		transform: rotate(0deg);
+/* Dark mode support for title if needed, based on index.css */
+@media (prefers-color-scheme: dark) {
+	.container {
+		background-color: #242424;
 	}
 
-	to {
-		transform: rotate(360deg);
+	.title {
+		color: rgba(255, 255, 255, 0.87);
 	}
 }
 
-@media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-		animation: logo-spin infinite 20s linear;
+.button-group {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	/* Space between buttons */
+	width: 100%;
+	max-width: 320px;
+	/* Max width for button container on larger screens */
+}
+
+.menu-button {
+	width: 100%;
+	padding: 1rem;
+	font-size: 1.1rem;
+	font-weight: 600;
+	border-radius: 12px;
+	background-color: #ffffff;
+	color: #333;
+	border: 1px solid #e0e0e0;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+.menu-button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+	background-color: #f8f9fa;
+	border-color: #d0d0d0;
+}
+
+.menu-button:active {
+	transform: translateY(0);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark mode styles for buttons */
+@media (prefers-color-scheme: dark) {
+	.menu-button {
+		background-color: #3a3a3a;
+		color: #fff;
+		border-color: #4a4a4a;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 	}
-}
 
-.card {
-	padding: 2em;
-}
-
-.read-the-docs {
-	color: #888;
+	.menu-button:hover {
+		background-color: #4a4a4a;
+		border-color: #646cff;
+	}
 }
