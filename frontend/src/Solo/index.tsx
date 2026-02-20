@@ -23,6 +23,18 @@ function Solo() {
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isShareOpen, setIsShareOpen] = useState(false);
+	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
+	const loadingMessages = [
+		"エスカレーターは右側に立つ",
+		"「行けたら行く」は行かない",
+		"アメを「アメちゃん」と言う",
+		"一家に一台たこ焼き器がある",
+		"語尾に「知らんけど」を添える",
+		"マクドナルドを「マクド」と言う",
+		"「自分」と言って相手を指す",
+		"会話のノリがテレビ並み",
+		"ナイトスクープは欠かさず見る"
+	];
 
 	const navigate = useNavigate();
 
@@ -64,6 +76,14 @@ function Solo() {
 		};
 		fetchGameData();
 	}, []);
+
+	useEffect(() => {
+		if (!isLoading) return;
+		const interval = setInterval(() => {
+			setLoadingMsgIndex(Math.floor(Math.random() * loadingMessages.length));
+		}, 3000);
+		return () => clearInterval(interval);
+	}, [isLoading, loadingMessages.length]);
 
 	//スクロールされたときに、画面の最も下にあるかどうかを判定する
 	const handleScroll = () => {
@@ -168,7 +188,25 @@ function Solo() {
 	const handleShare = () => setIsShareOpen(true);
 
 	if (isLoading) {
-		return <div className="loading-container">ロード中．．．</div>;
+		return (
+			<div className="loading-container">
+				<div className="loading-icon-container">
+					<img
+						src="/Image/Osaka.jpg"
+						alt="Osaka Icon"
+						className="loading-icon-img"
+					/>
+				</div>
+				<div className="loading-text-container">
+					<div className="loading-text">
+						関西あるある
+						<br />
+						{loadingMessages[loadingMsgIndex]}
+					</div>
+				</div>
+				<div className="spinner" />
+			</div>
+		);
 	}
 
 	return (

@@ -53,11 +53,124 @@
 	width: 100%;
 	height: 100vh;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	font-size: 24px;
-	color: #555;
-	background-color: #f5f5f5;
+	text-align: center;
+	background-color: #ffffff;
+	/* 更にクリーンな白に */
+	gap: 24px;
+}
+
+/* 大阪アイコンのスタイリング */
+.loading-icon-container {
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	overflow: hidden;
+	/* ズームした画像を丸く切り抜く */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #ffffff;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border: 3px solid #fff;
+	animation: bounce 2s ease-in-out infinite;
+	z-index: 2;
+}
+
+.loading-icon-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transform: scale(1.7);
+	/* ここでキャラクターを大きく表示 */
+}
+
+/* 吹き出しのスタイリング */
+.loading-text {
+	position: relative;
+	font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.5;
+	color: #333;
+	background: #ffffff;
+	padding: 15px 25px;
+	border-radius: 20px;
+	border: 2px solid #1a73e8;
+	/* 枠線を青に */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+	margin-top: 10px;
+	animation: floating-text 2s ease-in-out infinite;
+}
+
+/* 吹き出しのしっぽ（上向き） */
+.loading-text::before {
+	content: "";
+	position: absolute;
+	top: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 12px solid #1a73e8;
+}
+
+.loading-text::after {
+	content: "";
+	position: absolute;
+	top: -9px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-left: 9px solid transparent;
+	border-right: 9px solid transparent;
+	border-bottom: 11px solid #ffffff;
+}
+
+/* スピナーを少し小さく、Material Blueで */
+.spinner {
+	width: 30px;
+	height: 30px;
+	margin-top: 60px;
+	border: 3px solid rgba(0, 0, 0, 0.05);
+	border-top: 3px solid #1a73e8;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes floating-text {
+
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(5px);
+	}
+}
+
+@keyframes bounce {
+
+	0%,
+	100% {
+		transform: scale(1) translateY(0);
+	}
+
+	50% {
+		transform: scale(1.05) translateY(-5px);
+	}
 }
 
 .result-buttons-container {
