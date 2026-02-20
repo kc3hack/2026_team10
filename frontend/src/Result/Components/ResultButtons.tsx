@@ -1,29 +1,44 @@
 import "../Styles/Result.css";
+import Button from "@mui/material/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ShareIcon from "@mui/icons-material/Share";
+import ReplayIcon from "@mui/icons-material/Replay";
 
 interface Props {
-	onBackToLog: () => void;
 	onBackToTitle: () => void;
+	onSNS: () => void;
 	onRetry: () => void;
 }
 
 export default function ResultButtons({
-	onBackToLog,
 	onBackToTitle,
+	onSNS,
 	onRetry,
 }: Props) {
 	return (
 		<div className="button-container">
-			<button type="button" onClick={onBackToLog}>
-				ログに戻る
-			</button>
+			<Button
+				variant="outlined"
+				onClick={onBackToTitle}
+				className="square-icon-button"
+			>
+				<ArrowBackIcon fontSize="medium" />
+				<span>
+					タイトルに
+					<br />
+					戻る
+				</span>
+			</Button>
 
-			<button type="button" onClick={onBackToTitle}>
-				タイトルに戻る
-			</button>
+			<Button variant="outlined" onClick={onSNS} className="square-icon-button">
+				<ShareIcon fontSize="medium" />
+				<span>SNS</span>
+			</Button>
 
-			<button type="button" onClick={onRetry}>
-				もう一度遊ぶ
-			</button>
+			<Button variant="outlined" onClick={onRetry} className="square-icon-button">
+				<ReplayIcon fontSize="medium" />
+				<span>もう一度遊ぶ</span>
+			</Button>
 		</div>
 	);
 }
