@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kc3hack/2026_team10/backend/controllers"
 	"github.com/kc3hack/2026_team10/backend/infra"
@@ -21,6 +22,7 @@ func main() {
 	hintController := controllers.NewHintController(hintService)
 
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
