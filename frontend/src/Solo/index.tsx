@@ -6,7 +6,6 @@ import Timer from "./Components/Timer";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
-import ThanksConfetti from "../Result/Components/ThanksConfetti";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 
 function Solo() {
@@ -20,7 +19,6 @@ function Solo() {
 	const [timeLeft, setTimeLeft] = useState(10);
 	const [hasAnswered, setHasAnswered] = useState(false);
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
-	const [animationFinished, setAnimationFinished] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
@@ -153,6 +151,7 @@ function Solo() {
 
 			if (isCorrect) {
 				setHasAnswered(true);
+				setShowResultOverlay(true);
 			}
 		} catch (error) {
 			console.error("Error submitting answer:", error);
@@ -165,14 +164,6 @@ function Solo() {
 
 	return (
 		<div className="solo-container">
-			{hasAnswered && !animationFinished && (
-				<ThanksConfetti
-					onClose={() => {
-						setAnimationFinished(true);
-						setShowResultOverlay(true);
-					}}
-				/>
-			)}
 			{showResultOverlay && (
 				<ResultOverlay onClose={() => setShowResultOverlay(false)} />
 			)}
