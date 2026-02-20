@@ -5,7 +5,7 @@
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background-color: rgba(221, 214, 214, 0.5);
+	background-color: rgba(0, 0, 0, 0.4);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -14,30 +14,32 @@
 	cursor: default;
 }
 
-/* --- 左上の閉じるボタン（×マーク） --- */
-.close-icon-button {
+/* --- 結果カード --- */
+.result-card {
+	position: relative;
+	background: #fff;
+	border-radius: 20px;
+	padding: 40px 32px 32px;
+	min-width: 340px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 28px;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+	z-index: 1001;
+}
+
+/* カード内の×ボタン */
+.result-card-close {
 	position: absolute !important;
-	top: 20px;
-	left: 20px;
-
-	background-color: transparent !important;
-	box-shadow: none !important;
-	border-radius: 50% !important;
-	color: #000000 !important;
-
-	width: 64px !important;
-	height: 64px !important;
-	z-index: 1100;
+	top: 12px;
+	left: 12px;
+	color: #888 !important;
 }
 
-/*2. 中の「×」アイコン自体のサイズを大きくする */
-.close-icon-button svg {
-	width: 40px !important;
-	height: 40px !important;
-}
-
-.close-icon-button:hover {
+.result-card-close:hover {
 	background-color: #f0f0f0 !important;
+	color: #333 !important;
 }
 
 /* --- アイコンと文字が縦に並んだ四角いボタン --- */
@@ -64,12 +66,7 @@
 	border-color: #999 !important;
 }
 
-.square-icon-button:hover {
-	background-color: #f5f5f5 !important;
-	border-color: #999 !important;
-}
-
-/* ボタンを包むコンテナ（横並びの確認） */
+/* ボタンを包むコンテナ（横並び） */
 .button-container {
 	display: flex;
 	flex-direction: row;
@@ -77,62 +74,16 @@
 	gap: 15px;
 }
 
-/* --- 文字が入っているコンテナ --- */
-.confetti-overlay {
-	z-index: 100;
-	pointer-events: none;
-	width: 100%;
-	display: flex;
-	justify-content: center;
-}
-
-.confetti-content {
-	text-align: center;
-	pointer-events: none;
-}
-
-/* 「正解！」の文字スタイル */
+/* 「正解」の文字スタイル */
 .seikai-text {
-	font-size: 5rem;
+	font-size: 4rem;
 	color: #ff4757;
 	margin: 0;
 	text-shadow:
-		4px 4px 0px #fff,
-		7px 7px 0px rgba(0, 0, 0, 0.2);
+		3px 3px 0px #fff,
+		5px 5px 0px rgba(0, 0, 0, 0.15);
 	font-family: "Arial Black", Gadget, sans-serif;
-
-	/* アニメーションの適用 */
-	animation:
-		bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both,
-		floating 2s ease-in-out infinite 0.8s;
-}
-
-/* 文字とボタンを縦に並べる箱（この箱自体が画面中央に配置されます） */
-.result-content-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 40px;
-	z-index: 1001;
-}
-
-/* 文字とボタンをまとめるグループ */
-.result-action-group {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 20px;
-	/* ★ここで「正解！」文字と「ボタン」の隙間を調整できます */
-	z-index: 10;
-}
-
-/* ボタン群の配置 */
-.result-buttons-wrapper {
-	display: flex;
-	justify-content: center;
-	width: 100%;
-	position: relative;
-	z-index: 1002;
+	animation: bounce-in 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) both;
 }
 
 /* --- シェアモーダル --- */
@@ -207,20 +158,5 @@
 	100% {
 		transform: scale(1);
 		opacity: 1;
-	}
-}
-
-/* ふわふわ浮く動き */
-@keyframes floating {
-	0% {
-		transform: translateY(0px);
-	}
-
-	50% {
-		transform: translateY(-15px);
-	}
-
-	100% {
-		transform: translateY(0px);
 	}
 }
