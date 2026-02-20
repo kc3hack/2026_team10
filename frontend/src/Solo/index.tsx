@@ -3,10 +3,12 @@ import "./Solo.css";
 import MessageBubble from "./Components/MessageBubble";
 import InputArea from "./Components/InputArea";
 import Timer from "./Components/Timer";
+import ResultOverlay from "../Result/Components/ResultOverlay";
+import ResultButtons from "../Result/Components/ResultButtons";
+import ShareModal from "../Result/Components/ShareModal";
+import { useNavigate } from "react-router-dom";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
-
-import ResultOverlay from "../Result/Components/ResultOverlay";
 
 function Solo() {
 	const [messages, setMessages] = useState<
@@ -20,6 +22,9 @@ function Solo() {
 	const [hasAnswered, setHasAnswered] = useState(false);
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [isShareOpen, setIsShareOpen] = useState(false);
+
+	const navigate = useNavigate();
 
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
@@ -158,6 +163,10 @@ function Solo() {
 		}
 	};
 
+	const handleTitle = () => navigate("/");
+	const handleRetry = () => window.location.reload();
+	const handleShare = () => setIsShareOpen(true);
+
 	if (isLoading) {
 		return <div className="loading-container">ロード中．．．</div>;
 	}
@@ -169,6 +178,9 @@ function Solo() {
 					gameId={gameId}
 					onClose={() => setShowResultOverlay(false)}
 				/>
+			)}
+			{isShareOpen && gameId !== null && (
+				<ShareModal gameId={gameId} onClose={() => setIsShareOpen(false)} />
 			)}
 			{!hasAnswered && <Timer seconds={timeLeft} />}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
@@ -188,6 +200,15 @@ function Solo() {
 				placeholder="回答を記入してください"
 				hidden={hasAnswered}
 			/>
+			{hasAnswered && !showResultOverlay && (
+				<div className="result-buttons-container">
+					<ResultButtons
+						onBackToTitle={handleTitle}
+						onSNS={handleShare}
+						onRetry={handleRetry}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }
