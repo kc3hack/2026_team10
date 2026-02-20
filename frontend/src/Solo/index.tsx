@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Solo.css";
 import MessageBubble from "./Components/MessageBubble";
 import InputArea from "./Components/InputArea";
@@ -23,6 +23,7 @@ function Solo() {
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isShareOpen, setIsShareOpen] = useState(false);
+	const [pendingHints, setPendingHints] = useState<any[]>([]);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
 		"エスカレーターは右側に立つ",
@@ -187,6 +188,38 @@ function Solo() {
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
 
+	const handleCloseResult = () => {
+		setShowResultOverlay(false);
+
+		const shownHints = messages.filter(
+			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす..."
+		);
+		const shownCount = shownHints.length;
+
+		if (shownCount < hints.length) {
+			const remaining = hints.slice(shownCount).map((hint, index) => ({
+				messageId: Date.now() + 1000 + index,
+				hint: hint,
+				isUser: false,
+				icon: HINT_ICONS[(shownCount + index) % HINT_ICONS.length],
+			}));
+			setPendingHints(remaining);
+		}
+	};
+
+	const handleShowStory = () => {
+		setMessages((prev) => {
+			const newMessages = [...prev];
+			if (newMessages.length >= 2) {
+				newMessages.splice(newMessages.length - 2, 0, ...pendingHints);
+			} else {
+				newMessages.push(...pendingHints);
+			}
+			return newMessages;
+		});
+		setPendingHints([]);
+	};
+
 	if (isLoading) {
 		return (
 			<div className="loading-container">
@@ -214,7 +247,7 @@ function Solo() {
 			{showResultOverlay && gameId !== null && (
 				<ResultOverlay
 					gameId={gameId}
-					onClose={() => setShowResultOverlay(false)}
+					onClose={handleCloseResult}
 				/>
 			)}
 			{isShareOpen && gameId !== null && (
@@ -222,13 +255,21 @@ function Solo() {
 			)}
 			{!hasAnswered && <Timer seconds={timeLeft} />}
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
-				{messages.map((msg) => (
-					<MessageBubble
-						key={msg.messageId}
-						text={msg.hint}
-						isUser={msg.isUser}
-						icon={msg.icon}
-					/>
+				{messages.map((msg, index) => (
+					<React.Fragment key={msg.messageId}>
+						{pendingHints.length > 0 && index === messages.length - 2 && (
+							<div
+								className="show-story-trigger"
+								onClick={handleShowStory}
+								onKeyDown={(e) => e.key === "Enter" && handleShowStory()}
+								tabIndex={0}
+								role="button"
+							>
+								<span>物語の続きを見る ▼</span>
+							</div>
+						)}
+						<MessageBubble text={msg.hint} isUser={msg.isUser} icon={msg.icon} />
+					</React.Fragment>
 				))}
 			</div>
 			<div className="solo-footer">
