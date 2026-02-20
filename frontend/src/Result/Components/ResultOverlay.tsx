@@ -1,5 +1,7 @@
+import { useState } from "react";
 import "../Styles/Result.css";
 import ResultButtons from "./ResultButtons";
+import ShareModal from "./ShareModal";
 import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
 import IconButton from "@mui/material/IconButton";
@@ -11,10 +13,11 @@ interface Props {
 
 export default function ResultOverlay({ onClose }: Props) {
 	const navigate = useNavigate();
+	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => alert("ゲームをリスタートします");
-	const handleSNS = () => alert("SNSシェア用の処理をここに書きます");
+	const handleShare = () => setIsShareOpen(true);
 
 	return (
 		<button
@@ -46,11 +49,15 @@ export default function ResultOverlay({ onClose }: Props) {
 				<div className="result-buttons-wrapper">
 					<ResultButtons
 						onBackToTitle={handleTitle}
-						onSNS={handleSNS}
+						onSNS={handleShare}
 						onRetry={handleRetry}
 					/>
 				</div>
 			</div>
+
+			{isShareOpen && (
+				<ShareModal onClose={() => setIsShareOpen(false)} />
+			)}
 		</button>
 	);
 }
