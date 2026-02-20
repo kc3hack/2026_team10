@@ -26,32 +26,49 @@ export default function ResultButtons({
 		lineHeight: 1.2,
 		textTransform: "none",
 		borderRadius: "8px",
-		backgroundColor: "#ff9800",
-		color: "white",
+		borderWidth: "1px",
 		"&:hover": {
-			backgroundColor: "#f57c00",
+			borderWidth: "1px",
+		}
+	};
+
+	const orangeStyle = {
+		color: "#ed6c02",
+		borderColor: "#ed6c02",
+		"&:hover": {
+			borderColor: "#e65100",
+			backgroundColor: "rgba(237, 108, 2, 0.04)",
+		},
+	};
+
+	const blackStyle = {
+		color: "black",
+		borderColor: "black",
+		"&:hover": {
+			borderColor: "#333333",
+			backgroundColor: "rgba(0, 0, 0, 0.04)",
 		},
 	};
 
 	return (
 		<Stack direction="row" spacing={2} justifyContent="center" width="100%">
 			<Button
-				variant="contained"
+				variant="outlined"
 				onClick={onBackToTitle}
-				sx={baseButtonSx}
+				sx={{ ...baseButtonSx, ...orangeStyle }}
 			>
 				<ArrowBackIcon fontSize="medium" />
 				<span>
-					タイトルに
+					タイトル
 					<br />
-					戻る
+					に戻る
 				</span>
 			</Button>
 
 			<Button
-				variant="contained"
+				variant="outlined"
 				onClick={onSNS}
-				sx={baseButtonSx}
+				sx={{ ...baseButtonSx, ...blackStyle }}
 			>
 				<XIcon fontSize="medium" />
 				<span>
@@ -62,12 +79,16 @@ export default function ResultButtons({
 			</Button>
 
 			<Button
-				variant="contained"
+				variant="outlined"
 				onClick={onRetry}
-				sx={baseButtonSx}
+				sx={{ ...baseButtonSx, ...orangeStyle }}
 			>
 				<ReplayIcon fontSize="medium" />
-				<span>もう一度遊ぶ</span>
+				<span>
+					もう一度
+					<br />
+					遊ぶ
+				</span>
 			</Button>
 		</Stack>
 	);
