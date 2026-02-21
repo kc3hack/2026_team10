@@ -150,8 +150,11 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"answers": map[string]any{
 					"type": "array",
 					"items": map[string]any{
-						"type":        "string",
-						"description": "正解のリスト。表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。",
+						"type": "string",
+						"description": `正解のリスト。
+						- 一番最初に最も一般的な答えが入るようにしてください
+						- 表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、
+						- および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。`,
 					},
 				},
 				"hints": map[string]any{
