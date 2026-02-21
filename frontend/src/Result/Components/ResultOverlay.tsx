@@ -30,7 +30,7 @@ export default function ResultOverlay({
 	const handleShare = () => setIsShareOpen(true);
 	const handleBookmarkAndShare = () => {
 		onBookmark();
-		handleShare();
+		// handleShare();
 	};
 
 	return (
