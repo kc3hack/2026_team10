@@ -199,18 +199,26 @@ function Solo() {
 		if (!isBookmarked) {
 			setIsAnimating(true);
 			setIsBookmarked(true);
-			try {
-				await fetch(`/api/solo/${gameId ?? 0}/bookmark`, { method: "POST" });
-			} catch (e) {
-				console.error("ブックマーク登録に失敗しました:", e);
-				setIsBookmarked(false);
-			}
-			setTimeout(() => setIsAnimating(false), 600);
+			const postBookmark = async () => {
+				try {
+					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, { method: "POST" });
+					if (!res.ok) throw new Error("通信エラー");
+				} catch (e) {
+					console.error("ブックマーク登録に失敗しました:", e);
+					setIsBookmarked(false);
+				}
+			};
+			setTimeout(() => {
+				setIsAnimating(false);
+				postBookmark();
+				handleShare(); 
+				
+			}, 2000);
 		}
 	};
 	const handleBookmarkAndShare = async () => {
 		await handleBookmark();
-		handleShare();
+		// handleShare();
 	};
 
 	const handleCloseResult = () => {
@@ -354,7 +362,8 @@ function Solo() {
 							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}
 							onRetry={handleRetry}
-							onBookmark={handleBookmarkAndShare}
+							// onBookmark={handleBookmarkAndShare}
+							onBookmark={handleBookmark}
 						/>
 					</div>
 				)}
