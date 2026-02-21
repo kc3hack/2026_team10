@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./Solo.css";
-import MessageBubble from "./Components/MessageBubble";
-import InputArea from "./Components/InputArea";
-import Timer from "./Components/Timer";
-import ResultOverlay from "../Result/Components/ResultOverlay";
-import ResultButtons from "../Result/Components/ResultButtons";
-import ShareModal from "../Result/Components/ShareModal";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ResultButtons from "../Result/Components/ResultButtons";
+import ResultOverlay from "../Result/Components/ResultOverlay";
+import ShareModal from "../Result/Components/ShareModal";
+import InputArea from "./Components/InputArea";
+import MessageBubble from "./Components/MessageBubble";
+import Timer from "./Components/Timer";
+import "./Solo.css";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
@@ -42,7 +42,7 @@ function Solo() {
 		"マクドナルドを「マクド」と言う",
 		"「自分」と言って相手を指す",
 		"会話のノリがテレビ並み",
-		"ナイトスクープは欠かさず見る"
+		"ナイトスクープは欠かさず見る",
 	];
 
 	const navigate = useNavigate();
@@ -217,7 +217,7 @@ function Solo() {
 		setShowResultOverlay(false);
 
 		const shownHints = messages.filter(
-			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす..."
+			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす...",
 		);
 		const shownCount = shownHints.length;
 
@@ -259,7 +259,10 @@ function Solo() {
 
 			const newMessages = [...prev];
 			// Extractstory hints to put back in pendingHints
-			const storyHints = newMessages.slice(dividerIndex + 1, newMessages.length - 2);
+			const storyHints = newMessages.slice(
+				dividerIndex + 1,
+				newMessages.length - 2,
+			);
 			setPendingHints(storyHints);
 
 			// Remove divider and the hints

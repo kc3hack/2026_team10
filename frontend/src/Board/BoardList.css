@@ -1,0 +1,185 @@
+/* ==========================================
+   掲示板一覧ページのスタイル
+   ========================================== */
+
+/* --- ページ全体 --- */
+.board-list-page {
+	min-height: 100vh;
+	background-color: #faf7f2;
+	padding: 20px;
+	box-sizing: border-box;
+}
+
+/* --- ヘッダー --- */
+.board-list-header {
+	max-width: 600px;
+	margin: 0 auto 24px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.board-list-back-link {
+	color: #ed6c02 !important;
+	text-transform: none !important;
+	font-weight: bold !important;
+	min-width: auto !important;
+	padding: 4px 8px !important;
+}
+
+.board-list-title {
+	font-size: 1.4rem;
+	font-weight: 700;
+	color: #333;
+	margin: 0;
+}
+
+/* --- カード一覧エリア --- */
+.board-list-cards {
+	max-width: 600px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+/* --- 各カード --- */
+.board-card {
+	/* ボタンのリセット */
+	all: unset;
+	box-sizing: border-box;
+	cursor: pointer;
+
+	background: white;
+	border-radius: 16px;
+	padding: 20px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	border: 1px solid #f0ebe3;
+	transition:
+		transform 0.2s,
+		box-shadow 0.2s;
+	display: block;
+	width: 100%;
+}
+
+.board-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 16px rgba(237, 108, 2, 0.12);
+	border-color: #ed6c02;
+}
+
+.board-card:active {
+	transform: translateY(0);
+}
+
+/* --- カードヘッダー（ラウンド番号 + 日付） --- */
+.board-card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.board-card-round-number {
+	background: linear-gradient(135deg, #ff9800, #ed6c02);
+	color: white;
+	font-weight: 700;
+	font-size: 0.8rem;
+	padding: 4px 12px;
+	border-radius: 20px;
+}
+
+.board-card-date {
+	color: #999;
+	font-size: 0.8rem;
+}
+
+/* --- ヒントのプレビュー（チャット形式） --- */
+.board-card-hints {
+	margin-bottom: 12px;
+	display: flex;
+	flex-direction: column;
+	pointer-events: none;
+}
+
+/* カード内のチャットバブルを小さめに調整 */
+.board-card-hints .message-container {
+	max-width: 95%;
+	margin-bottom: 8px;
+}
+
+.board-card-hints .icon {
+	width: 36px;
+	height: 36px;
+}
+
+.board-card-hints .bubble {
+	padding: 8px 12px;
+	font-size: 0.8rem;
+	line-height: 1.4;
+
+	/* 長いテキストを2行で切る */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* --- カードフッター --- */
+.board-card-footer {
+	text-align: right;
+}
+
+.board-card-read-more {
+	color: #ed6c02;
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+
+/* --- ローディング --- */
+.board-list-loading {
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.2rem;
+	color: #888;
+	background-color: #faf7f2;
+}
+
+/* --- 空状態 --- */
+.board-list-empty {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+	background-color: #faf7f2;
+	color: #888;
+	font-size: 1.1rem;
+}
+
+.board-list-back-button {
+	background-color: #ed6c02 !important;
+	text-transform: none !important;
+	font-weight: bold !important;
+	border-radius: 8px !important;
+}
+
+/* --- スマホ対応 --- */
+@media (max-width: 768px) {
+	.board-list-page {
+		padding: 16px 12px;
+	}
+
+	.board-list-title {
+		font-size: 1.2rem;
+	}
+
+	.board-card {
+		padding: 16px;
+		border-radius: 12px;
+	}
+}
