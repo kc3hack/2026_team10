@@ -2,98 +2,129 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Board.css";
 import MessageBubble from "./Components/MessageBubble";
-import ResultOverlay from "../Result/Components/ResultOverlay";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
+// ==========================================
+// 定数
+// ==========================================
+
+/** ヒントに交互に表示するアイコン（京都と大阪） */
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
-function Solo() {
-	const navigate = useNavigate();
-	const { id } = useParams<{ id: string }>();
-	const gameId = Number(id);
-	const [showResultOverlay, setShowResultOverlay] = useState(false);
+// ==========================================
+// 型定義
+// ==========================================
 
+/** APIレスポンスの形 */
+type RoundResponse = {
+	round: {
+		id: number;
+		answer: string;
+		hints: string[];
+		updated_at: string;
+	};
+};
+
+/** チャット表示用のメッセージ */
+type Message = {
+	messageId: number;
+	hint: string;
+	isUser: boolean;
+	icon?: string;
+};
+
+// ==========================================
+// メインコンポーネント
+// ==========================================
+
+function Board() {
+	const navigate = useNavigate();
+
+	// URLからラウンドIDを取得（例: /board/12 → id = "12"）
+	const { id } = useParams<{ id: string }>();
+
+	// 正解の文字列
 	const [answer, setAnswer] = useState("");
-	const [messages, setMessages] = useState<
-		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
-	>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	// チャット形式のメッセージ一覧
+	const [messages, setMessages] = useState<Message[]>([]);
+	// ローディング状態
+	const [isLoading, setIsLoading] = useState(true);
+	// 答えの表示/非表示
+	const [isAnswerVisible, setIsAnswerVisible] = useState(false);
+
+	// スクロール制御用の参照
+	const messagesAreaRef = useRef<HTMLDivElement>(null);
+	const isAtBottomRef = useRef(true);
+	// 二重フェッチ防止用
 	const hasFetchedRef = useRef(false);
 
+	// ページ表示時にAPIからラウンドデータを取得する
 	useEffect(() => {
+		// StrictModeでの二重実行を防ぐ
 		if (hasFetchedRef.current) return;
-		const fetchGameData = async () => {
+		hasFetchedRef.current = true;
+
+		const fetchRoundData = async () => {
 			try {
-				const res = await fetch(`/api/solo/bookmark/random`);
-				const data = await res.json();
-				console.log("APIから取得した生データ:", data);
+				const response = await fetch(`/api/solo/board/${id}`);
+				const data: RoundResponse = await response.json();
 
-				if (data.result) {
-					const fetchedHints = data.result.hints;
-					const fetchedAnswer = data.result.answer;
+				// 正解をセット
+				setAnswer(data.round.answer);
 
-					setAnswer(fetchedAnswer);
-
-					const formattedMessages = fetchedHints.map(
-						(hintText: string, index: number) => ({
-							messageId: index,
-							hint: hintText,
-							isUser: false,
-							icon: HINT_ICONS[index % HINT_ICONS.length],
-						}),
-					);
-
-					setMessages(formattedMessages);
-				}
-			} catch (e) {
-				console.error("データの取得に失敗しました:", e);
+				// ヒントをチャット表示用のメッセージに変換
+				const formattedMessages: Message[] = data.round.hints.map(
+					(hintText, index) => ({
+						messageId: index,
+						hint: hintText,
+						isUser: false,
+						icon: HINT_ICONS[index % HINT_ICONS.length],
+					}),
+				);
+				setMessages(formattedMessages);
+			} catch (error) {
+				console.error("ラウンドデータの取得に失敗しました:", error);
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
-		fetchGameData();
-	}, []);
+		fetchRoundData();
+	}, [id]);
 
-	const messagesAreaRef = useRef<HTMLDivElement>(null);
-	const isAtBottomRef = useRef(true);
-
-	const [isAnswerVisible, setIsAnswerVisible] = useState(false);
-
-	//スクロールされたときに、画面の最も下にあるかどうかを判定する
+	// スクロール位置の判定（最下部にいるかどうか）
 	const handleScroll = () => {
 		if (messagesAreaRef.current) {
 			const { scrollTop, scrollHeight, clientHeight } = messagesAreaRef.current;
-			//画面から10px下以内にあれば、画面の最も下にあると判定する
+			// 画面の下端から10px以内なら「最下部にいる」と判定
 			isAtBottomRef.current = scrollHeight - scrollTop - clientHeight < 10;
 		}
 	};
 
-	//画面の最も下にある場合にのみ自動スクロールする
-	// biome-ignore lint: messageが変更された時点で下にスクロールするためだけなのでmessageは使っていない
+	// メッセージが増えたとき、最下部にいる場合のみ自動スクロール
+	// biome-ignore lint: messagesの変更でスクロールするためだけに使用
 	useEffect(() => {
 		if (isAtBottomRef.current && messagesAreaRef.current) {
 			messagesAreaRef.current.scrollTop = messagesAreaRef.current.scrollHeight;
 		}
 	}, [messages]);
 
+	// ローディング中の表示
 	if (isLoading) {
-		return <div className="loading-container">ロード中．．．</div>;
+		return <div className="loading-container">読み込み中...</div>;
 	}
 
 	return (
 		<div className="board-page-container">
-			{showResultOverlay && (
-				<ResultOverlay
-					gameId={gameId}
-					onClose={() => setShowResultOverlay(false)}
-				/>
-			)}
-			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
-			<div className="messages-area board-message-wrapper" ref={messagesAreaRef} onScroll={handleScroll}>
+			{/* チャット形式のメッセージ表示エリア */}
+			<div
+				className="messages-area board-message-wrapper"
+				ref={messagesAreaRef}
+				onScroll={handleScroll}
+			>
 				{messages.map((msg) => (
 					<MessageBubble
 						key={msg.messageId}
@@ -103,19 +134,24 @@ function Solo() {
 					/>
 				))}
 			</div>
+
+			{/* 画面下部の固定バー */}
 			<div className="fixed-answer-bar">
+				{/* 一覧に戻るボタン */}
 				<Button
 					variant="outlined"
-					onClick={() => navigate("/")}
+					onClick={() => navigate("/board")}
 					className="square-icon-button back-to-title-btn"
 				>
 					<ArrowBackIcon fontSize="medium" />
 					<span>
-						タイトル
+						一覧に
 						<br />
-						に戻る
+						戻る
 					</span>
 				</Button>
+
+				{/* 答えの表示/非表示トグルボタン */}
 				<Button
 					variant="outlined"
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
@@ -147,4 +183,4 @@ function Solo() {
 	);
 }
 
-export default Solo;
+export default Board;

@@ -90,7 +90,9 @@
 /* 吹き出しのスタイリング */
 .loading-text {
 	position: relative;
-	font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+	font-family:
+		"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo,
+		sans-serif;
 	font-size: 18px;
 	font-weight: 700;
 	line-height: 1.5;
@@ -150,7 +152,6 @@
 }
 
 @keyframes floating-text {
-
 	0%,
 	100% {
 		transform: translateY(0);
@@ -162,7 +163,6 @@
 }
 
 @keyframes bounce {
-
 	0%,
 	100% {
 		transform: scale(1) translateY(0);

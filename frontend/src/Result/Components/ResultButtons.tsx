@@ -29,7 +29,7 @@ export default function ResultButtons({
 		borderWidth: "1px",
 		"&:hover": {
 			borderWidth: "1px",
-		}
+		},
 	};
 
 	const orangeStyle = {

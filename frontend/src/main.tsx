@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
 import Solo from "./Solo/index.tsx";
+import BoardList from "./Board/BoardList.tsx";
 import Board from "./Board/index.tsx";
 
 const rootElement = document.getElementById("root");
@@ -17,8 +18,10 @@ createRoot(rootElement).render(
 				<Route path="/" element={<App />} />
 				{/* localhost:5173/solo */}
 				<Route path="/solo" element={<Solo />} />
-				{/* localhost:5173/board */}
-				<Route path="/board" element={<Board />} />
+				{/* localhost:5173/board（一覧ページ） */}
+				<Route path="/board" element={<BoardList />} />
+				{/* localhost:5173/board/12（詳細ページ） */}
+				<Route path="/board/:id" element={<Board />} />
 			</Routes>
 		</BrowserRouter>
 	</StrictMode>,
