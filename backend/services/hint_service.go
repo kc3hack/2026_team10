@@ -31,7 +31,7 @@ type IHintService interface {
 	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
 	BookmarkRound(id uint) (*dto.RoundResponse, error)
 	GetRandomBookmark() (*dto.RoundResponse, error)
-	GetBookmarkedList() ([]models.Round, error)
+	GetBookmarkedList() ([]BookmarkedRoundResponse, error)
 }
 
 type HintService struct {
@@ -300,14 +300,37 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 	}, nil
 }
 
-func (s *HintService) GetBookmarkedList() ([]models.Round, error) {
-	// s.repo ではなく s.repository に修正
+// 1. 構造体に CreatedAt を追加
+type BookmarkedRoundResponse struct {
+	ID        uint      `json:"id"`
+	Answer    string    `json:"answer"`
+	Hints     []string  `json:"hints"`
+	CreatedAt time.Time `json:"created_at"` // 追加
+}
+
+func (s *HintService) GetBookmarkedList() ([]BookmarkedRoundResponse, error) {
 	rounds, err := s.repository.GetAllBookmarkedRounds()
 	if err != nil {
 		return nil, err
 	}
-	if rounds == nil {
-		return []models.Round{}, nil
+
+	response := []BookmarkedRoundResponse{}
+
+	for _, r := range rounds {
+		// 2. ヒントを前から最大4つに制限するロジック
+		limit := 4
+		if len(r.Hints) < limit {
+			limit = len(r.Hints)
+		}
+		displayHints := r.Hints[:limit]
+
+		// 3. 必要な情報を詰め替える
+		response = append(response, BookmarkedRoundResponse{
+			ID:        r.ID,
+			Answer:    r.Answers[0],
+			Hints:     displayHints, // 制限したヒントを使用
+			CreatedAt: r.CreatedAt,  // 作成日時を代入
+		})
 	}
-	return rounds, nil
+	return response, nil
 }
