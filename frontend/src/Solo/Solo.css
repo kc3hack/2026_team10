@@ -109,7 +109,7 @@
 
 .loading-progress-text {
 	margin-top: -10px;
-	font-size: 13px;
+	font-size: 10px;
 	font-weight: 600;
 	color: #666;
 	letter-spacing: 0.01em;
@@ -136,6 +136,11 @@
 	border-left: 9px solid transparent;
 	border-right: 9px solid transparent;
 	border-bottom: 11px solid #ffffff;
+}
+
+.aruaru-text {
+	font-size: 20px;
+	font-weight: 600;
 }
 
 /* スピナーを少し小さく、Material Blueで */
