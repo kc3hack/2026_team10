@@ -12,7 +12,13 @@ const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
 function Solo() {
 	const [messages, setMessages] = useState<
-		{ messageId: number; hint: string; isUser: boolean; icon?: string }[]
+		{
+			messageId: number;
+			hint: string;
+			isUser: boolean;
+			icon?: string;
+			isDivider?: boolean;
+		}[]
 	>([]);
 	const [hints, setHints] = useState<string[]>([]);
 	const [gameId, setGameId] = useState<number | null>(null);
@@ -210,14 +216,37 @@ function Solo() {
 	const handleShowStory = () => {
 		setMessages((prev) => {
 			const newMessages = [...prev];
+			const divider = {
+				messageId: Date.now() + 999,
+				hint: "DIVIDER",
+				isUser: false,
+				isDivider: true,
+			};
+
 			if (newMessages.length >= 2) {
-				newMessages.splice(newMessages.length - 2, 0, ...pendingHints);
+				newMessages.splice(newMessages.length - 2, 0, divider, ...pendingHints);
 			} else {
-				newMessages.push(...pendingHints);
+				newMessages.push(divider, ...pendingHints);
 			}
 			return newMessages;
 		});
 		setPendingHints([]);
+	};
+
+	const handleHideStory = () => {
+		setMessages((prev) => {
+			const dividerIndex = prev.findIndex((m) => m.isDivider);
+			if (dividerIndex === -1) return prev;
+
+			const newMessages = [...prev];
+			// Extractstory hints to put back in pendingHints
+			const storyHints = newMessages.slice(dividerIndex + 1, newMessages.length - 2);
+			setPendingHints(storyHints);
+
+			// Remove divider and the hints
+			newMessages.splice(dividerIndex, storyHints.length + 1);
+			return newMessages;
+		});
 	};
 
 	if (isLoading) {
@@ -257,18 +286,32 @@ function Solo() {
 			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg, index) => (
 					<React.Fragment key={msg.messageId}>
-						{pendingHints.length > 0 && index === messages.length - 2 && (
+						{msg.isDivider ? (
 							<div
-								className="show-story-trigger"
-								onClick={handleShowStory}
-								onKeyDown={(e) => e.key === "Enter" && handleShowStory()}
+								className="story-start-divider"
+								onClick={handleHideStory}
+								onKeyDown={(e) => e.key === "Enter" && handleHideStory()}
 								tabIndex={0}
 								role="button"
 							>
-								<span>物語の続きを見る ▼</span>
+								<span>物語の続きを閉じる ▲</span>
 							</div>
+						) : (
+							<>
+								{pendingHints.length > 0 && index === messages.length - 2 && (
+									<div
+										className="show-story-trigger"
+										onClick={handleShowStory}
+										onKeyDown={(e) => e.key === "Enter" && handleShowStory()}
+										tabIndex={0}
+										role="button"
+									>
+										<span>物語の続きを見る ▼</span>
+									</div>
+								)}
+								<MessageBubble text={msg.hint} isUser={msg.isUser} icon={msg.icon} />
+							</>
 						)}
-						<MessageBubble text={msg.hint} isUser={msg.isUser} icon={msg.icon} />
 					</React.Fragment>
 				))}
 			</div>
