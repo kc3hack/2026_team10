@@ -31,6 +31,7 @@ type IHintService interface {
 	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
 	BookmarkRound(id uint) (*dto.RoundResponse, error)
 	GetRandomBookmark() (*dto.RoundResponse, error)
+	GetBookmarkedList() ([]dto.RoundResponse, error)
 }
 
 type HintService struct {
@@ -149,8 +150,11 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"answers": map[string]any{
 					"type": "array",
 					"items": map[string]any{
-						"type":        "string",
-						"description": "正解のリスト。表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。",
+						"type": "string",
+						"description": `正解のリスト。
+						- 一番最初に最も一般的な答えが入るようにしてください
+						- 表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、
+						- および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。`,
 					},
 				},
 				"hints": map[string]any{
@@ -297,4 +301,29 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 		Hints:     round.Hints,
 		UpdatedAt: round.UpdatedAt,
 	}, nil
+}
+
+func (s *HintService) GetBookmarkedList() ([]dto.RoundResponse, error) {
+	rounds, err := s.repository.GetAllBookmarkedRounds()
+	if err != nil {
+		return nil, err
+	}
+
+	response := []dto.RoundResponse{}
+
+	for _, r := range rounds {
+		limit := 4
+		if len(r.Hints) < limit {
+			limit = len(r.Hints)
+		}
+		displayHints := r.Hints[:limit]
+
+		response = append(response, dto.RoundResponse{
+			ID:        r.ID,
+			Answer:    r.Answers[0],
+			Hints:     displayHints,
+			UpdatedAt: r.UpdatedAt,
+		})
+	}
+	return response, nil
 }
