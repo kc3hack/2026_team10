@@ -31,6 +31,7 @@ function Solo() {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 	const [isBookmarked, setIsBookmarked] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [isGivenUp, setIsGivenUp] = useState(false);
 	const [pendingHints, setPendingHints] = useState<any[]>([]);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
@@ -192,6 +193,57 @@ function Solo() {
 		}
 	};
 
+	// 全ヒントが表示されたかどうかを判定する
+	const shownHintCount = messages.filter(
+		(m) =>
+			!m.isUser &&
+			!m.isDivider &&
+			m.hint !== "正解やで！" &&
+			m.hint !== "不正解どす..." &&
+			!m.hint.startsWith("正解は「"),
+	).length;
+	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
+
+	// ギブアップ処理：正解を取得してチャットに表示する
+	const handleGiveUp = async () => {
+		if (gameId === null) return;
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/answer`);
+			const data = await res.json();
+			const correctAnswer = data.answer;
+
+			// 「ギブアップ！」のユーザーメッセージを追加
+			setMessages((prev) => [
+				...prev,
+				{
+					messageId: Date.now(),
+					hint: "ギブアップ！",
+					isUser: true,
+					icon: "😎",
+				},
+			]);
+
+			// 少し間を空けてから正解を表示する
+			setTimeout(() => {
+				setMessages((prev) => [
+					...prev,
+					{
+						messageId: Date.now() + 1,
+						hint: `正解は「${correctAnswer}」やで！`,
+						isUser: false,
+						icon: "/Image/Osaka.jpg",
+					},
+				]);
+				setIsGivenUp(true);
+				setHasAnswered(true);
+				setShowResultOverlay(true);
+			}, 500);
+		} catch (error) {
+			console.error("正解の取得に失敗しました:", error);
+		}
+	};
+
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
@@ -302,6 +354,7 @@ function Solo() {
 					isAnimating={isAnimating}
 					onBookmark={handleBookmark}
 					onClose={handleCloseResult}
+					isGivenUp={isGivenUp}
 				/>
 			)}
 			{isShareOpen && gameId !== null && (
@@ -339,6 +392,17 @@ function Solo() {
 						)}
 					</React.Fragment>
 				))}
+				{/* 全ヒント表示後にギブアップの選択肢をチャットとして表示 */}
+				{allHintsShown && !hasAnswered && (
+					<button
+						type="button"
+						className="giveup-chat-bubble"
+						onClick={handleGiveUp}
+					>
+						<img src="/Image/Kyoto.jpg" alt="icon" className="giveup-icon-img" />
+						<span className="giveup-chat-text">答えを見る？</span>
+					</button>
+				)}
 			</div>
 			<div className="solo-footer">
 				{!hasAnswered || showResultOverlay ? (

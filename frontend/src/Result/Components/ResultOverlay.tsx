@@ -13,6 +13,7 @@ interface Props {
 	readonly isAnimating: boolean;
 	readonly onBookmark: () => void;
 	readonly onClose?: () => void;
+	readonly isGivenUp?: boolean;
 }
 
 export default function ResultOverlay({
@@ -21,6 +22,7 @@ export default function ResultOverlay({
 	isAnimating,
 	onBookmark,
 	onClose,
+	isGivenUp = false,
 }: Props) {
 	const navigate = useNavigate();
 	const [isShareOpen, setIsShareOpen] = useState(false);
@@ -41,7 +43,7 @@ export default function ResultOverlay({
 			type="button"
 			tabIndex={0}
 		>
-			<ThanksConfetti />
+			{!isGivenUp && <ThanksConfetti />}
 
 			<div
 				className="result-card"
@@ -61,7 +63,7 @@ export default function ResultOverlay({
 					<CloseIcon />
 				</IconButton>
 
-				<h1 className="seikai-text">正解</h1>
+				{!isGivenUp && <h1 className="seikai-text">正解</h1>}
 
 				<ResultButtons
 					gameId={gameId}
