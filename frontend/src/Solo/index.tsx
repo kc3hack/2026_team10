@@ -6,6 +6,7 @@ import ShareModal from "../Result/Components/ShareModal";
 import InputArea from "./Components/InputArea";
 import MessageBubble from "./Components/MessageBubble";
 import Timer from "./Components/Timer";
+import FlagIcon from "@mui/icons-material/Flag";
 import "./Solo.css";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
@@ -31,6 +32,7 @@ function Solo() {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 	const [isBookmarked, setIsBookmarked] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(false);
+	const [isGivenUp, setIsGivenUp] = useState(false);
 	const [pendingHints, setPendingHints] = useState<any[]>([]);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
@@ -192,6 +194,57 @@ function Solo() {
 		}
 	};
 
+	// 全ヒントが表示されたかどうかを判定する
+	const shownHintCount = messages.filter(
+		(m) =>
+			!m.isUser &&
+			!m.isDivider &&
+			m.hint !== "正解やで！" &&
+			m.hint !== "不正解どす..." &&
+			!m.hint.startsWith("正解は「"),
+	).length;
+	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
+
+	// ギブアップ処理：正解を取得してチャットに表示する
+	const handleGiveUp = async () => {
+		if (gameId === null) return;
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/answer`);
+			const data = await res.json();
+			const correctAnswer = data.answer;
+
+			// 「ギブアップ！」のユーザーメッセージを追加
+			setMessages((prev) => [
+				...prev,
+				{
+					messageId: Date.now(),
+					hint: "ギブアップ！",
+					isUser: true,
+					icon: "😎",
+				},
+			]);
+
+			// 少し間を空けてから正解を表示する
+			setTimeout(() => {
+				setMessages((prev) => [
+					...prev,
+					{
+						messageId: Date.now() + 1,
+						hint: `正解は「${correctAnswer}」やで！`,
+						isUser: false,
+						icon: "/Image/Osaka.jpg",
+					},
+				]);
+				setIsGivenUp(true);
+				setHasAnswered(true);
+				setShowResultOverlay(true);
+			}, 500);
+		} catch (error) {
+			console.error("正解の取得に失敗しました:", error);
+		}
+	};
+
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
@@ -302,6 +355,7 @@ function Solo() {
 					isAnimating={isAnimating}
 					onBookmark={handleBookmark}
 					onClose={handleCloseResult}
+					isGivenUp={isGivenUp}
 				/>
 			)}
 			{isShareOpen && gameId !== null && (
@@ -342,13 +396,21 @@ function Solo() {
 			</div>
 			<div className="solo-footer">
 				{!hasAnswered || showResultOverlay ? (
-					<InputArea
-						value={inputValue}
-						onChange={setInputValue}
-						onSubmit={handleSubmit}
-						placeholder="回答を記入してください"
-						hidden={hasAnswered}
-					/>
+					<div className="input-with-giveup">
+						<InputArea
+							value={inputValue}
+							onChange={setInputValue}
+							onSubmit={handleSubmit}
+							placeholder="回答を記入してください"
+							hidden={hasAnswered}
+						/>
+						{allHintsShown && !hasAnswered && (
+							<button type="button" className="giveup-button" onClick={handleGiveUp}>
+								<FlagIcon fontSize="small" />
+								<span>ギブアップ</span>
+							</button>
+						)}
+					</div>
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
