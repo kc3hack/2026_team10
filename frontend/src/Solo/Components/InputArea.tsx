@@ -1,4 +1,5 @@
 import React from "react";
+import SendIcon from "@mui/icons-material/Send";
 import "./InputArea.css";
 
 interface InputAreaProps {
@@ -38,7 +39,7 @@ const InputArea: React.FC<InputAreaProps> = ({
 				style={{ visibility: hidden ? "hidden" : "visible" }}
 			>
 				<button type="button" className="send-button" onClick={onSubmit}>
-					送信
+					<SendIcon className="send-button-icon" />
 				</button>
 			</div>
 		</div>
