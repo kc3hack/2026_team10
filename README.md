@@ -169,6 +169,10 @@
 
 <!-- 使用技術を入力してください -->
 
+### AWS構成図
+<img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />
+
+
 
 <!--
 markdownの記法はこちらを参照してください！
