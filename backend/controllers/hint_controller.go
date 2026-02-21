@@ -17,6 +17,7 @@ type IHintController interface {
 	GetFinishedRoundByID(ctx *gin.Context)
 	BookmarkRound(ctx *gin.Context)
 	GetRandomBookmark(ctx *gin.Context)
+	GetBookmarkedList(ctx *gin.Context)
 }
 
 type HintController struct {
@@ -142,4 +143,14 @@ func (c *HintController) GetRandomBookmark(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"result": result})
+}
+
+func (c *HintController) GetBookmarkedList(ctx *gin.Context) {
+	result, err := c.service.GetBookmarkedList()
+	if err != nil {
+		_ = ctx.Error(err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get bookmarked list"})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"results": result})
 }
