@@ -65,7 +65,7 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 			"answers": {
 				Type:        genai.TypeArray,
 				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
+				Description: "正解のリスト。漢字、ひらがな、カタカナ、英語（小文字）、および一般的な略称（例：自販機、スマホ）を全て含めること。",
 			},
 			"hints": {
 				Type:        genai.TypeArray,
@@ -86,6 +86,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		- お題を当てるクイズ形式にする。
 		- お題 そのものの単語は絶対にセリフに含めない。
 		- 具体的な 商品名 は避け、一般名詞を正解とする。
+
+		- "answers" 配列には、正解判定を網羅するため以下のパターンを全て含めること。
+            - 漢字、ひらがな、カタカナ。
+            - 英語（全て小文字）。
+            - 一般的な略称や通称（例：「自動販売機」なら「自販機」、「スマートフォン」なら「スマホ」）。
+            - 例：お題が自転車なら ["自転車", "じてんしゃ", "ジテンシャ", "bicycle", "チャリ"]
 
 		- ヒント(セリフ)は10個程度で。京都のターン → 大阪のターン の順番で交互にループさせる。
 		- 1つのセリフはできるだけ短くする。
