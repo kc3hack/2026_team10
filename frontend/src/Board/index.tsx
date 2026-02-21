@@ -85,7 +85,7 @@ function Solo() {
 	}
 
 	return (
-		<div className="solo-container">
+		<div className="board-page-container">
 			{showResultOverlay && (
 				<ResultOverlay
 					gameId={gameId}
@@ -93,7 +93,7 @@ function Solo() {
 				/>
 			)}
 			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
-			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
+			<div className="messages-area board-message-wrapper" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
 					<MessageBubble
 						key={msg.messageId}

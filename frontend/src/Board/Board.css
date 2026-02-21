@@ -1,4 +1,4 @@
-.solo-container {
+.board-page-container {
 	width: 100%;
 	height: 100vh;
 	margin: 0;
@@ -12,7 +12,7 @@
 }
 
 @media (max-width: 768px) {
-	.solo-container {
+	.board-page-container {
 		padding: 0 5px;
 		/* Minimal horizontal padding */
 	}
@@ -152,7 +152,7 @@
 
 /* スマホ向けの微調整 */
 @media (max-width: 768px) {
-	.solo-container {
+	.board-page-container {
 		padding: 0;
 	}
 
