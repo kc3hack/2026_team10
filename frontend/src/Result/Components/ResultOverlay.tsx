@@ -34,11 +34,11 @@ export default function ResultOverlay({
 	};
 
 	return (
-		<button
+		<div
 			className="overlay"
 			onClick={onClose}
 			onKeyDown={(e) => e.key === "Escape" && onClose}
-			type="button"
+			// type="button"
 			tabIndex={0}
 		>
 			<ThanksConfetti />
@@ -76,6 +76,6 @@ export default function ResultOverlay({
 			{isShareOpen && (
 				<ShareModal gameId={gameId} onClose={() => setIsShareOpen(false)} />
 			)}
-		</button>
+		</div>
 	);
 }
