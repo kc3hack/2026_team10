@@ -9,7 +9,11 @@ interface Props {
 	readonly onClick?: () => void;
 }
 
-export default function BookmarkButton({ isBookmarked, isAnimating = false, onClick }: Props) {
+export default function BookmarkButton({
+	isBookmarked,
+	isAnimating = false,
+	onClick,
+}: Props) {
 	return (
 		<IconButton
 			className={`bookmark-button ${isBookmarked ? "bookmarked" : ""} ${isAnimating ? "bookmark-pop" : ""}`}

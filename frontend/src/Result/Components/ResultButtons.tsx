@@ -36,7 +36,7 @@ export default function ResultButtons({
 		borderWidth: "1px",
 		"&:hover": {
 			borderWidth: "1px",
-		}
+		},
 	};
 
 	const orangeStyle = {
@@ -78,7 +78,12 @@ export default function ResultButtons({
 				variant={isBookmarked ? "contained" : "outlined"}
 				onClick={onBookmark}
 				className={isAnimating ? "bookmark-pop" : ""}
-				sx={{ ...baseButtonSx, ...heartStyle, transition: "color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease" }}
+				sx={{
+					...baseButtonSx,
+					...heartStyle,
+					transition:
+						"color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease",
+				}}
 			>
 				{isAnimating ? (
 					<img 
@@ -96,6 +101,7 @@ export default function ResultButtons({
 				<span>
 					ええやん
 				</span>
+
 			</Button>
 
 			<Button
