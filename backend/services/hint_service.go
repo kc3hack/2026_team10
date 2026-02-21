@@ -31,6 +31,7 @@ type IHintService interface {
 	GetFinishedRoundByID(id uint) (*dto.RoundResponse, error)
 	BookmarkRound(id uint) (*dto.RoundResponse, error)
 	GetRandomBookmark() (*dto.RoundResponse, error)
+	GetBookmarkedList() ([]models.Round, error)
 }
 
 type HintService struct {
@@ -297,4 +298,16 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 		Hints:     round.Hints,
 		UpdatedAt: round.UpdatedAt,
 	}, nil
+}
+
+func (s *HintService) GetBookmarkedList() ([]models.Round, error) {
+	// s.repo ではなく s.repository に修正
+	rounds, err := s.repository.GetAllBookmarkedRounds()
+	if err != nil {
+		return nil, err
+	}
+	if rounds == nil {
+		return []models.Round{}, nil
+	}
+	return rounds, nil
 }
