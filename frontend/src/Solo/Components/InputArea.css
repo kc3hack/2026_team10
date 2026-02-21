@@ -1,5 +1,7 @@
 .input-area-container {
 	width: 100%;
+	max-width: 700px;
+	margin: 0 auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -8,9 +10,7 @@
 
 .input-field {
 	flex: 1;
-	/* Take up available space */
-	max-width: 70%;
-	/* Adjust max-width to make room for button */
+	min-width: 0;
 	padding: 15px 20px;
 	border: 2px solid #888;
 	border-radius: 8px;
@@ -26,7 +26,12 @@
 }
 
 .send-button {
-	padding: 15px 25px;
+	width: 56px;
+	height: 56px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	background-color: #4caf50;
 	/* Green submit button */
 	color: white;
@@ -35,11 +40,17 @@
 	font-size: 16px;
 	cursor: pointer;
 	transition: background-color 0.3s;
-	white-space: nowrap;
 }
 
 .send-button:hover {
 	background-color: #45a049;
+}
+
+@media (max-width: 768px) {
+	.send-button {
+		width: 48px;
+		height: 48px;
+	}
 }
 
 .result-button {
@@ -61,23 +72,8 @@
 
 .button-group {
 	display: flex;
-	flex-direction: column;
 	gap: 10px;
-}
-
-@media (max-width: 768px) {
-	.input-area-container {
-		padding: 0;
-		/* Remove internal padding to keep footer height stable */
-	}
-
-	.input-field {
-		max-width: 100%;
-		/* Take full width */
-		padding: 10px;
-	}
-
-	.send-button {
-		padding: 10px 15px;
-	}
+	width: auto;
+	max-width: none;
+	flex: 0 0 auto;
 }

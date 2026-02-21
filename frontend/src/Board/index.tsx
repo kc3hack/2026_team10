@@ -5,6 +5,8 @@ import MessageBubble from "./Components/MessageBubble";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
@@ -25,7 +27,7 @@ function Solo() {
 		if (hasFetchedRef.current) return;
 		const fetchGameData = async () => {
 			try {
-				const res = await fetch(`/api/solo/bookmark/random`); 
+				const res = await fetch(`/api/solo/bookmark/random`);
 				const data = await res.json();
 				console.log("APIから取得した生データ:", data);
 
@@ -83,7 +85,7 @@ function Solo() {
 	}
 
 	return (
-		<div className="solo-container">
+		<div className="board-page-container">
 			{showResultOverlay && (
 				<ResultOverlay
 					gameId={gameId}
@@ -91,7 +93,7 @@ function Solo() {
 				/>
 			)}
 			{/* {!hasAnswered && <Timer seconds={timeLeft} />} */}
-			<div className="messages-area" ref={messagesAreaRef} onScroll={handleScroll}>
+			<div className="messages-area board-message-wrapper" ref={messagesAreaRef} onScroll={handleScroll}>
 				{messages.map((msg) => (
 					<MessageBubble
 						key={msg.messageId}
@@ -109,19 +111,37 @@ function Solo() {
 				>
 					<ArrowBackIcon fontSize="medium" />
 					<span>
-						タイトルに
+						タイトル
 						<br />
-						戻る
+						に戻る
 					</span>
 				</Button>
-				<button
-					className="answer-section"
+				<Button
+					variant="outlined"
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
+					className={`square-icon-button answer-toggle-btn ${isAnswerVisible ? "visible" : ""}`}
 				>
-					<span className={`answer-mask ${isAnswerVisible ? "visible" : ""}`}>
-						{isAnswerVisible ? answer : "タップで答えを確認"}
+					{isAnswerVisible ? (
+						<VisibilityIcon fontSize="medium" />
+					) : (
+						<HelpOutlineIcon fontSize="medium" />
+					)}
+					<span>
+						{isAnswerVisible ? (
+							<>
+								答え:
+								<br />
+								{answer}
+							</>
+						) : (
+							<>
+								タップで
+								<br />
+								答えを確認
+							</>
+						)}
 					</span>
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

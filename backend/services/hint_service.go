@@ -51,6 +51,26 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
 	}
+	defer client.Close()
+
+	modelGemini := client.GenerativeModel("gemini-2.5-flash")
+	modelGemini.ResponseMIMEType = "application/json"
+	modelGemini.ResponseSchema = &genai.Schema{
+		Type:     genai.TypeObject,
+		Required: []string{"answers", "hints"},
+		Properties: map[string]*genai.Schema{
+			"answers": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
+			},
+			"hints": {
+				Type:        genai.TypeArray,
+				Items:       &genai.Schema{Type: genai.TypeString},
+				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
+			},
+		},
+	}
 
 	const prompt = `
 		# Role
@@ -63,6 +83,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		- お題を当てるクイズ形式にする。
 		- お題 そのものの単語は絶対にセリフに含めない。
 		- 具体的な 商品名 は避け、一般名詞を正解とする。
+
+		- "answers" 配列には、正解判定を網羅するため以下のパターンを全て含めること。
+            - 漢字、ひらがな、カタカナ。
+            - 英語（全て小文字）。
+            - 一般的な略称や通称（例：「自動販売機」なら「自販機」、「スマートフォン」なら「スマホ」）。
+            - 例：お題が自転車なら ["自転車", "じてんしゃ", "ジテンシャ", "bicycle", "チャリ"]
 
 		- ヒント(セリフ)は10個程度で。京都のターン → 大阪のターン の順番で交互にループさせる。
 		- 1つのセリフはできるだけ短くする。
@@ -144,14 +170,14 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 					"type": "array",
 					"items": map[string]any{
 						"type":        "string",
-						"description": "お題。表記ゆれを考慮して複数入れる。",
+						"description": "正解のリスト。表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。",
 					},
 				},
 				"hints": map[string]any{
 					"type": "array",
 					"items": map[string]any{
 						"type":        "string",
-						"description": "ヒントの会話文のセリフ。京都(奇数)と大阪(偶数)の交互で10個。",
+						"description": "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
 					},
 				},
 			},
