@@ -253,7 +253,9 @@ function Solo() {
 			setIsBookmarked(true);
 			const postBookmark = async () => {
 				try {
-					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, { method: "POST" });
+					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, {
+						method: "POST",
+					});
 					if (!res.ok) throw new Error("通信エラー");
 				} catch (e) {
 					console.error("ブックマーク登録に失敗しました:", e);
@@ -263,14 +265,9 @@ function Solo() {
 			setTimeout(() => {
 				setIsAnimating(false);
 				postBookmark();
-				handleShare(); 
-				
+				handleShare();
 			}, 2000);
 		}
-	};
-	const handleBookmarkAndShare = async () => {
-		await handleBookmark();
-		// handleShare();
 	};
 
 	const handleCloseResult = () => {
@@ -349,6 +346,7 @@ function Solo() {
 					</div>
 				</div>
 				<div className="spinner" />
+				<div className="loading-progress-text">お題とヒントを準備中...</div>
 			</div>
 		);
 	}
@@ -429,7 +427,6 @@ function Solo() {
 							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}
 							onRetry={handleRetry}
-							// onBookmark={handleBookmarkAndShare}
 							onBookmark={handleBookmark}
 						/>
 					</div>
