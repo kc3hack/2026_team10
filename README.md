@@ -1,5 +1,5 @@
 # プロダクト名
-
+あれちゃう？知らんけど。
 <!-- プロダクト名に変更してください -->
 
 ![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png)
@@ -8,12 +8,12 @@
 
 ## チーム名
 
-チーム10 XXXX
+チーム10 一汁三菜
 
 <!-- チームIDとチーム名を入力してください -->
 
 # プロダクト名
-
+<img width="935" height="446" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
 > キャッチコピー(1行で「何を誰のために解決するか」)
 
 # 1. プロダクト概要
