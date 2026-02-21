@@ -80,7 +80,19 @@ export default function ResultButtons({
 				className={isAnimating ? "bookmark-pop" : ""}
 				sx={{ ...baseButtonSx, ...heartStyle, transition: "color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease" }}
 			>
-				{isBookmarked ? <FavoriteIcon fontSize="medium" /> : <FavoriteBorderIcon fontSize="medium" />}
+				{isAnimating ? (
+					<img 
+						src={`/chaShibaki.gif?t=${Date.now()}`} 
+						alt="ええやん" 
+						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					/>
+				) : (
+					<img 
+						src="/chashibaki.png" 
+						alt="ちゃしばき済" 
+						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					/>
+                )}
 				<span>
 					ええやん
 				</span>
