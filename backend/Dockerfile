@@ -1,12 +1,19 @@
-FROM golang:1.25.7-alpine
+FROM golang:1.25.7-alpine AS builder
 
-WORKDIR /app
+WORKDIR /src
 
-RUN go install github.com/air-verse/air@v1.64.5
-
-COPY go.mod go.sum ./
+COPY backend/go.mod backend/go.sum ./backend/
+WORKDIR /src/backend
 RUN go mod download
 
-COPY . .
+COPY backend/ ./
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/server main.go
 
-CMD ["air", "-c", ".air.toml"]
+FROM gcr.io/distroless/static-debian12
+
+WORKDIR /app
+COPY --from=builder /app/server /app/server
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/server"]

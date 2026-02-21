@@ -1,0 +1,24 @@
+services:
+  app-front:
+    image: ghcr.io/${GHCR_OWNER:-kc3hack}/team10-front:latest
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - app-back
+    networks:
+      - app-network
+
+  app-back:
+    image: ghcr.io/${GHCR_OWNER:-kc3hack}/team10-back:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
