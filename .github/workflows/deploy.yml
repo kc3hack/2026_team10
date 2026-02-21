@@ -2,7 +2,11 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
 
 env:
   REGISTRY: ghcr.io
@@ -49,6 +53,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'develop' || startsWith(github.ref_name, 'release/'))
     strategy:
       matrix:
         host: [web01.home, web02.home]
@@ -71,9 +76,9 @@ jobs:
               git clone https://github.com/${{ github.repository }}.git /home/ec2-user/2026_team10
             fi
             cd /home/ec2-user/2026_team10
-            git fetch origin main
-            git checkout main
-            git pull --ff-only origin main
+            git fetch origin ${{ github.ref_name }}
+            git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+            git pull --ff-only origin ${{ github.ref_name }}
             echo "${GITHUB_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
             docker compose -f docker-compose.yaml pull
             docker compose -f docker-compose.yaml up -d --remove-orphans
