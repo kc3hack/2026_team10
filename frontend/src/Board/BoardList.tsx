@@ -48,7 +48,7 @@ function BoardList() {
 	useEffect(() => {
 		const fetchRounds = async () => {
 			try {
-				const response = await fetch("/api/solo/board");
+				const response = await fetch("/api/solo/bookmark/all");
 				const data: ApiResponse = await response.json();
 
 				// results配列をそのままセット
