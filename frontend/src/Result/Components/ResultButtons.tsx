@@ -72,9 +72,9 @@ export default function ResultButtons({
 			>
 				<XIcon fontSize="medium" />
 				<span>
-					Xで
+					Xに
 					<br />
-					シェア
+					ポスト
 				</span>
 			</Button>
 
