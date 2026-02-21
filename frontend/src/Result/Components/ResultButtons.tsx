@@ -11,7 +11,6 @@ interface Props {
 	isBookmarked: boolean;
 	isAnimating: boolean;
 	onBackToTitle: () => void;
-	onShare: () => void;
 	onRetry: () => void;
 	onBookmark: () => void;
 }
@@ -20,7 +19,6 @@ export default function ResultButtons({
 	isBookmarked,
 	isAnimating,
 	onBackToTitle,
-	onShare,
 	onRetry,
 	onBookmark,
 }: Props) {

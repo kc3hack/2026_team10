@@ -9,16 +9,29 @@ import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
 	readonly gameId: number;
+	readonly isBookmarked: boolean;
+	readonly isAnimating: boolean;
+	readonly onBookmark: () => void;
 	readonly onClose?: () => void;
 }
 
-export default function ResultOverlay({ gameId, onClose }: Props) {
+export default function ResultOverlay({
+	gameId,
+	isBookmarked,
+	isAnimating,
+	onBookmark,
+	onClose,
+}: Props) {
 	const navigate = useNavigate();
 	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
+	const handleBookmarkAndShare = () => {
+		onBookmark();
+		handleShare();
+	};
 
 	return (
 		<button
@@ -52,9 +65,11 @@ export default function ResultOverlay({ gameId, onClose }: Props) {
 
 				<ResultButtons
 					gameId={gameId}
+					isBookmarked={isBookmarked}
+					isAnimating={isAnimating}
 					onBackToTitle={handleTitle}
-					onShare={handleShare}
 					onRetry={handleRetry}
+					onBookmark={handleBookmarkAndShare}
 				/>
 			</div>
 

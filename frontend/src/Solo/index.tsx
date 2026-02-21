@@ -29,6 +29,8 @@ function Solo() {
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isShareOpen, setIsShareOpen] = useState(false);
+	const [isBookmarked, setIsBookmarked] = useState(false);
+	const [isAnimating, setIsAnimating] = useState(false);
 	const [pendingHints, setPendingHints] = useState<any[]>([]);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
@@ -193,6 +195,23 @@ function Solo() {
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
+	const handleBookmark = async () => {
+		if (!isBookmarked) {
+			setIsAnimating(true);
+			setIsBookmarked(true);
+			try {
+				await fetch(`/api/solo/${gameId ?? 0}/bookmark`, { method: "POST" });
+			} catch (e) {
+				console.error("ブックマーク登録に失敗しました:", e);
+				setIsBookmarked(false);
+			}
+			setTimeout(() => setIsAnimating(false), 600);
+		}
+	};
+	const handleBookmarkAndShare = async () => {
+		await handleBookmark();
+		handleShare();
+	};
 
 	const handleCloseResult = () => {
 		setShowResultOverlay(false);
@@ -276,6 +295,9 @@ function Solo() {
 			{showResultOverlay && gameId !== null && (
 				<ResultOverlay
 					gameId={gameId}
+					isBookmarked={isBookmarked}
+					isAnimating={isAnimating}
+					onBookmark={handleBookmark}
 					onClose={handleCloseResult}
 				/>
 			)}
@@ -328,9 +350,11 @@ function Solo() {
 					<div className="result-buttons-container">
 						<ResultButtons
 							gameId={gameId ?? 0}
+							isBookmarked={isBookmarked}
+							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}
-							onShare={handleShare}
 							onRetry={handleRetry}
+							onBookmark={handleBookmarkAndShare}
 						/>
 					</div>
 				)}
