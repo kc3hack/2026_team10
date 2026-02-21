@@ -85,9 +85,9 @@ export default function ResultButtons({
 			>
 				{isAnimating ? (
 					<img
-						src={`/chaShibaki.gif?t=${Date.now()}`}
+						src={`/chaShibaki.gif`}
 						alt="ええやん"
-						style={{ width: "40px", height: "40px", objectFit: "contain" }}
+						style={{ width: "160px", height: "160px", objectFit: "contain" }}
 					/>
 				) : (
 					<img
