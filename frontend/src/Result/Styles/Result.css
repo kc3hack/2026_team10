@@ -123,7 +123,7 @@
 .share-modal-close {
 	position: absolute !important;
 	top: 8px;
-	right: 8px;
+	left: 8px;
 }
 
 .share-modal-label {
@@ -179,15 +179,19 @@
 	0% {
 		transform: scale(1);
 	}
+
 	30% {
 		transform: scale(1.4);
 	}
+
 	50% {
 		transform: scale(0.9);
 	}
+
 	70% {
 		transform: scale(1.15);
 	}
+
 	100% {
 		transform: scale(1);
 	}

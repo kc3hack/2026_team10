@@ -203,16 +203,20 @@
 	}
 }
 
-/* 物語の続きを見る（クリックできる仕切り） */
+/* 物語の続きを見る（クリックできる仕切り） - 閉じるボタンと見た目を統一 */
 .show-story-trigger {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 24px 0;
+	margin: 32px 0;
 	cursor: pointer;
 	position: relative;
-	transition: all 0.3s ease;
+	transition: all 0.2s ease;
 	width: 100%;
+}
+
+.show-story-trigger:hover {
+	transform: translateY(-2px);
 }
 
 .show-story-trigger::before,
@@ -220,31 +224,67 @@
 	content: "";
 	flex: 1;
 	height: 1px;
-	background-color: #e0e0e0;
+	background: linear-gradient(to right, transparent, #2196f3, transparent);
+	opacity: 0.6;
 }
 
 .show-story-trigger span {
-	padding: 8px 16px;
-	background-color: #f8f9fa;
-	border: 1px solid #e0e0e0;
-	border-radius: 20px;
-	color: #666;
-	font-size: 13px;
-	font-weight: 500;
-	transition: all 0.3s ease;
+	padding: 6px 16px;
+	background-color: #ebf5ff;
+	border: 1px solid #bbdefb;
+	color: #1976d2;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: bold;
+	transition: all 0.2s ease;
 	z-index: 1;
-	margin: 0 10px;
+	margin: 0 15px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .show-story-trigger:hover span {
 	background-color: #e3f2fd;
-	border-color: #1a73e8;
-	color: #1a73e8;
-	transform: scale(1.05);
+	border-color: #2196f3;
 }
 
-.show-story-trigger:hover::before,
-.show-story-trigger:hover::after {
-	background-color: #1a73e8;
-	opacity: 0.3;
+/* 物語の続き開始の区切り線 */
+.story-start-divider {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 32px 0;
+	width: 100%;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.story-start-divider:hover {
+	transform: translateY(-2px);
+}
+
+.story-start-divider:hover span {
+	background-color: #e3f2fd;
+	border-color: #2196f3;
+}
+
+.story-start-divider::before,
+.story-start-divider::after {
+	content: "";
+	flex: 1;
+	height: 1px;
+	background: linear-gradient(to right, transparent, #2196f3, transparent);
+	opacity: 0.6;
+}
+
+.story-start-divider span {
+	padding: 6px 16px;
+	background-color: #ebf5ff;
+	border: 1px solid #bbdefb;
+	color: #1976d2;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0 15px;
+	white-space: nowrap;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }

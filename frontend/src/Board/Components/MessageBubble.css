@@ -7,6 +7,11 @@
 	gap: 10px;
 }
 
+/* Board専用の横長スタイルを親クラスで制御 */
+.board-message-wrapper .message-container {
+	max-width: 95%;
+}
+
 .message-container.system {
 	align-self: flex-start;
 	flex-direction: row;
@@ -77,6 +82,11 @@
 		max-width: 80%;
 		/* Reduce max width on mobile */
 		margin-bottom: 10px;
+	}
+
+	.board-message-wrapper .message-container {
+		max-width: 95%;
+		/* Expanded specifically for Board */
 	}
 
 	.icon {

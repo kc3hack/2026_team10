@@ -9,11 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
 	"github.com/kc3hack/2026_team10/backend/dto"
 	"github.com/kc3hack/2026_team10/backend/models"
 	"github.com/kc3hack/2026_team10/backend/repositories"
-	"google.golang.org/api/option"
+	"google.golang.org/genai"
 )
 
 const MinRoundAnswerRevealDuration = 90 * time.Second
@@ -43,36 +42,14 @@ func NewHintService(repository repositories.IHintRepository) IHintService {
 }
 
 func (s *HintService) StartGame() (*dto.StartGameResult, error) {
-	ctx := context.Background()
-
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
 		return nil, fmt.Errorf("GEMINI_API_KEY が設定されていません")
 	}
-
-	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
-	}
-	defer client.Close()
-
-	modelGemini := client.GenerativeModel("gemini-2.5-flash")
-	modelGemini.ResponseMIMEType = "application/json"
-	modelGemini.ResponseSchema = &genai.Schema{
-		Type:     genai.TypeObject,
-		Required: []string{"answers", "hints"},
-		Properties: map[string]*genai.Schema{
-			"answers": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
-			},
-			"hints": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
-			},
-		},
 	}
 
 	const prompt = `
@@ -86,6 +63,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		- お題を当てるクイズ形式にする。
 		- お題 そのものの単語は絶対にセリフに含めない。
 		- 具体的な 商品名 は避け、一般名詞を正解とする。
+
+		- "answers" 配列には、正解判定を網羅するため以下のパターンを全て含めること。
+            - 漢字、ひらがな、カタカナ。
+            - 英語（全て小文字）。
+            - 一般的な略称や通称（例：「自動販売機」なら「自販機」、「スマートフォン」なら「スマホ」）。
+            - 例：お題が自転車なら ["自転車", "じてんしゃ", "ジテンシャ", "bicycle", "チャリ"]
 
 		- ヒント(セリフ)は10個程度で。京都のターン → 大阪のターン の順番で交互にループさせる。
 		- 1つのセリフはできるだけ短くする。
@@ -119,9 +102,75 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"9つ目のセリフ(京都)",
 				"10個目のセリフ(大阪：難易度 低)"
 			]
-		}`
+		}
+	`
 
-	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
+	// 生成パラメータ設定。
+	// 「かなりランダムにしたいけど、日本語が崩れるのはイヤ」という前提で、
+	// そこそこ攻めつつも壊れにくいラインを狙っている。
+	temp := float32(1.3)
+	// temperature: 出力のランダムさ（0.0〜2.0）
+	// ・0 に近い      : ほぼ毎回同じ＝堅い・安定
+	// ・1.0（デフォ）: Google公式が推奨している標準値
+	// ・1.0〜1.3      : そこそこ多様で、普通の文章タスクならまだ破綻しにくいゾーン
+	// ・1.6 以上       : 研究や実験でも「一気に破綻しやすくなる」ことが報告されている
+
+	topP := float32(0.95)
+	// topP: nucleus sampling（確率質量）のカットオフ（0.0〜1.0）
+	// ・高いほど（0.9〜0.95）: 候補トークンを広く残す → バリエーションが増える
+	// ・低いほど（0.4〜0.6）: 高確率な単語だけ使う → 安定・保守的
+	// 0.95 は「創造性寄りにしつつも、あまりに変な単語は落とす」バランスの良い値。
+
+	topK := float32(40)
+	// topK: 各ステップで「確率の高い上位K個のトークン」だけを候補にする制限。
+	// ・小さい値（1〜10）  : かなり保守的、ほぼ同じ文になりがち
+	// ・大きい値（40〜100）: バリエーション増えるが、変な言い回しも増えやすい
+	// 一部の Gemini モデルは nucleus sampling（topP）だけを使っていて、
+	// その場合は topK は無視される（ドキュメントにそう明記されている）。
+	// ここでは「効けばラッキー」程度で 40 にしておく。
+
+	// seed := int32(46)
+	// seed: 乱数シード（同じプロンプト＋同じ設定＋同じ seed なら、
+	//       ベストエフォートで同じ出力になりやすくするためのもの）。
+	// ・テストやデバッグで「同じ出力を再現したい」ときに固定する
+	// ・毎回違う出力がほしいときは、あえて設定しないか、毎回変える
+	// ランダムさを優先したい本番ゲーム用途では、基本は設定しない方がよいので
+	// 実際の config には渡さずコメントアウトしておく:
+
+	config := &genai.GenerateContentConfig{
+		Temperature: &temp, // ランダムさ
+		TopP:        &topP, // nucleus sampling の範囲
+		TopK:        &topK, // 有効なモデルなら上位K制限（無効なモデルもある）
+		// Seed:      &seed, // ※再現性が欲しいテスト時だけ使う。通常はコメントアウト。
+		ResponseMIMEType: "application/json",
+		ResponseJsonSchema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"answers": map[string]any{
+					"type": "array",
+					"items": map[string]any{
+						"type":        "string",
+						"description": "正解のリスト。表記ゆれを考慮して複数入れる。漢字、ひらがな、カタカナ、英語（小文字）、および一般的な略称（例：自販機、スマホ）など、考えられえるものを全て含めること。",
+					},
+				},
+				"hints": map[string]any{
+					"type": "array",
+					"items": map[string]any{
+						"type":        "string",
+						"description": "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
+					},
+				},
+			},
+			"required": []string{"answers", "hints"},
+		},
+	}
+
+	res, err := client.Models.GenerateContent(
+		ctx,
+		"gemini-2.5-flash",
+		genai.Text(prompt),
+		config,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
@@ -131,12 +180,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		Hints   []string `json:"hints"`
 	}
 
-	if part, ok := resp.Candidates[0].Content.Parts[0].(genai.Text); ok {
-		if err := json.Unmarshal([]byte(part), &geminiData); err != nil {
-			return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, string(part))
-		}
-	} else {
-		return nil, fmt.Errorf("Geminiからのレスポンス形式が不正です")
+	text := res.Text()
+
+	fmt.Println(text)
+
+	if err := json.Unmarshal([]byte(text), &geminiData); err != nil {
+		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, text)
 	}
 
 	result, err := s.repository.CreateRound(geminiData.Answers, geminiData.Hints)
