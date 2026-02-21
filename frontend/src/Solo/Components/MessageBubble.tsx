@@ -20,7 +20,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 		// ファイル名から拡張子を除いた部分をクラス名として追加
 		const iconClassName = src.split("/").pop()?.split(".")[0]?.toLowerCase() || "";
 		return (
-			<div className="icon">
+			<div className={`icon ${iconClassName}`}>
 				<img src={src} alt="icon" className={`icon-img ${iconClassName}`} />
 			</div>
 		);
