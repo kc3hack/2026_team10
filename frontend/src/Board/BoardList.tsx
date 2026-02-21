@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import MessageBubble from "./Components/MessageBubble";
 import "./BoardList.css";
 
 // ==========================================
@@ -27,6 +28,9 @@ type ApiResponse = {
 
 /** 一覧で表示するヒントの数 */
 const PREVIEW_HINT_COUNT = 4;
+
+/** ヒントに交互に表示するアイコン（京都と大阪） */
+const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
 // ==========================================
 // メインコンポーネント
@@ -122,12 +126,15 @@ function BoardList() {
 							<span className="board-card-date">{formatDate(round.updated_at)}</span>
 						</div>
 
-						{/* ヒントのプレビュー（最初の3つだけ表示） */}
+						{/* ヒントのプレビュー（チャット形式で最初の数個を表示） */}
 						<div className="board-card-hints">
 							{round.hints.slice(0, PREVIEW_HINT_COUNT).map((hint, index) => (
-								<p key={`hint-${round.id}-${index}`} className="board-card-hint-line">
-									{hint}
-								</p>
+								<MessageBubble
+									key={`hint-${round.id}-${index}`}
+									text={hint}
+									isUser={false}
+									icon={HINT_ICONS[index % HINT_ICONS.length]}
+								/>
 							))}
 						</div>
 

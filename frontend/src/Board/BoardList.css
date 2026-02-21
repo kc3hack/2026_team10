@@ -94,16 +94,29 @@
 	font-size: 0.8rem;
 }
 
-/* --- ヒントのプレビュー --- */
+/* --- ヒントのプレビュー（チャット形式） --- */
 .board-card-hints {
 	margin-bottom: 12px;
+	display: flex;
+	flex-direction: column;
+	pointer-events: none;
 }
 
-.board-card-hint-line {
-	color: #555;
-	font-size: 0.9rem;
-	line-height: 1.6;
-	margin: 0 0 6px;
+/* カード内のチャットバブルを小さめに調整 */
+.board-card-hints .message-container {
+	max-width: 95%;
+	margin-bottom: 8px;
+}
+
+.board-card-hints .icon {
+	width: 36px;
+	height: 36px;
+}
+
+.board-card-hints .bubble {
+	padding: 8px 12px;
+	font-size: 0.8rem;
+	line-height: 1.4;
 
 	/* 長いテキストを2行で切る */
 	display: -webkit-box;
