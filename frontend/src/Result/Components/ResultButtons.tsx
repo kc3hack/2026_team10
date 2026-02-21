@@ -17,10 +17,10 @@ export default function ResultButtons({
 }: Props) {
 	const baseButtonSx = {
 		width: "110px",
-		height: "100px",
+		height: "80px",
 		display: "flex",
 		flexDirection: "column",
-		gap: "8px",
+		gap: "4px",
 		fontWeight: "bold",
 		fontSize: "0.85rem",
 		lineHeight: 1.2,
