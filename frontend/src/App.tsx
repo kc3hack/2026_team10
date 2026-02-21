@@ -8,7 +8,6 @@ function App() {
 
 	return (
 		<div className="app-background">
-
 			{/* ▼ オーロラ背景用の色の塊（これをCSSで強烈にぼかします） ▼ */}
 			<div className="aurora-blob aurora-1"></div>
 			<div className="aurora-blob aurora-2"></div>

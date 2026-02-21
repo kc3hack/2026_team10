@@ -72,28 +72,6 @@
 	transform: translateY(0);
 }
 
-/* --- カードヘッダー（ラウンド番号 + 日付） --- */
-.board-card-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 12px;
-}
-
-.board-card-round-number {
-	background: linear-gradient(135deg, #ff9800, #ed6c02);
-	color: white;
-	font-weight: 700;
-	font-size: 0.8rem;
-	padding: 4px 12px;
-	border-radius: 20px;
-}
-
-.board-card-date {
-	color: #999;
-	font-size: 0.8rem;
-}
-
 /* --- ヒントのプレビュー（チャット形式） --- */
 .board-card-hints {
 	margin-bottom: 12px;
@@ -128,7 +106,14 @@
 
 /* --- カードフッター --- */
 .board-card-footer {
-	text-align: right;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.board-card-date {
+	color: #999;
+	font-size: 0.75rem;
 }
 
 .board-card-read-more {
