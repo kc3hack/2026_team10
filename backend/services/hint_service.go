@@ -51,26 +51,6 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
 	}
-	defer client.Close()
-
-	modelGemini := client.GenerativeModel("gemini-2.5-flash")
-	modelGemini.ResponseMIMEType = "application/json"
-	modelGemini.ResponseSchema = &genai.Schema{
-		Type:     genai.TypeObject,
-		Required: []string{"answers", "hints"},
-		Properties: map[string]*genai.Schema{
-			"answers": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
-			},
-			"hints": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
-			},
-		},
-	}
 
 	const prompt = `
 		# Role
