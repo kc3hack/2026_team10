@@ -6,7 +6,6 @@ import ShareModal from "../Result/Components/ShareModal";
 import InputArea from "./Components/InputArea";
 import MessageBubble from "./Components/MessageBubble";
 import Timer from "./Components/Timer";
-import FlagIcon from "@mui/icons-material/Flag";
 import "./Solo.css";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
@@ -393,24 +392,27 @@ function Solo() {
 						)}
 					</React.Fragment>
 				))}
+				{/* 全ヒント表示後にギブアップの選択肢をチャットとして表示 */}
+				{allHintsShown && !hasAnswered && (
+					<button
+						type="button"
+						className="giveup-chat-bubble"
+						onClick={handleGiveUp}
+					>
+						<img src="/Image/Kyoto.jpg" alt="icon" className="giveup-icon-img" />
+						<span className="giveup-chat-text">答えを見る？</span>
+					</button>
+				)}
 			</div>
 			<div className="solo-footer">
 				{!hasAnswered || showResultOverlay ? (
-					<div className="input-with-giveup">
-						<InputArea
-							value={inputValue}
-							onChange={setInputValue}
-							onSubmit={handleSubmit}
-							placeholder="回答を記入してください"
-							hidden={hasAnswered}
-						/>
-						{allHintsShown && !hasAnswered && (
-							<button type="button" className="giveup-button" onClick={handleGiveUp}>
-								<FlagIcon fontSize="small" />
-								<span>ギブアップ</span>
-							</button>
-						)}
-					</div>
+					<InputArea
+						value={inputValue}
+						onChange={setInputValue}
+						onSubmit={handleSubmit}
+						placeholder="回答を記入してください"
+						hidden={hasAnswered}
+					/>
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
