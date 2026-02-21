@@ -1,57 +1,46 @@
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
 import "./App.css";
 
 function App() {
 	const navigate = useNavigate();
 
 	return (
-		<div className="container">
-			<h1 className="title">偏見で遊ぼう（仮）</h1>
-			<Stack
-				spacing={3}
-				direction="column"
-				className="button-group"
-				alignItems="center"
-			>
-				<Button
-					variant="contained"
-					size="large"
-					onClick={() => navigate("/solo")}
-					sx={{
-						width: "300px",
-						minHeight: "60px",
-						fontWeight: "bold",
-						fontSize: "1.2rem",
-						backgroundColor: "#ff9800", // Lighter Orange
-						"&:hover": {
-							backgroundColor: "#f57c00",
-						},
-					}}
-				>
-					スタート
-				</Button>
-				<Button
-					variant="outlined"
-					size="large"
-					onClick={() => navigate("/board")}
-					sx={{
-						width: "300px",
-						minHeight: "60px",
-						fontWeight: "bold",
-						fontSize: "1rem", // Reduced font size to fit text
-						color: "#ed6c02", // Orange
-						borderColor: "#ed6c02",
-						"&:hover": {
-							borderColor: "#e65100",
-							backgroundColor: "rgba(237, 108, 2, 0.04)",
-						},
-					}}
-				>
-					共有されたストーリーを見る
-				</Button>
-			</Stack>
+		<div className="app-background">
+
+			{/* ▼ オーロラ背景用の色の塊（これをCSSで強烈にぼかします） ▼ */}
+			<div className="aurora-blob aurora-1"></div>
+			<div className="aurora-blob aurora-2"></div>
+			<div className="aurora-blob aurora-3"></div>
+			{/* ▲ ここまで背景装飾 ▲ */}
+
+			<Paper elevation={0} className="title-card">
+				<div className="title-logo-area">
+					<img
+						src="/Image/aresira_logo.png"
+						alt="あれちゃう？知らんけど"
+						className="title-logo-img"
+					/>
+				</div>
+
+				<div className="title-button-group">
+					<Button
+						variant="contained"
+						onClick={() => navigate("/solo")}
+						className="title-base-button btn-start"
+					>
+						スタート
+					</Button>
+					<Button
+						variant="outlined"
+						onClick={() => navigate("/board")}
+						className="title-base-button btn-story"
+					>
+						共有されたストーリー見る
+					</Button>
+				</div>
+			</Paper>
 		</div>
 	);
 }
