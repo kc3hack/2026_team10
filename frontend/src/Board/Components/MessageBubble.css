@@ -3,8 +3,13 @@
 	align-items: flex-end;
 	/* Align icon to bottom of message */
 	margin-bottom: 20px;
-	max-width: 95%;
+	max-width: 80%;
 	gap: 10px;
+}
+
+/* Board専用の横長スタイルを親クラスで制御 */
+.board-message-wrapper .message-container {
+	max-width: 95%;
 }
 
 .message-container.system {
@@ -74,9 +79,14 @@
 
 @media (max-width: 768px) {
 	.message-container {
-		max-width: 95%;
-		/* Expanded width on mobile */
+		max-width: 80%;
+		/* Reduce max width on mobile */
 		margin-bottom: 10px;
+	}
+
+	.board-message-wrapper .message-container {
+		max-width: 95%;
+		/* Expanded specifically for Board */
 	}
 
 	.icon {
