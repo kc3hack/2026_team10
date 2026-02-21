@@ -1,8 +1,6 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ReplayIcon from "@mui/icons-material/Replay";
 import "../Styles/Result.css";
 
@@ -86,22 +84,19 @@ export default function ResultButtons({
 				}}
 			>
 				{isAnimating ? (
-					<img 
-						src={`/chaShibaki.gif?t=${Date.now()}`} 
-						alt="ええやん" 
-						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					<img
+						src={`/chaShibaki.gif?t=${Date.now()}`}
+						alt="ええやん"
+						style={{ width: "40px", height: "40px", objectFit: "contain" }}
 					/>
 				) : (
-					<img 
-						src="/chashibaki.png" 
-						alt="ちゃしばき済" 
-						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					<img
+						src="/chashibaki.png"
+						alt="ちゃしばき済"
+						style={{ width: "40px", height: "40px", objectFit: "contain" }}
 					/>
-                )}
-				<span>
-					ええやん
-				</span>
-
+				)}
+				<span>ええやん</span>
 			</Button>
 
 			<Button

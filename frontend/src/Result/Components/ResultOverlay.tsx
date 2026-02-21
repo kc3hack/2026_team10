@@ -29,11 +29,6 @@ export default function ResultOverlay({
 
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
-	const handleShare = () => setIsShareOpen(true);
-	const handleBookmarkAndShare = () => {
-		onBookmark();
-		// handleShare();
-	};
 
 	return (
 		<div
@@ -71,7 +66,7 @@ export default function ResultOverlay({
 					isAnimating={isAnimating}
 					onBackToTitle={handleTitle}
 					onRetry={handleRetry}
-					onBookmark={handleBookmarkAndShare}
+					onBookmark={onBookmark}
 				/>
 			</div>
 
