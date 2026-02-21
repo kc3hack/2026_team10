@@ -18,7 +18,7 @@ type Round = {
 
 /** APIレスポンス全体の形 */
 type ApiResponse = {
-	result: { round: Round }[];
+	results: Round[];
 };
 
 // ==========================================
@@ -47,9 +47,8 @@ function BoardList() {
 				const response = await fetch("/api/solo/board");
 				const data: ApiResponse = await response.json();
 
-				// result配列から各roundを取り出して配列にする
-				const roundList = data.result.map((item) => item.round);
-				setRounds(roundList);
+				// results配列をそのままセット
+				setRounds(data.results);
 			} catch (error) {
 				console.error("ラウンド一覧の取得に失敗しました:", error);
 			} finally {
@@ -60,10 +59,16 @@ function BoardList() {
 		fetchRounds();
 	}, []);
 
-	// 日付を「2026/02/19」の形式に変換する関数
+	// 日付を「2026/02/19 19:38」の形式に変換する関数
 	const formatDate = (dateString: string): string => {
 		const date = new Date(dateString);
-		return date.toLocaleDateString("ja-JP");
+		return date.toLocaleString("ja-JP", {
+			year: "numeric",
+			month: "2-digit",
+			day: "2-digit",
+			hour: "2-digit",
+			minute: "2-digit",
+		});
 	};
 
 	// ローディング中の表示
