@@ -77,7 +77,7 @@
 	flex-direction: column !important;
 	align-items: center;
 	justify-content: center;
-	width: 110px !important;
+	width: 125px !important;
 	height: 100px !important;
 	gap: 8px !important;
 	font-size: 0.85rem !important;
@@ -117,6 +117,16 @@
 	background-color: white !important;
 	color: var(--md-error) !important;
 	border-color: var(--md-error) !important;
+}
+
+/* 答えのテキストが長い場合に折り返せるようにする */
+.square-icon-button span {
+	text-align: center;
+	line-height: 1.2;
+}
+
+.square-icon-button.visible span {
+	font-size: 0.8rem;
 }
 
 /* 答えを確認ボタン：未確認時は目立たせるために塗りつぶしスタイルに */
@@ -159,9 +169,10 @@
 	}
 
 	.square-icon-button {
-		width: 110px !important;
+		width: 120px !important;
 		height: 85px !important;
 		font-size: 0.75rem !important;
+		padding: 6px !important;
 	}
 
 	.answer-label {
