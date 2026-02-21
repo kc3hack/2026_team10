@@ -85,12 +85,23 @@ export default function ResultButtons({
 						"color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease",
 				}}
 			>
-				{isBookmarked ? (
-					<FavoriteIcon fontSize="medium" />
+				{isAnimating ? (
+					<img 
+						src={`/chaShibaki.gif?t=${Date.now()}`} 
+						alt="ええやん" 
+						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					/>
 				) : (
-					<FavoriteBorderIcon fontSize="medium" />
-				)}
-				<span>ええやん</span>
+					<img 
+						src="/chashibaki.png" 
+						alt="ちゃしばき済" 
+						style={{ width: "40px", height: "40px", objectFit: "contain" }} 
+					/>
+                )}
+				<span>
+					ええやん
+				</span>
+
 			</Button>
 
 			<Button
