@@ -120,12 +120,6 @@ function BoardList() {
 						className="board-card"
 						onClick={() => navigate(`/board/${round.id}`)}
 					>
-						{/* カード上部：ラウンド番号と日付 */}
-						<div className="board-card-header">
-							<span className="board-card-round-number">#{round.id}</span>
-							<span className="board-card-date">{formatDate(round.updated_at)}</span>
-						</div>
-
 						{/* ヒントのプレビュー（チャット形式で最初の数個を表示） */}
 						<div className="board-card-hints">
 							{round.hints.slice(0, PREVIEW_HINT_COUNT).map((hint, index) => (
@@ -138,8 +132,9 @@ function BoardList() {
 							))}
 						</div>
 
-						{/* 「続きを読む」のラベル */}
+						{/* フッター：日付と「続きを読む」 */}
 						<div className="board-card-footer">
+							<span className="board-card-date">{formatDate(round.updated_at)}</span>
 							<span className="board-card-read-more">続きを読む →</span>
 						</div>
 					</button>
