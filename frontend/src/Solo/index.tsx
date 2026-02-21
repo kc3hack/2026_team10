@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./Solo.css";
-import MessageBubble from "./Components/MessageBubble";
-import InputArea from "./Components/InputArea";
-import Timer from "./Components/Timer";
-import ResultOverlay from "../Result/Components/ResultOverlay";
-import ResultButtons from "../Result/Components/ResultButtons";
-import ShareModal from "../Result/Components/ShareModal";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ResultButtons from "../Result/Components/ResultButtons";
+import ResultOverlay from "../Result/Components/ResultOverlay";
+import ShareModal from "../Result/Components/ShareModal";
+import InputArea from "./Components/InputArea";
+import MessageBubble from "./Components/MessageBubble";
+import Timer from "./Components/Timer";
+import "./Solo.css";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
@@ -29,6 +29,9 @@ function Solo() {
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [isShareOpen, setIsShareOpen] = useState(false);
+	const [isBookmarked, setIsBookmarked] = useState(false);
+	const [isAnimating, setIsAnimating] = useState(false);
+	const [isGivenUp, setIsGivenUp] = useState(false);
 	const [pendingHints, setPendingHints] = useState<any[]>([]);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
@@ -40,7 +43,7 @@ function Solo() {
 		"マクドナルドを「マクド」と言う",
 		"「自分」と言って相手を指す",
 		"会話のノリがテレビ並み",
-		"ナイトスクープは欠かさず見る"
+		"ナイトスクープは欠かさず見る",
 	];
 
 	const navigate = useNavigate();
@@ -190,15 +193,88 @@ function Solo() {
 		}
 	};
 
+	// 全ヒントが表示されたかどうかを判定する
+	const shownHintCount = messages.filter(
+		(m) =>
+			!m.isUser &&
+			!m.isDivider &&
+			m.hint !== "正解やで！" &&
+			m.hint !== "不正解どす..." &&
+			!m.hint.startsWith("正解は「"),
+	).length;
+	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
+
+	// ギブアップ処理：正解を取得してチャットに表示する
+	const handleGiveUp = async () => {
+		if (gameId === null) return;
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/answer`);
+			const data = await res.json();
+			const correctAnswer = data.answer;
+
+			// 「ギブアップ！」のユーザーメッセージを追加
+			setMessages((prev) => [
+				...prev,
+				{
+					messageId: Date.now(),
+					hint: "ギブアップ！",
+					isUser: true,
+					icon: "😎",
+				},
+			]);
+
+			// 少し間を空けてから正解を表示する
+			setTimeout(() => {
+				setMessages((prev) => [
+					...prev,
+					{
+						messageId: Date.now() + 1,
+						hint: `正解は「${correctAnswer}」やで！`,
+						isUser: false,
+						icon: "/Image/Osaka.jpg",
+					},
+				]);
+				setIsGivenUp(true);
+				setHasAnswered(true);
+				setShowResultOverlay(true);
+			}, 500);
+		} catch (error) {
+			console.error("正解の取得に失敗しました:", error);
+		}
+	};
+
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
+	const handleBookmark = async () => {
+		if (!isBookmarked) {
+			setIsAnimating(true);
+			setIsBookmarked(true);
+			const postBookmark = async () => {
+				try {
+					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, {
+						method: "POST",
+					});
+					if (!res.ok) throw new Error("通信エラー");
+				} catch (e) {
+					console.error("ブックマーク登録に失敗しました:", e);
+					setIsBookmarked(false);
+				}
+			};
+			setTimeout(() => {
+				setIsAnimating(false);
+				postBookmark();
+				handleShare();
+			}, 2000);
+		}
+	};
 
 	const handleCloseResult = () => {
 		setShowResultOverlay(false);
 
 		const shownHints = messages.filter(
-			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす..."
+			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす...",
 		);
 		const shownCount = shownHints.length;
 
@@ -240,7 +316,10 @@ function Solo() {
 
 			const newMessages = [...prev];
 			// Extractstory hints to put back in pendingHints
-			const storyHints = newMessages.slice(dividerIndex + 1, newMessages.length - 2);
+			const storyHints = newMessages.slice(
+				dividerIndex + 1,
+				newMessages.length - 2,
+			);
 			setPendingHints(storyHints);
 
 			// Remove divider and the hints
@@ -263,10 +342,13 @@ function Solo() {
 					<div className="loading-text">
 						関西あるある
 						<br />
-						{loadingMessages[loadingMsgIndex]}
+						<div className="aruaru-text">
+							{loadingMessages[loadingMsgIndex]}
+						</div>
 					</div>
 				</div>
 				<div className="spinner" />
+				<div className="loading-progress-text">お題とヒントを準備中...</div>
 			</div>
 		);
 	}
@@ -276,7 +358,11 @@ function Solo() {
 			{showResultOverlay && gameId !== null && (
 				<ResultOverlay
 					gameId={gameId}
+					isBookmarked={isBookmarked}
+					isAnimating={isAnimating}
+					onBookmark={handleBookmark}
 					onClose={handleCloseResult}
+					isGivenUp={isGivenUp}
 				/>
 			)}
 			{isShareOpen && gameId !== null && (
@@ -314,6 +400,17 @@ function Solo() {
 						)}
 					</React.Fragment>
 				))}
+				{/* 全ヒント表示後にギブアップの選択肢をチャットとして表示 */}
+				{allHintsShown && !hasAnswered && (
+					<button
+						type="button"
+						className="giveup-chat-bubble"
+						onClick={handleGiveUp}
+					>
+						<img src="/Image/Kyoto.jpg" alt="icon" className="giveup-icon-img" />
+						<span className="giveup-chat-text">答えを見る？</span>
+					</button>
+				)}
 			</div>
 			<div className="solo-footer">
 				{!hasAnswered || showResultOverlay ? (
@@ -327,9 +424,12 @@ function Solo() {
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
+							gameId={gameId ?? 0}
+							isBookmarked={isBookmarked}
+							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}
-							onSNS={handleShare}
 							onRetry={handleRetry}
+							onBookmark={handleBookmark}
 						/>
 					</div>
 				)}

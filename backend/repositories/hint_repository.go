@@ -14,6 +14,7 @@ type IHintRepository interface {
 	FinishRound(id uint) error
 	BookmarkRound(id uint) error
 	GetRandomBookmarkedRound() (*models.Round, error)
+	GetAllBookmarkedRounds() ([]models.Round, error)
 }
 
 type HintRepository struct {
@@ -69,4 +70,12 @@ func (r *HintRepository) GetRandomBookmarkedRound() (*models.Round, error) {
 		return nil, nil
 	}
 	return &rounds[rand.Intn(len(rounds))], nil
+}
+
+func (r *HintRepository) GetAllBookmarkedRounds() ([]models.Round, error) {
+	var rounds []models.Round
+	if err := r.db.Where("is_bookmarked = ?", true).Find(&rounds).Error; err != nil {
+		return nil, err
+	}
+	return rounds, nil
 }

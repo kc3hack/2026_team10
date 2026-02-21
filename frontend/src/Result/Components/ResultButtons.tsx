@@ -1,19 +1,24 @@
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import XIcon from "@mui/icons-material/X";
 import ReplayIcon from "@mui/icons-material/Replay";
+import "../Styles/Result.css";
 
 interface Props {
+	gameId: number;
+	isBookmarked: boolean;
+	isAnimating: boolean;
 	onBackToTitle: () => void;
-	onSNS: () => void;
 	onRetry: () => void;
+	onBookmark: () => void;
 }
 
 export default function ResultButtons({
+	isBookmarked,
+	isAnimating,
 	onBackToTitle,
-	onSNS,
 	onRetry,
+	onBookmark,
 }: Props) {
 	const baseButtonSx = {
 		width: "110px",
@@ -29,7 +34,7 @@ export default function ResultButtons({
 		borderWidth: "1px",
 		"&:hover": {
 			borderWidth: "1px",
-		}
+		},
 	};
 
 	const orangeStyle = {
@@ -41,12 +46,14 @@ export default function ResultButtons({
 		},
 	};
 
-	const blackStyle = {
-		color: "black",
-		borderColor: "black",
+	const heartStyle = {
+		color: isBookmarked ? "#fff" : "#aaa",
+		borderColor: isBookmarked ? "#ff4757" : "#ccc",
+		backgroundColor: isBookmarked ? "#ff4757" : "transparent",
 		"&:hover": {
-			borderColor: "#333333",
-			backgroundColor: "rgba(0, 0, 0, 0.04)",
+			borderColor: isBookmarked ? "#e8313f" : "#ff6b81",
+			backgroundColor: isBookmarked ? "#e8313f" : "rgba(255, 71, 87, 0.06)",
+			color: isBookmarked ? "#fff" : "#ff6b81",
 		},
 	};
 
@@ -66,16 +73,30 @@ export default function ResultButtons({
 			</Button>
 
 			<Button
-				variant="outlined"
-				onClick={onSNS}
-				sx={{ ...baseButtonSx, ...blackStyle }}
+				variant={isBookmarked ? "contained" : "outlined"}
+				onClick={onBookmark}
+				className={isAnimating ? "bookmark-pop" : ""}
+				sx={{
+					...baseButtonSx,
+					...heartStyle,
+					transition:
+						"color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease",
+				}}
 			>
-				<XIcon fontSize="medium" />
-				<span>
-					Xに
-					<br />
-					ポスト
-				</span>
+				{isAnimating ? (
+					<img
+						src={`/chaShibaki.gif`}
+						alt="ええやん"
+						style={{ width: "160px", height: "160px", objectFit: "contain" }}
+					/>
+				) : (
+					<img
+						src="/chashibaki.png"
+						alt="ちゃしばき済"
+						style={{ width: "40px", height: "40px", objectFit: "contain" }}
+					/>
+				)}
+				<span>ええやん</span>
 			</Button>
 
 			<Button

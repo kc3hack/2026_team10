@@ -90,7 +90,9 @@
 /* 吹き出しのスタイリング */
 .loading-text {
 	position: relative;
-	font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+	font-family:
+		"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo,
+		sans-serif;
 	font-size: 18px;
 	font-weight: 700;
 	line-height: 1.5;
@@ -103,6 +105,14 @@
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
 	margin-top: 10px;
 	animation: floating-text 2s ease-in-out infinite;
+}
+
+.loading-progress-text {
+	margin-top: -10px;
+	font-size: 10px;
+	font-weight: 600;
+	color: #666;
+	letter-spacing: 0.01em;
 }
 
 /* 吹き出しのしっぽ（上向き） */
@@ -128,6 +138,11 @@
 	border-bottom: 11px solid #ffffff;
 }
 
+.aruaru-text {
+	font-size: 20px;
+	font-weight: 600;
+}
+
 /* スピナーを少し小さく、Material Blueで */
 .spinner {
 	width: 30px;
@@ -150,7 +165,6 @@
 }
 
 @keyframes floating-text {
-
 	0%,
 	100% {
 		transform: translateY(0);
@@ -162,7 +176,6 @@
 }
 
 @keyframes bounce {
-
 	0%,
 	100% {
 		transform: scale(1) translateY(0);
@@ -287,4 +300,60 @@
 	margin: 0 15px;
 	white-space: nowrap;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- ギブアップ（チャットバブル風ボタン） --- */
+.giveup-chat-bubble {
+	all: unset;
+	box-sizing: border-box;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	align-self: flex-start;
+	gap: 10px;
+	margin-top: 12px;
+	margin-bottom: 20px;
+	padding: 10px 20px 10px 10px;
+	border-radius: 20px;
+	border: 2px dashed #ccc;
+	background-color: #fafafa;
+	color: #888;
+	font-size: 14px;
+	font-weight: 600;
+	transition: all 0.2s ease;
+}
+
+.giveup-chat-bubble:hover {
+	border-color: #ed6c02;
+	background-color: #fff8f0;
+	color: #ed6c02;
+}
+
+.giveup-chat-bubble:active {
+	transform: scale(0.97);
+}
+
+.giveup-icon-img {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	object-fit: cover;
+	transform: scale(1.55);
+	overflow: hidden;
+}
+
+.giveup-chat-text {
+	white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+	.giveup-chat-bubble {
+		font-size: 13px;
+		padding: 8px 16px 8px 8px;
+	}
+
+	.giveup-icon-img {
+		width: 30px;
+		height: 30px;
+	}
 }

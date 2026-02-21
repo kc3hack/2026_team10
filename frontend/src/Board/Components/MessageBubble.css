@@ -73,8 +73,23 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	transform: scale(1.4);
+	transform: scale(1.7);
 	/* Zoom in the image inside the icon */
+}
+
+/* 京都アイコンは他より小さいため、個別に大きく設定 */
+.icon-img.kyoto {
+	transform: scale(1.55);
+}
+
+/* 大阪アイコンを標準サイズにしつつ、絵を少しだけ大きくして揃える */
+.icon.osaka {
+	width: 60px;
+	height: 60px;
+}
+
+.icon-img.osaka {
+	transform: scale(1.75);
 }
 
 @media (max-width: 768px) {
@@ -95,8 +110,21 @@
 	}
 
 	.icon-img {
-		transform: scale(1.4);
+		transform: scale(1.7);
 		/* Keep zoom on mobile */
+	}
+
+	.icon-img.kyoto {
+		transform: scale(1.55);
+	}
+
+	.icon.osaka {
+		width: 48px;
+		height: 48px;
+	}
+
+	.icon-img.osaka {
+		transform: scale(1.45);
 	}
 
 	.bubble {

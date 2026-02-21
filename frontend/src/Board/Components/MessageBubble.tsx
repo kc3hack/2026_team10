@@ -17,9 +17,12 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
 	const renderIcon = () => {
 		const src = icon || DEFAULT_ICON_URL;
+		// ファイル名から拡張子を除いた部分をクラス名として追加
+		const iconClassName =
+			src.split("/").pop()?.split(".")[0]?.toLowerCase() || "";
 		return (
-			<div className="icon">
-				<img src={src} alt="icon" className="icon-img" />
+			<div className={`icon ${iconClassName}`}>
+				<img src={src} alt="icon" className={`icon-img ${iconClassName}`} />
 			</div>
 		);
 	};
