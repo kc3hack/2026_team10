@@ -9,11 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/generative-ai-go/genai" // Google公式のGemini SDK
 	"github.com/kc3hack/2026_team10/backend/dto"
 	"github.com/kc3hack/2026_team10/backend/models"
 	"github.com/kc3hack/2026_team10/backend/repositories"
-	"google.golang.org/api/option"
+	"google.golang.org/genai"
 )
 
 const MinRoundAnswerRevealDuration = 90 * time.Second
@@ -43,36 +42,14 @@ func NewHintService(repository repositories.IHintRepository) IHintService {
 }
 
 func (s *HintService) StartGame() (*dto.StartGameResult, error) {
-	ctx := context.Background()
-
 	apiKey := os.Getenv("GEMINI_API_KEY")
 	if apiKey == "" {
 		return nil, fmt.Errorf("GEMINI_API_KEY が設定されていません")
 	}
-
-	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
+	ctx := context.Background()
+	client, err := genai.NewClient(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
-	}
-	defer client.Close()
-
-	modelGemini := client.GenerativeModel("gemini-2.5-flash")
-	modelGemini.ResponseMIMEType = "application/json"
-	modelGemini.ResponseSchema = &genai.Schema{
-		Type:     genai.TypeObject,
-		Required: []string{"answers", "hints"},
-		Properties: map[string]*genai.Schema{
-			"answers": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "解答の表記ブレになりそうな複数の文字列も入れる",
-			},
-			"hints": {
-				Type:        genai.TypeArray,
-				Items:       &genai.Schema{Type: genai.TypeString},
-				Description: "10個の会話文。京都(奇数)と大阪(偶数)の交互。",
-			},
-		},
 	}
 
 	const prompt = `
@@ -119,9 +96,39 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 				"9つ目のセリフ(京都)",
 				"10個目のセリフ(大阪：難易度 低)"
 			]
-		}`
+		}
+	`
 
-	resp, err := modelGemini.GenerateContent(ctx, genai.Text(prompt))
+	config := &genai.GenerateContentConfig{
+		ResponseMIMEType: "application/json",
+		ResponseJsonSchema: map[string]any{
+			"type": "object",
+			"properties": map[string]any{
+				"answers": map[string]any{
+					"type": "array",
+					"items": map[string]any{
+						"type":        "string",
+						"description": "お題。表記ゆれを考慮して複数入れる。",
+					},
+				},
+				"hints": map[string]any{
+					"type": "array",
+					"items": map[string]any{
+						"type":        "string",
+						"description": "ヒントの会話文のセリフ。京都(奇数)と大阪(偶数)の交互で10個。",
+					},
+				},
+			},
+			"required": []string{"answers", "hints"},
+		},
+	}
+
+	res, err := client.Models.GenerateContent(
+		ctx,
+		"gemini-2.5-flash",
+		genai.Text(prompt),
+		config,
+	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
@@ -131,12 +138,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		Hints   []string `json:"hints"`
 	}
 
-	if part, ok := resp.Candidates[0].Content.Parts[0].(genai.Text); ok {
-		if err := json.Unmarshal([]byte(part), &geminiData); err != nil {
-			return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, string(part))
-		}
-	} else {
-		return nil, fmt.Errorf("Geminiからのレスポンス形式が不正です")
+	text := res.Text()
+
+	fmt.Println(text)
+
+	if err := json.Unmarshal([]byte(text), &geminiData); err != nil {
+		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, text)
 	}
 
 	result, err := s.repository.CreateRound(geminiData.Answers, geminiData.Hints)
