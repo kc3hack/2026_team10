@@ -1,20 +1,39 @@
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import XIcon from "@mui/icons-material/X";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ReplayIcon from "@mui/icons-material/Replay";
 
 interface Props {
+	gameId: number;
 	onBackToTitle: () => void;
-	onSNS: () => void;
+	onShare: () => void;
 	onRetry: () => void;
 }
 
 export default function ResultButtons({
+	gameId,
 	onBackToTitle,
-	onSNS,
+	onShare,
 	onRetry,
 }: Props) {
+	const [isBookmarked, setIsBookmarked] = useState(false);
+
+	const handleBookmark = async () => {
+		if (!isBookmarked) {
+			setIsBookmarked(true);
+			try {
+				await fetch(`/api/solo/${gameId}/bookmark`, { method: "POST" });
+			} catch (e) {
+				console.error("ブックマーク登録に失敗しました:", e);
+				setIsBookmarked(false);
+				return;
+			}
+		}
+		onShare();
+	};
 	const baseButtonSx = {
 		width: "110px",
 		height: "80px",
@@ -67,14 +86,12 @@ export default function ResultButtons({
 
 			<Button
 				variant="outlined"
-				onClick={onSNS}
+				onClick={handleBookmark}
 				sx={{ ...baseButtonSx, ...blackStyle }}
 			>
-				<XIcon fontSize="medium" />
+				{isBookmarked ? <BookmarkIcon fontSize="medium" /> : <BookmarkBorderIcon fontSize="medium" />}
 				<span>
-					Xに
-					<br />
-					ポスト
+					ええやん
 				</span>
 			</Button>
 

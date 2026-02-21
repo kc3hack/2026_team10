@@ -327,8 +327,9 @@ function Solo() {
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
+							gameId={gameId ?? 0}
 							onBackToTitle={handleTitle}
-							onSNS={handleShare}
+							onShare={handleShare}
 							onRetry={handleRetry}
 						/>
 					</div>
