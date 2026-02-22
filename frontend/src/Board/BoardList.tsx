@@ -43,18 +43,24 @@ function BoardList() {
 	const [rounds, setRounds] = useState<Round[]>([]);
 	// ローディング状態
 	const [isLoading, setIsLoading] = useState(true);
+	// エラー状態
+	const [fetchError, setFetchError] = useState(false);
 
 	// ページ表示時にAPIからデータを取得する
 	useEffect(() => {
 		const fetchRounds = async () => {
 			try {
 				const response = await fetch("/api/solo/bookmark/all");
+				if (!response.ok) {
+					throw new Error(`サーバーエラー: ${response.status}`);
+				}
 				const data: ApiResponse = await response.json();
 
 				// results配列をそのままセット
 				setRounds(data.results);
 			} catch (error) {
 				console.error("ラウンド一覧の取得に失敗しました:", error);
+				setFetchError(true);
 			} finally {
 				setIsLoading(false);
 			}
@@ -78,6 +84,30 @@ function BoardList() {
 	// ローディング中の表示
 	if (isLoading) {
 		return <div className="board-list-loading">読み込み中...</div>;
+	}
+
+	// エラー時の表示
+	if (fetchError) {
+		return (
+			<div className="board-list-empty">
+				<p>データの読み込みに失敗しました</p>
+				<Button
+					variant="contained"
+					onClick={() => window.location.reload()}
+					className="board-list-back-button"
+				>
+					もう一度試す
+				</Button>
+				<Button
+					variant="outlined"
+					onClick={() => navigate("/")}
+					className="board-list-back-button"
+					style={{ marginTop: "8px" }}
+				>
+					タイトルに戻る
+				</Button>
+			</div>
+		);
 	}
 
 	// データが空の場合の表示
