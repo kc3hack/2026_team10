@@ -52,6 +52,8 @@ function Board() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	// ローディング状態
 	const [isLoading, setIsLoading] = useState(true);
+	// エラー状態
+	const [fetchError, setFetchError] = useState(false);
 	// 答えの表示/非表示
 	const [isAnswerVisible, setIsAnswerVisible] = useState(false);
 
@@ -70,6 +72,9 @@ function Board() {
 		const fetchRoundData = async () => {
 			try {
 				const response = await fetch(`/api/solo/board/${id}`);
+				if (!response.ok) {
+					throw new Error(`サーバーエラー: ${response.status}`);
+				}
 				const data: RoundResponse = await response.json();
 
 				// 正解をセット
@@ -87,6 +92,7 @@ function Board() {
 				setMessages(formattedMessages);
 			} catch (error) {
 				console.error("ラウンドデータの取得に失敗しました:", error);
+				setFetchError(true);
 			} finally {
 				setIsLoading(false);
 			}
@@ -115,6 +121,50 @@ function Board() {
 	// ローディング中の表示
 	if (isLoading) {
 		return <div className="loading-container">読み込み中...</div>;
+	}
+
+	if (fetchError) {
+		return (
+			<div className="loading-container">
+				<div className="error-icon-container">
+					<img src="/Image/Kyoto.jpg" alt="Error" />
+				</div>
+				<p className="error-message">データの読み込みに失敗しました</p>
+				<div className="error-actions">
+					<Button
+						variant="contained"
+						onClick={() => window.location.reload()}
+						style={{
+							width: "200px",
+							padding: "10px 20px",
+							borderRadius: "8px",
+							backgroundColor: "#ed6c02",
+							color: "#ffffff",
+							fontWeight: "bold",
+							textTransform: "none",
+						}}
+					>
+						もう一度試す
+					</Button>
+					<Button
+						variant="outlined"
+						onClick={() => navigate("/board")}
+						style={{
+							width: "200px",
+							padding: "10px 20px",
+							borderRadius: "8px",
+							borderColor: "#ed6c02",
+							color: "#ed6c02",
+							backgroundColor: "#ffffff",
+							fontWeight: "bold",
+							textTransform: "none",
+						}}
+					>
+						一覧に戻る
+					</Button>
+				</div>
+			</div>
+		);
 	}
 
 	return (

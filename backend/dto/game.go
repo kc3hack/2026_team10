@@ -15,5 +15,5 @@ type StartGameResult struct {
 }
 
 type CheckAnswerRequest struct {
-	Answer string `json:"answer" binding:"required"`
+	Answer string `json:"answer" binding:"required,max=200"`
 }
