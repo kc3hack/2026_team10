@@ -111,6 +111,18 @@
 	align-items: center;
 }
 
+.board-card-story-id {
+	display: inline-block;
+	background-color: #fff4e6;
+	color: #ed6c02;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	padding: 2px 10px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
 .board-card-date {
 	color: #999;
 	font-size: 0.75rem;
@@ -133,21 +145,66 @@
 	background-color: #faf7f2;
 }
 
-/* --- 空状態 --- */
+/* --- 空状態・エラー状態 --- */
 .board-list-empty {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 20px;
+	gap: 12px;
 	background-color: #faf7f2;
 	color: #888;
 	font-size: 1.1rem;
 }
 
+.board-list-empty .error-icon-container {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #ffffff;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	border: 3px solid #fff;
+	margin-bottom: 4px;
+}
+
+.board-list-empty .error-icon-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transform: scale(1.7);
+}
+
+.board-list-empty .error-message {
+	font-size: 16px;
+	font-weight: 600;
+	color: #666;
+	margin: 0;
+}
+
+.board-list-empty .error-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 4px;
+}
+
 .board-list-back-button {
 	background-color: #ed6c02 !important;
+	color: #ffffff !important;
+	text-transform: none !important;
+	font-weight: bold !important;
+	border-radius: 8px !important;
+}
+
+.board-list-back-button-outlined {
+	background-color: #ffffff !important;
+	color: #ed6c02 !important;
+	border: 1px solid #ed6c02 !important;
 	text-transform: none !important;
 	font-weight: bold !important;
 	border-radius: 8px !important;

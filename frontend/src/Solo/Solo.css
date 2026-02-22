@@ -1,6 +1,6 @@
 .solo-container {
 	width: 100%;
-	height: 100vh;
+	height: 100dvh;
 	margin: 0;
 	padding: 20px 40px;
 	display: flex;
@@ -51,7 +51,7 @@
 
 .loading-container {
 	width: 100%;
-	height: 100vh;
+	height: 100dvh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -113,6 +113,50 @@
 	font-weight: 600;
 	color: #666;
 	letter-spacing: 0.01em;
+}
+
+.error-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.error-button-primary {
+	all: unset;
+	box-sizing: border-box;
+	cursor: pointer;
+	padding: 10px 40px;
+	border-radius: 8px;
+	background-color: #ed6c02;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	transition: background-color 0.2s;
+}
+
+.error-button-primary:hover {
+	background-color: #e65100;
+}
+
+.error-button-outlined {
+	all: unset;
+	box-sizing: border-box;
+	cursor: pointer;
+	padding: 10px 40px;
+	border-radius: 8px;
+	background-color: #ffffff;
+	color: #ed6c02;
+	border: 1px solid #ed6c02;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	transition: background-color 0.2s;
+}
+
+.error-button-outlined:hover {
+	background-color: #fff8f0;
 }
 
 /* 吹き出しのしっぽ（上向き） */

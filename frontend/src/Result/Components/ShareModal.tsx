@@ -1,8 +1,8 @@
-import "../Styles/Result.css";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import XIcon from "@mui/icons-material/X";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import "../Styles/Result.css";
 
 interface Props {
 	readonly gameId: number;
@@ -11,7 +11,7 @@ interface Props {
 
 function buildShareText(gameId: number): string {
 	const shareUrl = `${globalThis.location.origin}/board/${gameId}`;
-	return `偏見で遊ぼうで遊んだよ！\n${shareUrl}\n#偏見で遊ぼう`;
+	return `「あれちゃう？知らんけど。」で遊んだで！これうちのお気に入りやねん！\n${shareUrl}\n\n#あれ知ら #KC3Hack2026`;
 }
 
 export default function ShareModal({ gameId, onClose }: Props) {
@@ -41,7 +41,7 @@ export default function ShareModal({ gameId, onClose }: Props) {
 					<CloseIcon />
 				</IconButton>
 
-				<p className="share-modal-label">この内容でポストします</p>
+				<p className="share-modal-label">ぜひポストしてな！</p>
 				<div className="share-modal-preview">{shareText}</div>
 
 				<Button

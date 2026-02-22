@@ -15,13 +15,17 @@ import (
 	"google.golang.org/genai"
 )
 
-const MinRoundAnswerRevealDuration = 90 * time.Second
+const (
+	MinRoundAnswerRevealDuration = 90 * time.Second
+	RecentAnswersLimit           = 30
+)
 
 var (
-	ErrRoundNotFound    = errors.New("round not found")
-	ErrRoundNotFinished = errors.New("round is not finished yet")
-	ErrRoundTooEarly    = errors.New("game has not been played long enough")
-	ErrBookmarkNotFound = errors.New("bookmark not found")
+	ErrRoundNotFound      = errors.New("round not found")
+	ErrRoundNotFinished   = errors.New("round is not finished yet")
+	ErrRoundTooEarly      = errors.New("game has not been played long enough")
+	ErrBookmarkNotFound   = errors.New("bookmark not found")
+	ErrNoAnswersAvailable = errors.New("no answers available")
 )
 
 type IHintService interface {
@@ -53,7 +57,23 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
 	}
 
-	const prompt = `
+	// 過去の出題済みお題を取得（直近30件）
+	pastAnswers, err := s.repository.GetRecentAnswers(RecentAnswersLimit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get recent answers: %w", err)
+	}
+
+	excludeSection := ""
+	if len(pastAnswers) > 0 {
+		excludeSection = fmt.Sprintf(`
+
+		# 禁止お題
+		以下のお題は過去に出題済みなので、絶対に使わないでください：
+		%s
+`, strings.Join(pastAnswers, "、"))
+	}
+
+	const basePrompt = `
 		# Role
 		あなたは京都(上品・皮肉)と大阪(効率・本音)の個性を完璧に描き分ける脚本家であり、厳密なJSONデータを出力するシステムです。
 
@@ -169,10 +189,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		},
 	}
 
+	fullPrompt := basePrompt + excludeSection
+
 	res, err := client.Models.GenerateContent(
 		ctx,
 		"gemini-2.5-flash",
-		genai.Text(prompt),
+		genai.Text(fullPrompt),
 		config,
 	)
 	if err != nil {
@@ -185,8 +207,6 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 	}
 
 	text := res.Text()
-
-	fmt.Println(text)
 
 	if err := json.Unmarshal([]byte(text), &geminiData); err != nil {
 		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, text)
@@ -220,6 +240,9 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 	round, err := s.getRound(id)
 	if err != nil {
 		return "", err
+	}
+	if len(round.Answers) == 0 {
+		return "", fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
 	}
 	if !round.IsFinished {
 		if time.Since(round.CreatedAt) < MinRoundAnswerRevealDuration {
@@ -257,6 +280,9 @@ func (s *HintService) GetFinishedRoundByID(id uint) (*dto.RoundResponse, error) 
 	if !round.IsFinished {
 		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
 	}
+	if len(round.Answers) == 0 {
+		return nil, fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
+	}
 	result := &dto.RoundResponse{
 		ID:        round.ID,
 		Answer:    round.Answers[0],
@@ -273,6 +299,9 @@ func (s *HintService) BookmarkRound(id uint) (*dto.RoundResponse, error) {
 	}
 	if !round.IsFinished {
 		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
+	}
+	if len(round.Answers) == 0 {
+		return nil, fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
 	}
 	if err := s.repository.BookmarkRound(id); err != nil {
 		return nil, fmt.Errorf("failed to bookmark round: %w", err)
@@ -295,6 +324,9 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 		return nil, ErrBookmarkNotFound
 	}
 
+	if len(round.Answers) == 0 {
+		return nil, ErrNoAnswersAvailable
+	}
 	return &dto.RoundResponse{
 		ID:        round.ID,
 		Answer:    round.Answers[0],
@@ -312,6 +344,9 @@ func (s *HintService) GetBookmarkedList() ([]dto.RoundResponse, error) {
 	response := []dto.RoundResponse{}
 
 	for _, r := range rounds {
+		if len(r.Answers) == 0 {
+			continue
+		}
 		limit := 4
 		if len(r.Hints) < limit {
 			limit = len(r.Hints)

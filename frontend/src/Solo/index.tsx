@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
@@ -10,16 +10,16 @@ import "./Solo.css";
 
 const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
 
+type MessageItem = {
+	messageId: number;
+	hint: string;
+	isUser: boolean;
+	icon?: string;
+	isDivider?: boolean;
+};
+
 function Solo() {
-	const [messages, setMessages] = useState<
-		{
-			messageId: number;
-			hint: string;
-			isUser: boolean;
-			icon?: string;
-			isDivider?: boolean;
-		}[]
-	>([]);
+	const [messages, setMessages] = useState<MessageItem[]>([]);
 	const [hints, setHints] = useState<string[]>([]);
 	const [gameId, setGameId] = useState<number | null>(null);
 	const [inputValue, setInputValue] = useState("");
@@ -32,7 +32,8 @@ function Solo() {
 	const [isBookmarked, setIsBookmarked] = useState(false);
 	const [isAnimating, setIsAnimating] = useState(false);
 	const [isGivenUp, setIsGivenUp] = useState(false);
-	const [pendingHints, setPendingHints] = useState<any[]>([]);
+	const [pendingHints, setPendingHints] = useState<MessageItem[]>([]);
+	const [fetchError, setFetchError] = useState(false);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
 	const loadingMessages = [
 		"エスカレーターは右側に立つ",
@@ -51,6 +52,7 @@ function Solo() {
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
 	const isAtBottomRef = useRef(true);
 	const hasFetchedData = useRef(false);
+	const giveUpTimerRef = useRef<number | null>(null);
 
 	useEffect(() => {
 		if (hasFetchedData.current) return;
@@ -63,6 +65,9 @@ function Solo() {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({}),
 				});
+				if (!res.ok) {
+					throw new Error(`サーバーエラー: ${res.status}`);
+				}
 				const data = await res.json();
 				if (data.result && data.result.hints) {
 					setHints(data.result.hints);
@@ -80,6 +85,7 @@ function Solo() {
 				}
 			} catch (e) {
 				console.error(e);
+				setFetchError(true);
 			} finally {
 				setIsLoading(false);
 			}
@@ -172,6 +178,9 @@ function Solo() {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ answer: newMessage.hint }),
 			});
+			if (!res.ok) {
+				throw new Error(`サーバーエラー: ${res.status}`);
+			}
 			const data = await res.json();
 			const isCorrect = data.isCorrect;
 
@@ -190,19 +199,30 @@ function Solo() {
 			}
 		} catch (error) {
 			console.error("Error submitting answer:", error);
+			setMessages((prev) => [
+				...prev,
+				{
+					messageId: Date.now() + 1,
+					hint: "通信エラーが発生しました。もう一度お試しください。",
+					isUser: false,
+					icon: "/Image/Kyoto.jpg",
+				},
+			]);
 		}
 	};
 
 	// 全ヒントが表示されたかどうかを判定する
-	const shownHintCount = messages.filter(
-		(m) =>
-			!m.isUser &&
-			!m.isDivider &&
-			m.hint !== "正解やで！" &&
-			m.hint !== "不正解どす..." &&
-			!m.hint.startsWith("正解は「"),
-	).length;
-	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
+	const allHintsShown = useMemo(() => {
+		const shownHintCount = messages.filter(
+			(m) =>
+				!m.isUser &&
+				!m.isDivider &&
+				m.hint !== "正解やで！" &&
+				m.hint !== "不正解どす..." &&
+				!m.hint.startsWith("正解は「"),
+		).length;
+		return hints.length > 0 && shownHintCount >= hints.length;
+	}, [messages, hints]);
 
 	// ギブアップ処理：正解を取得してチャットに表示する
 	const handleGiveUp = async () => {
@@ -210,6 +230,9 @@ function Solo() {
 
 		try {
 			const res = await fetch(`/api/solo/${gameId}/answer`);
+			if (!res.ok) {
+				throw new Error(`サーバーエラー: ${res.status}`);
+			}
 			const data = await res.json();
 			const correctAnswer = data.answer;
 
@@ -225,7 +248,7 @@ function Solo() {
 			]);
 
 			// 少し間を空けてから正解を表示する
-			setTimeout(() => {
+			giveUpTimerRef.current = setTimeout(() => {
 				setMessages((prev) => [
 					...prev,
 					{
@@ -241,8 +264,26 @@ function Solo() {
 			}, 500);
 		} catch (error) {
 			console.error("正解の取得に失敗しました:", error);
+			setMessages((prev) => [
+				...prev,
+				{
+					messageId: Date.now(),
+					hint: "通信エラーが発生しました。もう一度お試しください。",
+					isUser: false,
+					icon: "/Image/Kyoto.jpg",
+				},
+			]);
 		}
 	};
+
+	// giveUpTimerのクリーンアップ
+	useEffect(() => {
+		return () => {
+			if (giveUpTimerRef.current !== null) {
+				clearTimeout(giveUpTimerRef.current);
+			}
+		};
+	}, []);
 
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
@@ -342,13 +383,42 @@ function Solo() {
 					<div className="loading-text">
 						関西あるある
 						<br />
-						<div className="aruaru-text">
-							{loadingMessages[loadingMsgIndex]}
-						</div>
+						<div className="aruaru-text">{loadingMessages[loadingMsgIndex]}</div>
 					</div>
 				</div>
 				<div className="spinner" />
 				<div className="loading-progress-text">お題とヒントを準備中...</div>
+			</div>
+		);
+	}
+
+	if (fetchError) {
+		return (
+			<div className="loading-container">
+				<div className="loading-icon-container">
+					<img
+						src="/Image/Kyoto.jpg"
+						alt="Error Icon"
+						className="loading-icon-img"
+					/>
+				</div>
+				<div className="loading-progress-text">読み込みに失敗しました</div>
+				<div className="error-actions">
+					<button
+						type="button"
+						className="error-button-primary"
+						onClick={() => window.location.reload()}
+					>
+						もう一度試す
+					</button>
+					<button
+						type="button"
+						className="error-button-outlined"
+						onClick={() => navigate("/")}
+					>
+						タイトルに戻る
+					</button>
+				</div>
 			</div>
 		);
 	}
