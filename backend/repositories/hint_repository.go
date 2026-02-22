@@ -15,6 +15,7 @@ type IHintRepository interface {
 	BookmarkRound(id uint) error
 	GetRandomBookmarkedRound() (*models.Round, error)
 	GetAllBookmarkedRounds() ([]models.Round, error)
+	GetRecentAnswers(limit int) ([]string, error)
 }
 
 type HintRepository struct {
@@ -78,4 +79,18 @@ func (r *HintRepository) GetAllBookmarkedRounds() ([]models.Round, error) {
 		return nil, err
 	}
 	return rounds, nil
+}
+
+func (r *HintRepository) GetRecentAnswers(limit int) ([]string, error) {
+	var rounds []models.Round
+	if err := r.db.Order("created_at desc").Limit(limit).Find(&rounds).Error; err != nil {
+		return nil, err
+	}
+	answers := make([]string, 0, len(rounds))
+	for _, round := range rounds {
+		if len(round.Answers) > 0 {
+			answers = append(answers, round.Answers[0])
+		}
+	}
+	return answers, nil
 }

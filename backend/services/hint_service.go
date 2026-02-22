@@ -15,7 +15,10 @@ import (
 	"google.golang.org/genai"
 )
 
-const MinRoundAnswerRevealDuration = 90 * time.Second
+const (
+	MinRoundAnswerRevealDuration = 90 * time.Second
+	RecentAnswersLimit           = 30
+)
 
 var (
 	ErrRoundNotFound      = errors.New("round not found")
@@ -54,7 +57,23 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
 	}
 
-	const prompt = `
+	// 過去の出題済みお題を取得（直近30件）
+	pastAnswers, err := s.repository.GetRecentAnswers(RecentAnswersLimit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get recent answers: %w", err)
+	}
+
+	excludeSection := ""
+	if len(pastAnswers) > 0 {
+		excludeSection = fmt.Sprintf(`
+
+		# 禁止お題
+		以下のお題は過去に出題済みなので、絶対に使わないでください：
+		%s
+`, strings.Join(pastAnswers, "、"))
+	}
+
+	const basePrompt = `
 		# Role
 		あなたは京都(上品・皮肉)と大阪(効率・本音)の個性を完璧に描き分ける脚本家であり、厳密なJSONデータを出力するシステムです。
 
@@ -170,10 +189,12 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 		},
 	}
 
+	fullPrompt := basePrompt + excludeSection
+
 	res, err := client.Models.GenerateContent(
 		ctx,
 		"gemini-2.5-flash",
-		genai.Text(prompt),
+		genai.Text(fullPrompt),
 		config,
 	)
 	if err != nil {
