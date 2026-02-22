@@ -126,21 +126,43 @@ function Board() {
 	if (fetchError) {
 		return (
 			<div className="loading-container">
-				<p>データの読み込みに失敗しました</p>
-				<Button
-					variant="contained"
-					onClick={() => window.location.reload()}
-					style={{ marginTop: "16px" }}
-				>
-					もう一度試す
-				</Button>
-				<Button
-					variant="outlined"
-					onClick={() => navigate("/board")}
-					style={{ marginTop: "8px" }}
-				>
-					一覧に戻る
-				</Button>
+				<div className="error-icon-container">
+					<img src="/Image/Kyoto.jpg" alt="Error" />
+				</div>
+				<p className="error-message">データの読み込みに失敗しました</p>
+				<div className="error-actions">
+					<Button
+						variant="contained"
+						onClick={() => window.location.reload()}
+						style={{
+							width: "200px",
+							padding: "10px 20px",
+							borderRadius: "8px",
+							backgroundColor: "#ed6c02",
+							color: "#ffffff",
+							fontWeight: "bold",
+							textTransform: "none",
+						}}
+					>
+						もう一度試す
+					</Button>
+					<Button
+						variant="outlined"
+						onClick={() => navigate("/board")}
+						style={{
+							width: "200px",
+							padding: "10px 20px",
+							borderRadius: "8px",
+							borderColor: "#ed6c02",
+							color: "#ed6c02",
+							backgroundColor: "#ffffff",
+							fontWeight: "bold",
+							textTransform: "none",
+						}}
+					>
+						一覧に戻る
+					</Button>
+				</div>
 			</div>
 		);
 	}

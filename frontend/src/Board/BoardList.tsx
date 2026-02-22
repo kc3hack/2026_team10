@@ -90,22 +90,26 @@ function BoardList() {
 	if (fetchError) {
 		return (
 			<div className="board-list-empty">
-				<p>データの読み込みに失敗しました</p>
-				<Button
-					variant="contained"
-					onClick={() => window.location.reload()}
-					className="board-list-back-button"
-				>
-					もう一度試す
-				</Button>
-				<Button
-					variant="outlined"
-					onClick={() => navigate("/")}
-					className="board-list-back-button"
-					style={{ marginTop: "8px" }}
-				>
-					タイトルに戻る
-				</Button>
+				<div className="error-icon-container">
+					<img src="/Image/Kyoto.jpg" alt="Error" />
+				</div>
+				<p className="error-message">データの読み込みに失敗しました</p>
+				<div className="error-actions">
+					<Button
+						variant="contained"
+						onClick={() => window.location.reload()}
+						className="board-list-back-button"
+					>
+						もう一度試す
+					</Button>
+					<Button
+						variant="outlined"
+						onClick={() => navigate("/")}
+						className="board-list-back-button-outlined"
+					>
+						タイトルに戻る
+					</Button>
+				</div>
 			</div>
 		);
 	}

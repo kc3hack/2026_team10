@@ -403,14 +403,22 @@ function Solo() {
 					/>
 				</div>
 				<div className="loading-progress-text">読み込みに失敗しました</div>
-				<button
-					type="button"
-					className="giveup-chat-bubble"
-					onClick={() => window.location.reload()}
-					style={{ marginTop: "16px" }}
-				>
-					<span className="giveup-chat-text">もう一度試す</span>
-				</button>
+				<div className="error-actions">
+					<button
+						type="button"
+						className="error-button-primary"
+						onClick={() => window.location.reload()}
+					>
+						もう一度試す
+					</button>
+					<button
+						type="button"
+						className="error-button-outlined"
+						onClick={() => navigate("/")}
+					>
+						タイトルに戻る
+					</button>
+				</div>
 			</div>
 		);
 	}
