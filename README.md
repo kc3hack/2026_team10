@@ -79,6 +79,9 @@
 
 不正解なら関西人の会話がそのまま続くので、お題が何かユーザが考え続ける。
 
+[CMはこちら](https://youtu.be/Kf5yTqowlrI)   
+[紹介動画はこちら](https://youtu.be/6dZ70s2YJhc)
+
 ---
 
 # 4. 技術面でのこだわり
@@ -196,8 +199,8 @@
 - **Material Designによる統一感**:
   一貫性のあるデザインシステム（MUI）を採用し、全体として清潔感とプレミアム感のある外観を実現。
 
-  [使用例のストーリーはこちら](https://youtu.be/Kf5yTqowlrI)   
-  [紹介動画はこちら](https://youtu.be/6dZ70s2YJhc)
+  <!-- [使用例のストーリーはこちら](https://youtu.be/Kf5yTqowlrI)   
+  [紹介動画はこちら](https://youtu.be/6dZ70s2YJhc) -->
 
 ---
 
