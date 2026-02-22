@@ -342,9 +342,7 @@ function Solo() {
 					<div className="loading-text">
 						関西あるある
 						<br />
-						<div className="aruaru-text">
-							{loadingMessages[loadingMsgIndex]}
-						</div>
+						<div className="aruaru-text">{loadingMessages[loadingMsgIndex]}</div>
 					</div>
 				</div>
 				<div className="spinner" />
