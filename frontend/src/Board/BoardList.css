@@ -111,6 +111,18 @@
 	align-items: center;
 }
 
+.board-card-story-id {
+	display: inline-block;
+	background-color: #fff4e6;
+	color: #ed6c02;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	padding: 2px 10px;
+	border-radius: 12px;
+	margin-bottom: 10px;
+}
+
 .board-card-date {
 	color: #999;
 	font-size: 0.75rem;
