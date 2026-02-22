@@ -36,7 +36,7 @@ function App() {
 						onClick={() => navigate("/board")}
 						className="title-base-button btn-story"
 					>
-						共有されたストーリー見る
+						みんなのストーリーを見る
 					</Button>
 				</div>
 			</Paper>
