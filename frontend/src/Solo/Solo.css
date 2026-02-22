@@ -165,6 +165,7 @@
 }
 
 @keyframes floating-text {
+
 	0%,
 	100% {
 		transform: translateY(0);
@@ -176,6 +177,7 @@
 }
 
 @keyframes bounce {
+
 	0%,
 	100% {
 		transform: scale(1) translateY(0);
