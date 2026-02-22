@@ -11,7 +11,7 @@ interface Props {
 
 function buildShareText(gameId: number): string {
 	const shareUrl = `${globalThis.location.origin}/board/${gameId}`;
-	return `「あれちゃう？知らんけど。」で遊んだで！みんなも遊ばへん？\n${shareUrl}\n\n#あれ知ら #KC3Hack`;
+	return `「あれちゃう？知らんけど。」で遊んだで！これうちのお気に入りやねん！\n${shareUrl}\n\n#あれ知ら #KC3Hack`;
 }
 
 export default function ShareModal({ gameId, onClose }: Props) {
