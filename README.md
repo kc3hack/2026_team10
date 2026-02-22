@@ -1,20 +1,33 @@
-# プロダクト名
-あれちゃう？知らんけど。
+<!-- # プロダクト名 -->
+<!-- あれちゃう？知らんけど。 -->
 <!-- プロダクト名に変更してください -->
 
-![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png)
+<!-- ![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png) -->
 
-<!-- プロダクト名・イメージ画像を差し変えてください -->
 
-## チーム名
-
-チーム10 一汁三菜
+<!-- プロダクト名・イメージ画像を差し変えてください
+# チーム名
+## チーム10 一汁三菜
+-->
 
 <!-- チームIDとチーム名を入力してください -->
 
 # プロダクト名
-<img width="935" height="446" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
-> キャッチコピー(1行で「何を誰のために解決するか」)
+
+<p align="center">
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
+</p>
+
+<!--
+  誰の、どんな "欲しい" に焦点を当てたかおしえてください。
+  # チーム名
+  # キャッチコピー
+-->
+## チーム名
+チーム10 一汁三菜
+## キャッチコピー
+答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
+
 
 # 1. プロダクト概要
 
@@ -111,7 +124,9 @@
 ---
 
 ## インフラ
-<img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />
+<p align="center">
+  <img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />
+</p>
 
 ### セキュアなネットワーク設計（VPC/Subnet分割）
 ただEC2を立てるだけでなく、実務で標準とされるセキュアな構成を採用しています。
@@ -153,7 +168,8 @@
 - **物語の完全公開（アコーディオン）**:
   正解後、「物語の続きを見る」をクリックすることで、クイズ中に出てこなかった残りの会話を全て読むことができ、ストーリーを最後まで楽しめます。
 - **「茶しばき（お気に入り）」機能**:
-  面白かったヒントには、関西ならではの「茶しばき（お茶しに行こう）」という言葉でお気に入り登録が可能。心地よいハートのアニメーションで達成感を高めています。
+  面白いと思ったチャットには、関西ならではの「茶しばき（お茶しに行こう）」という言葉でお気に入り登録が可能。
+
   <p align="center">
     <img width="250" alt="image" src="./frontend/public/chaShibaki.gif" />
   </p>
