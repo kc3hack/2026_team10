@@ -18,10 +18,11 @@ import (
 const MinRoundAnswerRevealDuration = 90 * time.Second
 
 var (
-	ErrRoundNotFound    = errors.New("round not found")
-	ErrRoundNotFinished = errors.New("round is not finished yet")
-	ErrRoundTooEarly    = errors.New("game has not been played long enough")
-	ErrBookmarkNotFound = errors.New("bookmark not found")
+	ErrRoundNotFound      = errors.New("round not found")
+	ErrRoundNotFinished   = errors.New("round is not finished yet")
+	ErrRoundTooEarly      = errors.New("game has not been played long enough")
+	ErrBookmarkNotFound   = errors.New("bookmark not found")
+	ErrNoAnswersAvailable = errors.New("no answers available")
 )
 
 type IHintService interface {
@@ -186,8 +187,6 @@ func (s *HintService) StartGame() (*dto.StartGameResult, error) {
 
 	text := res.Text()
 
-	fmt.Println(text)
-
 	if err := json.Unmarshal([]byte(text), &geminiData); err != nil {
 		return nil, fmt.Errorf("JSONパースに失敗しました: %w (raw: %s)", err, text)
 	}
@@ -220,6 +219,9 @@ func (s *HintService) GetAnswer(id uint) (string, error) {
 	round, err := s.getRound(id)
 	if err != nil {
 		return "", err
+	}
+	if len(round.Answers) == 0 {
+		return "", fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
 	}
 	if !round.IsFinished {
 		if time.Since(round.CreatedAt) < MinRoundAnswerRevealDuration {
@@ -257,6 +259,9 @@ func (s *HintService) GetFinishedRoundByID(id uint) (*dto.RoundResponse, error) 
 	if !round.IsFinished {
 		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
 	}
+	if len(round.Answers) == 0 {
+		return nil, fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
+	}
 	result := &dto.RoundResponse{
 		ID:        round.ID,
 		Answer:    round.Answers[0],
@@ -273,6 +278,9 @@ func (s *HintService) BookmarkRound(id uint) (*dto.RoundResponse, error) {
 	}
 	if !round.IsFinished {
 		return nil, fmt.Errorf("%w: id=%d", ErrRoundNotFinished, id)
+	}
+	if len(round.Answers) == 0 {
+		return nil, fmt.Errorf("%w: id=%d", ErrNoAnswersAvailable, id)
 	}
 	if err := s.repository.BookmarkRound(id); err != nil {
 		return nil, fmt.Errorf("failed to bookmark round: %w", err)
@@ -295,6 +303,9 @@ func (s *HintService) GetRandomBookmark() (*dto.RoundResponse, error) {
 		return nil, ErrBookmarkNotFound
 	}
 
+	if len(round.Answers) == 0 {
+		return nil, ErrNoAnswersAvailable
+	}
 	return &dto.RoundResponse{
 		ID:        round.ID,
 		Answer:    round.Answers[0],
@@ -312,6 +323,9 @@ func (s *HintService) GetBookmarkedList() ([]dto.RoundResponse, error) {
 	response := []dto.RoundResponse{}
 
 	for _, r := range rounds {
+		if len(r.Answers) == 0 {
+			continue
+		}
 		limit := 4
 		if len(r.Hints) < limit {
 			limit = len(r.Hints)
