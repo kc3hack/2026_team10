@@ -1,8 +1,9 @@
 # プロダクト名
-あれちゃう？知らんけど。
+<!-- あれちゃう？知らんけど。 -->
 <!-- プロダクト名に変更してください -->
 
-![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png)
+<!-- ![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png) -->
+
 
 <!-- プロダクト名・イメージ画像を差し変えてください
 # チーム名
@@ -12,6 +13,7 @@
 <!-- チームIDとチーム名を入力してください -->
 
 # プロダクト名
+
 <p align="center">
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
 </p>
@@ -21,9 +23,9 @@
   # チーム名
   # キャッチコピー
 -->
-
+## チーム名
 チーム10 一汁三菜
-
+## キャッチコピー
 答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
 
 
