@@ -56,8 +56,9 @@ function BoardList() {
 				}
 				const data: ApiResponse = await response.json();
 
-				// results配列をそのままセット
-				setRounds(data.results);
+				const sortedRounds = data.results.sort((a, b) => b.id - a.id);
+				setRounds(sortedRounds);
+				// results配列を降順にセット
 			} catch (error) {
 				console.error("ラウンド一覧の取得に失敗しました:", error);
 				setFetchError(true);
