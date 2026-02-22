@@ -59,7 +59,7 @@ function Board() {
 
 	// スクロール制御用の参照
 	const messagesAreaRef = useRef<HTMLDivElement>(null);
-	const isAtBottomRef = useRef(true);
+	const isAtBottomRef = useRef(false);
 	// 二重フェッチ防止用
 	const hasFetchedRef = useRef(false);
 
