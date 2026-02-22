@@ -12,16 +12,19 @@
 <!-- チームIDとチーム名を入力してください -->
 
 # プロダクト名
-<img width="935" height="446" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
+<p align="center">
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/82e88e43-ad45-463a-9ff5-22e25bf20ccd" />
+</p>
+
 <!--
   誰の、どんな "欲しい" に焦点を当てたかおしえてください。
   # チーム名
   # キャッチコピー
 -->
 
-## チーム10 一汁三菜
+チーム10 一汁三菜
 
-## 答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
+答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
 
 
 # 1. プロダクト概要
