@@ -154,6 +154,9 @@ function BoardList() {
 						className="board-card"
 						onClick={() => navigate(`/board/${round.id}`)}
 					>
+						{/* ストーリーID */}
+						<div className="board-card-story-id">ストーリー #{round.id}</div>
+
 						{/* ヒントのプレビュー（チャット形式で最初の数個を表示） */}
 						<div className="board-card-hints">
 							{round.hints.slice(0, PREVIEW_HINT_COUNT).map((hint, index) => (
