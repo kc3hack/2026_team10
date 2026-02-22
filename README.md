@@ -110,6 +110,21 @@
 
 ---
 
+## インフラ
+<img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />
+
+### セキュアなネットワーク設計（VPC/Subnet分割）
+ただEC2を立てるだけでなく、実務で標準とされるセキュアな構成を採用しています。
+**プライベートサブネットの活用:** アプリケーション（EC2）とデータベース（RDS）をインターネットから直接見えない「プライベートサブネット」に配置し、外部からの直接攻撃を遮断。
+**踏み台サーバー（Bastion）の導入: **開発者のメンテナンス用アクセスは、パブリックサブネットに配置したBastionサーバー経由のみに限定し、セキュアな運用経路を確保。
+**ALBによるアクセス集約とSSL化: **リクエストの受け口をApplication Load Balancer (ALB) に集約し、AWS Certificate Manager (ACM) と連携して安全なHTTPS通信（SSL終端）を実現。
+
+### GHCRを活用したEC2への負荷が少ないCI/CD
+**ビルド処理のオフロード:** リソースの限られたEC2インスタンス（t2.micro等）内で直接 docker build を行うとメモリ不足（OOM Killer）でフリーズするリスクがあります。これを回避するため、ビルド処理をGitHub Actionsの強力なサーバーに委譲しています。
+
+**GHCR (GitHub Container Registry) の採用:** GitHub Actionsでビルドした完成品のDockerイメージをGHCRにPushし、EC2側はそれを docker pull するだけの「超軽量なデプロイ」を実現。デプロイ時間の短縮とサーバーの安定稼働を両立しました。
+
+
 # 5. UI/UX面でのこだわり
 
 <!--
